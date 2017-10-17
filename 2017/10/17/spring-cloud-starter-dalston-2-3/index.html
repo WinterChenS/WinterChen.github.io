@@ -78,18 +78,18 @@
 
 
 
-<meta name="description" content="通过前两篇《Spring Cloud构建微服务架构：服务消费（基础）》和《Spring Cloud构建微服务架构：服务消费（Ribbon）》，我们已经学会了在Spring Cloud中基本的服务调用方式。本文我们将继续介绍Spring Cloud中的另外一个服务消费的工具：Spring Cloud Feign。  Spring Cloud FeignSpring Cloud Feign是一套基于">
+<meta name="description" content="通过前两篇《Spring Cloud构建微服务架构：服务消费（基础）》和《Spring Cloud构建微服务架构：服务消费（Ribbon）》，我们已经学会了在Spring Cloud中基本的服务调用方式。本文我们将继续介绍Spring Cloud中的另外一个服务消费的工具：Spring Cloud Feign。">
 <meta name="keywords" content="Spring Cloud,Feign">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring Cloud构建微服务架构：服务消费（Ribbon）【Dalston版】">
 <meta property="og:url" content="http://winterchens.github.io/2017/10/17/spring-cloud-starter-dalston-2-3/index.html">
 <meta property="og:site_name" content="winter的博客">
-<meta property="og:description" content="通过前两篇《Spring Cloud构建微服务架构：服务消费（基础）》和《Spring Cloud构建微服务架构：服务消费（Ribbon）》，我们已经学会了在Spring Cloud中基本的服务调用方式。本文我们将继续介绍Spring Cloud中的另外一个服务消费的工具：Spring Cloud Feign。  Spring Cloud FeignSpring Cloud Feign是一套基于">
+<meta property="og:description" content="通过前两篇《Spring Cloud构建微服务架构：服务消费（基础）》和《Spring Cloud构建微服务架构：服务消费（Ribbon）》，我们已经学会了在Spring Cloud中基本的服务调用方式。本文我们将继续介绍Spring Cloud中的另外一个服务消费的工具：Spring Cloud Feign。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-17T12:04:57.000Z">
+<meta property="og:updated_time" content="2017-10-17T12:24:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Cloud构建微服务架构：服务消费（Ribbon）【Dalston版】">
-<meta name="twitter:description" content="通过前两篇《Spring Cloud构建微服务架构：服务消费（基础）》和《Spring Cloud构建微服务架构：服务消费（Ribbon）》，我们已经学会了在Spring Cloud中基本的服务调用方式。本文我们将继续介绍Spring Cloud中的另外一个服务消费的工具：Spring Cloud Feign。  Spring Cloud FeignSpring Cloud Feign是一套基于">
+<meta name="twitter:description" content="通过前两篇《Spring Cloud构建微服务架构：服务消费（基础）》和《Spring Cloud构建微服务架构：服务消费（Ribbon）》，我们已经学会了在Spring Cloud中基本的服务调用方式。本文我们将继续介绍Spring Cloud中的另外一个服务消费的工具：Spring Cloud Feign。">
 
 
 
@@ -383,9 +383,9 @@
 
       
         <blockquote>
-<p>通过前两篇<a href="https://winterchens.github.io/2017/09/27/spring-cloud-starter-dalston-2-1/">《Spring Cloud构建微服务架构：服务消费（基础）》</a>和<a href="https://winterchens.github.io/2017/09/27/spring-cloud-starter-dalston-2-2/">《Spring Cloud构建微服务架构：服务消费（Ribbon）》</a>，我们已经学会了在Spring Cloud中基本的服务调用方式。本文我们将继续介绍Spring Cloud中的另外一个服务消费的工具：Spring Cloud Feign。</p>
-</blockquote>
-<h3 id="Spring-Cloud-Feign"><a href="#Spring-Cloud-Feign" class="headerlink" title="Spring Cloud Feign"></a>Spring Cloud Feign</h3><p>Spring Cloud Feign是一套基于Netflix Feign实现的声明式服务调用客户端。它使得编写Web服务客户端变得更加简单。我们只需要通过创建接口并用注解来配置它既可完成对Web服务接口的绑定。它具备可插拔的注解支持，包括Feign注解、JAX-RS注解。它也支持可插拔的编码器和解码器。Spring Cloud Feign还扩展了对Spring MVC注解的支持，同时还整合了Ribbon和Eureka来提供均衡负载的HTTP客户端实现。</p>
+<p>通过前两篇<a href="https://winterchens.github.io/2017/09/27/spring-cloud-starter-dalston-2-1/">《Spring Cloud构建微服务架构：服务消费（基础）》</a>和<a href="https://winterchens.github.io/2017/09/27/spring-cloud-starter-dalston-2-2/">《Spring Cloud构建微服务架构：服务消费（Ribbon）》</a>，我们已经学会了在Spring Cloud中基本的服务调用方式。本文我们将继续介绍Spring Cloud中的另外一个服务消费的工具：Spring Cloud Feign。<br><a id="more"></a></p>
+<h3 id="Spring-Cloud-Feign"><a href="#Spring-Cloud-Feign" class="headerlink" title="Spring Cloud Feign"></a>Spring Cloud Feign</h3></blockquote>
+<p>Spring Cloud Feign是一套基于Netflix Feign实现的声明式服务调用客户端。它使得编写Web服务客户端变得更加简单。我们只需要通过创建接口并用注解来配置它既可完成对Web服务接口的绑定。它具备可插拔的注解支持，包括Feign注解、JAX-RS注解。它也支持可插拔的编码器和解码器。Spring Cloud Feign还扩展了对Spring MVC注解的支持，同时还整合了Ribbon和Eureka来提供均衡负载的HTTP客户端实现。</p>
 <p>下面，我们通过一个例子来展现Feign如何方便的声明对eureka-client服务的定义和调用。</p>
 <h3 id="动手试一试"><a href="#动手试一试" class="headerlink" title="动手试一试"></a>动手试一试</h3><p>下面的例子，我们将利用之前构建的<code>eureka-server</code>作为服务注册中心、<code>eureka-client</code>作为服务提供者作为基础。而基于Spring Cloud Ribbon实现的消费者，我们可以根据<code>eureka-consumer</code>实现的内容进行简单改在就能完成，具体步骤如下：</p>
 <ul>

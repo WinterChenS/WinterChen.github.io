@@ -385,43 +385,15 @@
 
       
         
-          
-            <blockquote>
-<p>通过上一篇<a href="https://winterchens.github.io/2017/09/27/spring-cloud-starter-dalston-2-1/">《Spring Cloud构建微服务架构：服务消费（基础）》</a>，我们已经学会如何通过<code>LoadBalancerClient</code>接口来获取某个服务的具体实例，并根据实例信息来发起服务接口消费请求。但是这样的做法需要我们手工的去编写服务选取、链接拼接等繁琐的工作，对于开发人员来说非常的不友好。所以，下来我们看看Spring Cloud中针对客户端负载均衡的工具包：Spring Cloud Ribbon。</p>
-</blockquote>
-<h3 id="Spring-Cloud-Ribbon"><a href="#Spring-Cloud-Ribbon" class="headerlink" title="Spring Cloud Ribbon"></a>Spring Cloud Ribbon</h3><p>Spring Cloud Ribbon是基于Netflix Ribbon实现的一套客户端负载均衡的工具。它是一个基于HTTP和TCP的客户端负载均衡器。它可以通过在客户端中配置ribbonServerList来设置服务端列表去轮询访问以达到均衡负载的作用。</p>
-<p>当Ribbon与Eureka联合使用时，ribbonServerList会被DiscoveryEnabledNIWSServerList重写，扩展成从Eureka注册中心中获取服务实例列表。同时它也会用NIWSDiscoveryPing来取代IPing，它将职责委托给Eureka来确定服务端是否已经启动。</p>
-<p>而当Ribbon与Consul联合使用时，ribbonServerList会被ConsulServerList来扩展成从Consul获取服务实例列表。同时由ConsulPing来作为IPing接口的实现。</p>
-<p>我们在使用Spring Cloud Ribbon的时候，不论是与Eureka还是Consul结合，都会在引入Spring Cloud Eureka或Spring Cloud Consul依赖的时候通过自动化配置来加载上述所说的配置内容，所以我们可以快速在Spring Cloud中实现服务间调用的负载均衡。</p>
-<p>下面我们通过具体的例子来看看如何使用Spring Cloud Ribbon来实现服务的调用以及客户端均衡负载。</p>
-<h3 id="动手试一试"><a href="#动手试一试" class="headerlink" title="动手试一试"></a>动手试一试</h3><p>下面的例子，我们将利用之前构建的<code>eureka-server</code>作为服务注册中心、<code>eureka-client</code>作为服务提供者作为基础。而基于Spring Cloud Ribbon实现的消费者，我们可以根据<code>eureka-consumer</code>实现的内容进行简单改在就能完成，具体步骤如下：</p>
-<ul>
-<li>根据<code>eureka-consumer</code>复制一个服务消费者工程，命名为：<code>eureka-consumer-ribbon</code>。在<code>pom.xml</code>中增加下面的依赖：</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">    ...</div><div class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-ribbon<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div></pre></td></tr></table></figure>
-<ul>
-<li>修改应用主类。为<code>RestTemplate</code>增加<code>@LoadBalanced</code>注解：</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@EnableDiscoveryClient</span></div><div class="line"><span class="meta">@SpringBootApplication</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Application</span> </span>&#123;</div><div class="line">	<span class="meta">@Bean</span></div><div class="line">	<span class="meta">@LoadBalanced</span></div><div class="line">	<span class="function"><span class="keyword">public</span> RestTemplate <span class="title">restTemplate</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">new</span> RestTemplate();</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">new</span> SpringApplicationBuilder(Application.class).web(<span class="keyword">true</span>).run(args);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<ul>
-<li>修改<code>Controller</code>。去掉原来通过<code>LoadBalancerClient</code>选取实例和拼接URL的步骤，直接通过<code>RestTemplate</code>发起请求。</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="meta">@RestController</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DcController</span> </span>&#123;</div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    RestTemplate restTemplate;</div><div class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/consumer"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">dc</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> restTemplate.getForObject(<span class="string">"http://eureka-client/dc"</span>, String.class);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>可以看到这里，我们除了去掉了原来与<code>LoadBalancerClient</code>相关的逻辑之外，对于<code>RestTemplate</code>的使用，我们的第一个url参数有一些特别。这里请求的host位置并没有使用一个具体的IP地址和端口的形式，而是采用了服务名的方式组成。那么这样的请求为什么可以调用成功呢？因为Spring Cloud Ribbon有一个拦截器，它能够在这里进行实际调用的时候，自动的去选取服务实例，并将实际要请求的IP地址和端口替换这里的服务名，从而完成服务接口的调用。</p>
-<p>在完成了上面你的代码编写之后，读者可以将<code>eureka-server</code>、<code>eureka-client</code>、<code>eureka-consumer-ribbon</code>都启动起来，然后访问<a href="http://localhost:2101/consumer" target="_blank" rel="external">http://localhost:2101/consumer</a> ，来跟踪观察<code>eureka-consumer-ribbon</code>服务是如何消费<code>eureka-client</code>服务的<code>/dc</code>接口的，并且也可以通过启动多个<code>eureka-client</code>服务来观察其负载均衡的效果。</p>
-<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><p><strong>样例工程将沿用之前在码云和GitHub上创建的SpringCloud-Learning项目，重新做了一下整理。通过不同目录来区分Brixton和Dalston的示例。</strong></p>
-<ul>
-<li>码云: <a href="https://gitee.com/didispace/SpringCloud-Learning/tree/master/2-Dalston%E7%89%88%E6%95%99%E7%A8%8B%E7%A4%BA%E4%BE%8B" target="_blank" rel="external">点击查看</a></li>
-<li>GitHub: <a href="https://github.com/dyc87112/SpringCloud-Learning/tree/master/2-Dalston%E7%89%88%E6%95%99%E7%A8%8B%E7%A4%BA%E4%BE%8B" target="_blank" rel="external">点击查看</a></li>
-</ul>
-<p>具体工程说明如下：</p>
-<ul>
-<li>eureka的服务注册中心：eureka-server</li>
-<li>eureka的服务提供方：eureka-client</li>
-<li>eureka的服务消费者：eureka-consumer-ribbon</li>
-</ul>
-
-          
+          <blockquote>
+<p>通过上一篇<a href="https://winterchens.github.io/2017/09/27/spring-cloud-starter-dalston-2-1/">《Spring Cloud构建微服务架构：服务消费（基础）》</a>，我们已经学会如何通过<code>LoadBalancerClient</code>接口来获取某个服务的具体实例，并根据实例信息来发起服务接口消费请求。但是这样的做法需要我们手工的去编写服务选取、链接拼接等繁琐的工作，对于开发人员来说非常的不友好。所以，下来我们看看Spring Cloud中针对客户端负载均衡的工具包：Spring Cloud Ribbon。<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/10/17/spring-cloud-starter-dalston-2-2/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -591,44 +563,15 @@
 
       
         
-          
-            <blockquote>
-<p>通过前两篇<a href="https://winterchens.github.io/2017/09/27/spring-cloud-starter-dalston-2-1/">《Spring Cloud构建微服务架构：服务消费（基础）》</a>和<a href="https://winterchens.github.io/2017/09/27/spring-cloud-starter-dalston-2-2/">《Spring Cloud构建微服务架构：服务消费（Ribbon）》</a>，我们已经学会了在Spring Cloud中基本的服务调用方式。本文我们将继续介绍Spring Cloud中的另外一个服务消费的工具：Spring Cloud Feign。</p>
-</blockquote>
-<h3 id="Spring-Cloud-Feign"><a href="#Spring-Cloud-Feign" class="headerlink" title="Spring Cloud Feign"></a>Spring Cloud Feign</h3><p>Spring Cloud Feign是一套基于Netflix Feign实现的声明式服务调用客户端。它使得编写Web服务客户端变得更加简单。我们只需要通过创建接口并用注解来配置它既可完成对Web服务接口的绑定。它具备可插拔的注解支持，包括Feign注解、JAX-RS注解。它也支持可插拔的编码器和解码器。Spring Cloud Feign还扩展了对Spring MVC注解的支持，同时还整合了Ribbon和Eureka来提供均衡负载的HTTP客户端实现。</p>
-<p>下面，我们通过一个例子来展现Feign如何方便的声明对eureka-client服务的定义和调用。</p>
-<h3 id="动手试一试"><a href="#动手试一试" class="headerlink" title="动手试一试"></a>动手试一试</h3><p>下面的例子，我们将利用之前构建的<code>eureka-server</code>作为服务注册中心、<code>eureka-client</code>作为服务提供者作为基础。而基于Spring Cloud Ribbon实现的消费者，我们可以根据<code>eureka-consumer</code>实现的内容进行简单改在就能完成，具体步骤如下：</p>
-<ul>
-<li>根据<code>eureka-consumer</code>复制一个服务消费者工程，命名为：<code>eureka-consumer-feign</code>。在<code>pom.xml</code>中增加下面的依赖：</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">    ...</div><div class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-feign<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div></pre></td></tr></table></figure>
-<ul>
-<li>修改应用主类。通过<code>@EnableFeignClients</code>注解开启扫描Spring Cloud Feign客户端的功能：</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@EnableFeignClients</span></div><div class="line"><span class="meta">@EnableDiscoveryClient</span></div><div class="line"><span class="meta">@SpringBootApplication</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Application</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">new</span> SpringApplicationBuilder(Application.class).web(<span class="keyword">true</span>).run(args);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<ul>
-<li>创建一个Feign的客户端接口定义。使用<code>@FeignClient</code>注解来指定这个接口所要调用的服务名称，接口中定义的各个函数使用Spring MVC的注解就可以来绑定服务提供方的REST接口，比如下面就是绑定<code>eureka-client</code>服务的<code>/dc</code>接口的例子：</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@FeignClient</span>(<span class="string">"eureka-client"</span>)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">DcClient</span> </span>&#123;</div><div class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/dc"</span>)</div><div class="line">    <span class="function">String <span class="title">consumer</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<ul>
-<li>修改Controller。通过定义的feign客户端来调用服务提供方的接口：</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@RestController</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DcController</span> </span>&#123;</div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    DcClient dcClient;</div><div class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/consumer"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">dc</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> dcClient.consumer();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>通过Spring Cloud Feign来实现服务调用的方式更加简单了，通过<code>@FeignClient</code>定义的接口来统一的生命我们需要依赖的微服务接口。而在具体使用的时候就跟调用本地方法一点的进行调用即可。由于Feign是基于Ribbon实现的，所以它自带了客户端负载均衡功能，也可以通过Ribbon的IRule进行策略扩展。另外，Feign还整合的Hystrix来实现服务的容错保护，在Dalston版本中，Feign的Hystrix默认是关闭的。待后文介绍Hystrix带领大家入门之后，我们再结合介绍Feign中的Hystrix以及配置方式。</p>
-<p>在完成了上面你的代码编写之后，读者可以将<code>eureka-server</code>、<code>eureka-client</code>、<code>eureka-consumer-feign</code>都启动起来，然后访问<a href="http://localhost:2101/consumer" target="_blank" rel="external">http://localhost:2101/consumer</a> ，来跟踪观察<code>eureka-consumer-feign</code>服务是如何消费<code>ureka-client</code>服务的<code>/dc</code>接口的，并且也可以通过启动多个<code>eureka-client</code>服务来观察其负载均衡的效果。</p>
-<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><p>样例工程将沿用之前在码云和GitHub上创建的SpringCloud-Learning项目，重新做了一下整理。通过不同目录来区分Brixton和Dalston的示例。</p>
-<ul>
-<li>码云: <a href="https://gitee.com/didispace/SpringCloud-Learning/tree/master/2-Dalston%E7%89%88%E6%95%99%E7%A8%8B%E7%A4%BA%E4%BE%8B" target="_blank" rel="external">点击查看</a></li>
-<li>GitHub: <a href="https://github.com/dyc87112/SpringCloud-Learning/tree/master/2-Dalston%E7%89%88%E6%95%99%E7%A8%8B%E7%A4%BA%E4%BE%8B" target="_blank" rel="external">点击查看</a></li>
-</ul>
-<p>具体工程说明如下：</p>
-<ul>
-<li>eureka的服务注册中心：eureka-server</li>
-<li>eureka的服务提供方：eureka-client</li>
-<li>eureka的服务消费者：eureka-consumer-feign</li>
-</ul>
-
-          
+          <blockquote>
+<p>通过前两篇<a href="https://winterchens.github.io/2017/09/27/spring-cloud-starter-dalston-2-1/">《Spring Cloud构建微服务架构：服务消费（基础）》</a>和<a href="https://winterchens.github.io/2017/09/27/spring-cloud-starter-dalston-2-2/">《Spring Cloud构建微服务架构：服务消费（Ribbon）》</a>，我们已经学会了在Spring Cloud中基本的服务调用方式。本文我们将继续介绍Spring Cloud中的另外一个服务消费的工具：Spring Cloud Feign。<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/10/17/spring-cloud-starter-dalston-2-3/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -798,47 +741,15 @@
 
       
         
-          
-            <blockquote>
-<p>通过上一篇 <a href="https://winterchens.github.io/2017/09/27/spring-cloud-starter-dalston-1/">《Spring Cloud构建微服务架构：服务注册与发现》</a>，我们已经成功地将服务提供者：eureka-client或consul-client注册到了Eureka服务注册中心或Consul服务端上了，同时我们也通过DiscoveryClient接口的getServices获取了当前客户端缓存的所有服务清单，那么接下来我们要学习的就是：如何去消费服务提供者的接口？</p>
-</blockquote>
-<h3 id="使用LoadBalancerClient"><a href="#使用LoadBalancerClient" class="headerlink" title="使用LoadBalancerClient"></a>使用LoadBalancerClient</h3><p>在Spring Cloud Commons中提供了大量的与服务治理相关的抽象接口，包括<code>DiscoveryClient</code>、这里我们即将介绍的<code>LoadBalancerClient</code>等。对于这些接口的定义我们在上一篇介绍服务注册与发现时已经说过，Spring Cloud做这一层抽象，很好的解耦了服务治理体系，使得我们可以轻易的替换不同的服务治理设施。</p>
-<p>从<code>LoadBalancerClient</code>接口的命名中，我们就知道这是一个负载均衡客户端的抽象定义，下面我们就看看如何使用Spring Cloud提供的负载均衡器客户端接口来实现服务的消费。</p>
-<p>下面的例子，我们将利用上一篇中构建的eureka-server作为服务注册中心、eureka-client作为服务提供者作为基础。</p>
-<ul>
-<li>我们先来创建一个服务消费者工程，命名为：<code>eureka-consumer</code>。并在<code>pom.xml</code>中引入依赖（这里省略了parent和dependencyManagement的配置）：</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-eureka<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div></pre></td></tr></table></figure>
-<ul>
-<li><p>配置application.properties，指定eureka注册中心的地址：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">spring.application.name=eureka-consumer</div><div class="line">server.port=2101</div><div class="line">eureka.client.serviceUrl.defaultZone=http://localhost:1001/eureka/</div></pre></td></tr></table></figure>
-</li>
-<li><p>创建应用主类。初始化RestTemplate，用来真正发起REST请求。@EnableDiscoveryClient注解用来将当前应用加入到服务治理体系中。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@EnableDiscoveryClient</span></div><div class="line"><span class="meta">@SpringBootApplication</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Application</span> </span>&#123;</div><div class="line">	<span class="meta">@Bean</span></div><div class="line">	<span class="function"><span class="keyword">public</span> RestTemplate <span class="title">restTemplate</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">new</span> RestTemplate();</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">new</span> SpringApplicationBuilder(Application.class).web(<span class="keyword">true</span>).run(args);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>创建一个接口用来消费eureka-client提供的接口：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@RestController</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DcController</span> </span>&#123;</div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    LoadBalancerClient loadBalancerClient;</div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    RestTemplate restTemplate;</div><div class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/consumer"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">dc</span><span class="params">()</span> </span>&#123;</div><div class="line">        ServiceInstance serviceInstance = loadBalancerClient.choose(<span class="string">"eureka-client"</span>);</div><div class="line">        String url = <span class="string">"http://"</span> + serviceInstance.getHost() + <span class="string">":"</span> + serviceInstance.getPort() + <span class="string">"/dc"</span>;</div><div class="line">        System.out.println(url);</div><div class="line">        <span class="keyword">return</span> restTemplate.getForObject(url, String.class);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>可以看到这里，我们注入了<code>LoadBalancerClient</code>和<code>RestTemplate</code>，并在<code>/consumer</code>接口的实现中，先通过<code>loadBalancerClient</code>的<code>choose</code>函数来负载均衡的选出一个<code>eureka-client</code>的服务实例，这个服务实例的基本信息存储在<code>ServiceInstance</code>中，然后通过这些对象中的信息拼接出访问<code>/dc</code>接口的详细地址，最后再利用<code>estTemplate</code>对象实现对服务提供者接口的调用。</p>
-<p>在完成了上面你的代码编写之后，读者可以将<code>eureka-server</code>、<code>eureka-client</code>、<code>eureka-consumer</code>都启动起来，然后访问<a href="http://localhost:2101/consumer" target="_blank" rel="external">http://localhost:2101/consumer</a> ，来跟踪观察<code>eureka-consumer</code>服务是如何消费<code>eureka-client</code>服务的<code>/dc</code>接口的。</p>
-<p><strong>consul版的示例，可查看git仓库中的consul-client和consul-consumer</strong><br><strong>更多Spring Cloud内容请持续关注我的博客更新或在《Spring Cloud微服务实战》中获取。</strong></p>
-<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><p>样例工程将沿用之前在码云和GitHub上创建的SpringCloud-Learning项目，重新做了一下整理。通过不同目录来区分Brixton和Dalston的示例。</p>
-<ul>
-<li>码云: <a href="https://gitee.com/didispace/SpringCloud-Learning/tree/master/2-Dalston%E7%89%88%E6%95%99%E7%A8%8B%E7%A4%BA%E4%BE%8B" target="_blank" rel="external">点击查看</a></li>
-<li>GitHub: <a href="https://github.com/dyc87112/SpringCloud-Learning/tree/master/2-Dalston%E7%89%88%E6%95%99%E7%A8%8B%E7%A4%BA%E4%BE%8B" target="_blank" rel="external">点击查看</a></li>
-</ul>
-<p>具体工程说明如下：</p>
-<ul>
-<li>eureka的服务注册中心：eureka-server</li>
-<li>eureka的服务提供方：eureka-client</li>
-<li>eureka的服务消费者：eureka-consumer</li>
-<li>consul的服务提供方：consul-client</li>
-<li>consul的服务消费者：consul-consumer</li>
-</ul>
-<p>原作者：程序员didi<br>原文出处：<a href="http://blog.didispace.com/spring-cloud-starter-dalston-2-1/" target="_blank" rel="external">http://blog.didispace.com/spring-cloud-starter-dalston-2-1/</a></p>
-
-          
+          <blockquote>
+<p>通过上一篇 <a href="https://winterchens.github.io/2017/09/27/spring-cloud-starter-dalston-1/">《Spring Cloud构建微服务架构：服务注册与发现》</a>，我们已经成功地将服务提供者：eureka-client或consul-client注册到了Eureka服务注册中心或Consul服务端上了，同时我们也通过DiscoveryClient接口的getServices获取了当前客户端缓存的所有服务清单，那么接下来我们要学习的就是：如何去消费服务提供者的接口？<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/10/17/spring-cloud-starter-dalston-2-1/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>

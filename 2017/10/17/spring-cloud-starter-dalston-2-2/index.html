@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="winter的博客">
 <meta property="og:description" content="通过上一篇《Spring Cloud构建微服务架构：服务消费（基础）》，我们已经学会如何通过LoadBalancerClient接口来获取某个服务的具体实例，并根据实例信息来发起服务接口消费请求。但是这样的做法需要我们手工的去编写服务选取、链接拼接等繁琐的工作，对于开发人员来说非常的不友好。所以，下来我们看看Spring Cloud中针对客户端负载均衡的工具包：Spring Cloud Ribb">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-17T11:58:16.000Z">
+<meta property="og:updated_time" content="2017-10-17T12:24:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Cloud构建微服务架构：服务消费（Ribbon）【Dalston版】">
 <meta name="twitter:description" content="通过上一篇《Spring Cloud构建微服务架构：服务消费（基础）》，我们已经学会如何通过LoadBalancerClient接口来获取某个服务的具体实例，并根据实例信息来发起服务接口消费请求。但是这样的做法需要我们手工的去编写服务选取、链接拼接等繁琐的工作，对于开发人员来说非常的不友好。所以，下来我们看看Spring Cloud中针对客户端负载均衡的工具包：Spring Cloud Ribb">
@@ -383,7 +383,7 @@
 
       
         <blockquote>
-<p>通过上一篇<a href="https://winterchens.github.io/2017/09/27/spring-cloud-starter-dalston-2-1/">《Spring Cloud构建微服务架构：服务消费（基础）》</a>，我们已经学会如何通过<code>LoadBalancerClient</code>接口来获取某个服务的具体实例，并根据实例信息来发起服务接口消费请求。但是这样的做法需要我们手工的去编写服务选取、链接拼接等繁琐的工作，对于开发人员来说非常的不友好。所以，下来我们看看Spring Cloud中针对客户端负载均衡的工具包：Spring Cloud Ribbon。</p>
+<p>通过上一篇<a href="https://winterchens.github.io/2017/09/27/spring-cloud-starter-dalston-2-1/">《Spring Cloud构建微服务架构：服务消费（基础）》</a>，我们已经学会如何通过<code>LoadBalancerClient</code>接口来获取某个服务的具体实例，并根据实例信息来发起服务接口消费请求。但是这样的做法需要我们手工的去编写服务选取、链接拼接等繁琐的工作，对于开发人员来说非常的不友好。所以，下来我们看看Spring Cloud中针对客户端负载均衡的工具包：Spring Cloud Ribbon。<br><a id="more"></a></p>
 </blockquote>
 <h3 id="Spring-Cloud-Ribbon"><a href="#Spring-Cloud-Ribbon" class="headerlink" title="Spring Cloud Ribbon"></a>Spring Cloud Ribbon</h3><p>Spring Cloud Ribbon是基于Netflix Ribbon实现的一套客户端负载均衡的工具。它是一个基于HTTP和TCP的客户端负载均衡器。它可以通过在客户端中配置ribbonServerList来设置服务端列表去轮询访问以达到均衡负载的作用。</p>
 <p>当Ribbon与Eureka联合使用时，ribbonServerList会被DiscoveryEnabledNIWSServerList重写，扩展成从Eureka注册中心中获取服务实例列表。同时它也会用NIWSDiscoveryPing来取代IPing，它将职责委托给Eureka来确定服务端是否已经启动。</p>
