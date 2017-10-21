@@ -87,7 +87,7 @@
 <meta property="og:description" content="前言  在上一篇《Spring Cloud构建微服务架构：服务容错保护（Hystrix服务降级）》中，我们已经体验了如何使用@HystrixCommand来为一个依赖资源定义服务降级逻辑。实现方式非常简单，同时对于降级逻辑还能实现一些更加复杂的级联降级等策略。之前对于使用Hystrix来实现服务容错保护时，除了服务降级之外，我们还提到过线程隔离、断路器等功能。那么在本篇中我们就来具体说说线程隔离。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://img.blog.csdn.net/20171020165611141?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvV2ludGVyX2NoZW4wMDE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-10-21T12:06:41.000Z">
+<meta property="og:updated_time" content="2017-10-21T12:11:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Cloud构建微服务架构：服务容错保护（Hystrix依赖隔离）【Dalston版】">
 <meta name="twitter:description" content="前言  在上一篇《Spring Cloud构建微服务架构：服务容错保护（Hystrix服务降级）》中，我们已经体验了如何使用@HystrixCommand来为一个依赖资源定义服务降级逻辑。实现方式非常简单，同时对于降级逻辑还能实现一些更加复杂的级联降级等策略。之前对于使用Hystrix来实现服务容错保护时，除了服务降级之外，我们还提到过线程隔离、断路器等功能。那么在本篇中我们就来具体说说线程隔离。">
@@ -385,7 +385,7 @@
 
       
         <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
-<p> 在上一篇《Spring Cloud构建微服务架构：服务容错保护（Hystrix服务降级）》中，我们已经体验了如何使用@HystrixCommand来为一个依赖资源定义服务降级逻辑。实现方式非常简单，同时对于降级逻辑还能实现一些更加复杂的级联降级等策略。之前对于使用Hystrix来实现服务容错保护时，除了服务降级之外，我们还提到过线程隔离、断路器等功能。那么在本篇中我们就来具体说说线程隔离。<br><a id="more"></a></p>
+<p> 在上一篇<a href="https://winterchens.github.io/2017/10/21/spring-cloud-starter-dalston-4-1/">《Spring Cloud构建微服务架构：服务容错保护（Hystrix服务降级）》</a>中，我们已经体验了如何使用@HystrixCommand来为一个依赖资源定义服务降级逻辑。实现方式非常简单，同时对于降级逻辑还能实现一些更加复杂的级联降级等策略。之前对于使用Hystrix来实现服务容错保护时，除了服务降级之外，我们还提到过线程隔离、断路器等功能。那么在本篇中我们就来具体说说线程隔离。<br><a id="more"></a></p>
 </blockquote>
 <h3 id="依赖隔离"><a href="#依赖隔离" class="headerlink" title="依赖隔离"></a>依赖隔离</h3><p>舱壁模式”对于熟悉Docker的读者一定不陌生，Docker通过“舱壁模式”实现进程的隔离，使得容器与容器之间不会互相影响。而Hystrix则使用该模式实现线程池的隔离，它会为每一个Hystrix命令创建一个独立的线程池，这样就算某个在Hystrix命令包装下的依赖服务出现延迟过高的情况，也只是对该依赖服务的调用产生影响，而不会拖慢其他的服务。</p>
 <p>通过对依赖服务的线程池隔离实现，可以带来如下优势：</p>
