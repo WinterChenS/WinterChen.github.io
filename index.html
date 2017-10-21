@@ -262,6 +262,1312 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/21/spring-cloud-starter-dalston-5-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="winter chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://blog-1253516459.cossh.myqcloud.com/blog_img/2013010611300812.jpg?sign=sp7r7Suu4OZUAtsK8cuYA5FstKphPTEyNTM1MTY0NTkmaz1BS0lEWjJLUmx1ZGhLbjRGSEFHUW80Qjh4ZUJYd0dQTmFsQlEmZT0xNTA5MDA2NjE2JnQ9MTUwNjQxNDYxNiZyPTIxNDE4MjM5NjgmZj0vYmxvZ19pbWcvMjAxMzAxMDYxMTMwMDgxMi5qcGcmYj1ibG9n">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="winter的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/21/spring-cloud-starter-dalston-5-1/" itemprop="url">Spring Cloud构建微服务架构：Hystrix监控面板【Dalston版】</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T20:50:00+08:00">
+                2017-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring-Cloud/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring Cloud</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,471
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  6
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p> 在上一篇<a href="http://blog.csdn.net/Winter_chen001/article/details/78297533" target="_blank" rel="external">《服务容错保护（hystrix断路器）》</a>的介绍中，我们提到断路器是根据一段时间窗内的请求情况来判断并操作断路器的打开和关闭状态的。而这些请求情况的指标信息都是HystrixCommand和HystrixObservableCommand实例在执行过程中记录的重要度量信息，它们除了Hystrix断路器实现中使用之外，对于系统运维也有非常大的帮助。这些指标信息会以“滚动时间窗”与“桶”结合的方式进行汇总，并在内存中驻留一段时间，以供内部或外部进行查询使用，Hystrix Dashboard就是这些指标内容的消费者之一。</p>
+</blockquote>
+<p>下面我们基于之前的示例来结合Hystrix Dashboard实现Hystrix指标数据的可视化面板，这里我们将用到下之前实现的几个应用，包括：</p>
+<ul>
+<li>eureka-server：服务注册中心</li>
+<li>eureka-client：服务提供者</li>
+<li>eureka-consumer-ribbon-hystrix：使用ribbon和hystrix实现的服务消费者</li>
+</ul>
+<p>由于 <font color="#FFB90F">eureka-consumer-ribbon-hystrix</font> 项目中的 <font color="#FFB90F">/consumer</font> 接口实现使用了 <font color="#FFB90F">@HystrixCommand</font> 修饰，所以这个接口的调用情况会被Hystrix记录下来，以用来给断路器和Hystrix Dashboard使用。断路器我们在上一篇中已经介绍过了，下面我们来具体说说Hystrix Dashboard的构建。</p>
+<h3 id="动手试一试"><a href="#动手试一试" class="headerlink" title="动手试一试"></a>动手试一试</h3><ul>
+<li><p>在Spring Cloud中构建一个Hystrix Dashboard非常简单，只需要下面四步：</p>
+</li>
+<li><p>创建一个标准的Spring Boot工程，命名为：hystrix-dashboard。<br>编辑pom.xml，具体依赖内容如下：</p>
+</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">parent</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>Dalston.SR1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">relativePath</span> /&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">parent</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-hystrix<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-hystrix-dashboard<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div></pre></td></tr></table></figure>
+<ul>
+<li>为应用主类加上@EnableHystrixDashboard，启用Hystrix Dashboard功能。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@EnableHystrixDashboard</span></div><div class="line"><span class="meta">@SpringCloudApplication</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HystrixDashboardApplication</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SpringApplication.run(HystrixDashboardApplication.class, args);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>根据实际情况修改application.properties配置文件，比如：选择一个未被占用的端口等，此步非必须。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">spring.application.name=hystrix-dashboard</div><div class="line">server.port=1301</div></pre></td></tr></table></figure>
+<p>到这里我们已经完成了基本配置，接下来我们可以启动该应用，并访问：<a href="http://localhost:1301/hystrix，我们可以看到如下页面：" target="_blank" rel="external">http://localhost:1301/hystrix，我们可以看到如下页面：</a></p>
+<p><img src="http://img.blog.csdn.net/20171020171833798?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvV2ludGVyX2NoZW4wMDE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>这是Hystrix Dashboard的监控首页，该页面中并没有具体的监控信息。从页面的文字内容中我们可以知道，Hystrix Dashboard共支持三种不同的监控方式，依次为：</p>
+<ul>
+<li>默认的集群监控：通过URL <a href="http://turbine-hostname:port/turbine.stream" target="_blank" rel="external">http://turbine-hostname:port/turbine.stream</a> 开启，实现对默认集群的监控。</li>
+<li>指定的集群监控：通过URL <a href="http://turbine-hostname:port/turbine.stream?cluster=[clusterName]开启，实现对" target="_blank" rel="external">http://turbine-hostname:port/turbine.stream?cluster=[clusterName]开启，实现对</a> <font color="#FFB90F">clusterName</font> 集群的监控。</li>
+<li>单体应用的监控：通过URL<a href="http://hystrix-app:port/hystrix.stream开启，实现对具体某个服务实例的监控。" target="_blank" rel="external">http://hystrix-app:port/hystrix.stream开启，实现对具体某个服务实例的监控。</a></li>
+</ul>
+<p>前两者都对集群的监控，需要整合Turbine才能实现，这部分内容我们将在下一篇中做详细介绍。在本节中，我们主要实现对单个服务实例的监控，所以这里我们先来实现单个服务实例的监控。</p>
+<p>既然Hystrix Dashboard监控单实例节点需要通过访问实例的 <font color="#FFB90F">/hystrix.stream</font> 接口来实现，自然我们需要为服务实例添加这个端点，而添加该功能的步骤也同样简单，只需要下面两步：</p>
+<ul>
+<li>在服务实例 <font color="#FFB90F">pom.xml</font> 中的 <font color="#FFB90F">dependencies</font> 节点中新增 <font color="#FFB90F">spring-boot-starter-actuator</font> 监控模块以开启监控相关的端点，并确保已经引入断路器的依赖 <font color="#FFB90F">spring-cloud-starter-hystrix</font> ：</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-hystrix<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
+<ul>
+<li>确保在服务实例的主类中已经使用 <font color="#FFB90F">@EnableCircuitBreaker</font> 或 <font color="#FFB90F">@EnableHystrix</font> 注解，开启了断路器功能。</li>
+</ul>
+<p>到这里已经完成了所有的配置，我们可以在Hystrix Dashboard的首页输入<a href="http://localhost:2101/hystrix.stream，已启动对“eureka-consumer-ribbon-hystrix”的监控，点击“Monitor" target="_blank" rel="external">http://localhost:2101/hystrix.stream，已启动对“eureka-consumer-ribbon-hystrix”的监控，点击“Monitor</a> Stream”按钮，此时我们可以看到如下页面：</p>
+<p><img src="http://img.blog.csdn.net/20171020172243894?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvV2ludGVyX2NoZW4wMDE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>在对该页面介绍前，我们先看看在首页中我们还没有介绍的两外两个参数：</p>
+<ul>
+<li><font color="#FFB90F">Delay</font> ：该参数用来控制服务器上轮询监控信息的延迟时间，默认为2000毫秒，我们可以通过配置该属性来降低客户端的网络和CPU消耗。</li>
+<li><font color="#FFB90F">Title</font> ：该参数对应了上图头部标题Hystrix Stream之后的内容，默认会使用具体监控实例的URL，我们可以通过配置该信息来展示更合适的标题。</li>
+</ul>
+<p>回到监控页面，我们来详细说说其中各元素的具体含义：</p>
+<ul>
+<li><p>我们可以在监控信息的左上部分找到两个重要的图形信息：一个实心圆和一条曲线。</p>
+<ul>
+<li>实心圆：共有两种含义。它通过颜色的变化代表了实例的健康程度，如下图所示，它的健康度从绿色、黄色、橙色、红色递减。该实心圆除了颜色的变化之外，它的大小也会根据实例的请求流量发生变化，流量越大该实心圆就越大。所以通过该实心圆的展示，我们就可以在大量的实例中快速的发现故障实例和高压力实例。<br><img src="http://img.blog.csdn.net/20171020172414105?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvV2ludGVyX2NoZW4wMDE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></li>
+</ul>
+</li>
+</ul>
+<pre><code>* 曲线：用来记录2分钟内流量的相对变化，我们可以通过它来观察到流量的上升和下降趋势。
+</code></pre><ul>
+<li>其他一些数量指标如下图所示：<br><img src="http://img.blog.csdn.net/20171020172455565?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvV2ludGVyX2NoZW4wMDE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></li>
+</ul>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><p>样例工程将沿用之前在码云和GitHub上创建的SpringCloud-Learning项目，重新做了一下整理。通过不同目录来区分Brixton和Dalston的示例。</p>
+<ul>
+<li>码云: <a href="https://gitee.com/didispace/SpringCloud-Learning/tree/master/2-Dalston%E7%89%88%E6%95%99%E7%A8%8B%E7%A4%BA%E4%BE%8B" target="_blank" rel="external">点击查看</a></li>
+<li>GitHub: <a href="https://github.com/dyc87112/SpringCloud-Learning/tree/master/2-Dalston%E7%89%88%E6%95%99%E7%A8%8B%E7%A4%BA%E4%BE%8B" target="_blank" rel="external">点击查看</a></li>
+</ul>
+<p>原作者：程序员didi<br>原文出处：<a href="http://blog.didispace.com/spring-cloud-starter-dalston-2-1/" target="_blank" rel="external">http://blog.didispace.com/spring-cloud-starter-dalston-2-1/</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/21/spring-cloud-starter-dalston-4-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="winter chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://blog-1253516459.cossh.myqcloud.com/blog_img/2013010611300812.jpg?sign=sp7r7Suu4OZUAtsK8cuYA5FstKphPTEyNTM1MTY0NTkmaz1BS0lEWjJLUmx1ZGhLbjRGSEFHUW80Qjh4ZUJYd0dQTmFsQlEmZT0xNTA5MDA2NjE2JnQ9MTUwNjQxNDYxNiZyPTIxNDE4MjM5NjgmZj0vYmxvZ19pbWcvMjAxMzAxMDYxMTMwMDgxMi5qcGcmYj1ibG9n">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="winter的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/21/spring-cloud-starter-dalston-4-3/" itemprop="url">Spring Cloud构建微服务架构：服务容错保护（Hystrix断路器）【Dalston版】</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T20:35:00+08:00">
+                2017-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring-Cloud/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring Cloud</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,368
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
+<p>在前两篇《Spring Cloud构建微服务架构：服务容错保护（Hystrix服务降级）》和《Spring Cloud构建微服务架构：服务容错保护（Hystrix依赖隔离）》中，我们对Hystrix提供的服务降级和依赖隔离有了基本的认识。下面我们将继续说说Hystrix的另外一个重要元件：断路器。</p>
+</blockquote>
+<h3 id="断路器"><a href="#断路器" class="headerlink" title="断路器"></a>断路器</h3><p>断路器模式源于Martin Fowler的Circuit Breaker一文。“断路器”本身是一种开关装置，用于在电路上保护线路过载，当线路中有电器发生短路时，“断路器”能够及时的切断故障电路，防止发生过载、发热、甚至起火等严重后果。</p>
+<p>在分布式架构中，断路器模式的作用也是类似的，当某个服务单元发生故障（类似用电器发生短路）之后，通过断路器的故障监控（类似熔断保险丝），直接切断原来的主逻辑调用。但是，在Hystrix中的断路器除了切断主逻辑的功能之外，还有更复杂的逻辑，下面我们来看看它更为深层次的处理逻辑。</p>
+<p>以在 <a href="http://blog.csdn.net/winter_chen001/article/details/78297234" target="_blank" rel="external">《Spring Cloud构建微服务架构：服务容错保护（Hystrix服务降级）》</a> 一文中实现的服务降级例子为示例，我们来说说断路器的工作原理。当我们把服务提供者eureka-client中加入了模拟的时间延迟之后，在服务消费端的服务降级逻辑因为hystrix命令调用依赖服务超时，触发了降级逻辑，但是即使这样，受限于Hystrix超时时间的问题，我们的调用依然很有可能产生堆积。</p>
+<ul>
+<li><p>这个时候断路器就会发挥作用，那么断路器是在什么情况下开始起作用呢？这里涉及到断路器的三个重要参数：快照时间窗、请求总数下限、错误百分比下限。这个参数的作用分别是：</p>
+</li>
+<li><p>快照时间窗：断路器确定是否打开需要统计一些请求和错误数据，而统计的时间范围就是快照时间窗，默认为最近的10秒。<br>请求总数下限：在快照时间窗内，必须满足请求总数下限才有资格根据熔断。默认为20，意味着在10秒内，如果该hystrix命令的调用此时不足20次，即时所有的请求都超时或其他原因失败，断路器都不会打开。</p>
+</li>
+<li>错误百分比下限：当请求总数在快照时间窗内超过了下限，比如发生了30次调用，如果在这30次调用中，有16次发生了超时异常，也就是超过50%的错误百分比，在默认设定50%下限情况下，这时候就会将断路器打开。</li>
+</ul>
+<p>那么当断路器打开之后会发生什么呢？我们先来说说断路器未打开之前，对于之前那个示例的情况就是每个请求都会在当hystrix超时之后返回<font color="#FFB90F">fallback</font>，每个请求时间延迟就是近似hystrix的超时时间，如果设置为5秒，那么每个请求就都要延迟5秒才会返回。当熔断器在10秒内发现请求总数超过20，并且错误百分比超过50%，这个时候熔断器打开。打开之后，再有请求调用的时候，将不会调用主逻辑，而是直接调用降级逻辑，这个时候就不会等待5秒之后才返回fallback。通过断路器，实现了自动地发现错误并将降级逻辑切换为主逻辑，减少响应延迟的效果。</p>
+<p>在断路器打开之后，处理逻辑并没有结束，我们的降级逻辑已经被成了主逻辑，那么原来的主逻辑要如何恢复呢？对于这一问题，hystrix也为我们实现了自动恢复功能。当断路器打开，对主逻辑进行熔断之后，hystrix会启动一个休眠时间窗，在这个时间窗内，降级逻辑是临时的成为主逻辑，当休眠时间窗到期，断路器将进入半开状态，释放一次请求到原来的主逻辑上，如果此次请求正常返回，那么断路器将继续闭合，主逻辑恢复，如果这次请求依然有问题，断路器继续进入打开状态，休眠时间窗重新计时。</p>
+<p>通过上面的一系列机制，hystrix的断路器实现了对依赖资源故障的端口、对降级策略的自动切换以及对主逻辑的自动恢复机制。这使得我们的微服务在依赖外部服务或资源的时候得到了非常好的保护，同时对于一些具备降级逻辑的业务需求可以实现自动化的切换与恢复，相比于设置开关由监控和运维来进行切换的传统实现方式显得更为智能和高效。</p>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><p>样例工程将沿用之前在码云和GitHub上创建的SpringCloud-Learning项目，重新做了一下整理。通过不同目录来区分Brixton和Dalston的示例。</p>
+<ul>
+<li>码云: <a href="https://gitee.com/didispace/SpringCloud-Learning/tree/master/2-Dalston%E7%89%88%E6%95%99%E7%A8%8B%E7%A4%BA%E4%BE%8B" target="_blank" rel="external">点击查看</a></li>
+<li>GitHub: <a href="https://github.com/dyc87112/SpringCloud-Learning/tree/master/2-Dalston%E7%89%88%E6%95%99%E7%A8%8B%E7%A4%BA%E4%BE%8B" target="_blank" rel="external">点击查看</a></li>
+</ul>
+<p>原作者：程序员didi<br>原文出处：<a href="http://blog.didispace.com/spring-cloud-starter-dalston-2-1/" target="_blank" rel="external">http://blog.didispace.com/spring-cloud-starter-dalston-2-1/</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/21/spring-cloud-starter-dalston-4-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="winter chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://blog-1253516459.cossh.myqcloud.com/blog_img/2013010611300812.jpg?sign=sp7r7Suu4OZUAtsK8cuYA5FstKphPTEyNTM1MTY0NTkmaz1BS0lEWjJLUmx1ZGhLbjRGSEFHUW80Qjh4ZUJYd0dQTmFsQlEmZT0xNTA5MDA2NjE2JnQ9MTUwNjQxNDYxNiZyPTIxNDE4MjM5NjgmZj0vYmxvZ19pbWcvMjAxMzAxMDYxMTMwMDgxMi5qcGcmYj1ibG9n">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="winter的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/21/spring-cloud-starter-dalston-4-2/" itemprop="url">Spring Cloud构建微服务架构：服务容错保护（Hystrix依赖隔离）【Dalston版】</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T20:30:00+08:00">
+                2017-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring-Cloud/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring Cloud</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,835
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  6
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
+<p> 在上一篇《Spring Cloud构建微服务架构：服务容错保护（Hystrix服务降级）》中，我们已经体验了如何使用@HystrixCommand来为一个依赖资源定义服务降级逻辑。实现方式非常简单，同时对于降级逻辑还能实现一些更加复杂的级联降级等策略。之前对于使用Hystrix来实现服务容错保护时，除了服务降级之外，我们还提到过线程隔离、断路器等功能。那么在本篇中我们就来具体说说线程隔离。</p>
+</blockquote>
+<h3 id="依赖隔离"><a href="#依赖隔离" class="headerlink" title="依赖隔离"></a>依赖隔离</h3><p>舱壁模式”对于熟悉Docker的读者一定不陌生，Docker通过“舱壁模式”实现进程的隔离，使得容器与容器之间不会互相影响。而Hystrix则使用该模式实现线程池的隔离，它会为每一个Hystrix命令创建一个独立的线程池，这样就算某个在Hystrix命令包装下的依赖服务出现延迟过高的情况，也只是对该依赖服务的调用产生影响，而不会拖慢其他的服务。</p>
+<p>通过对依赖服务的线程池隔离实现，可以带来如下优势：</p>
+<ul>
+<li>应用自身得到完全的保护，不会受不可控的依赖服务影响。即便给依赖服务分配的线程池被填满，也不会影响应用自身的额其余部分。</li>
+<li>可以有效的降低接入新服务的风险。如果新服务接入后运行不稳定或存在问题，完全不会影响到应用其他的请求。</li>
+<li>当依赖的服务从失效恢复正常后，它的线程池会被清理并且能够马上恢复健康的服务，相比之下容器级别的清理恢复速度要慢得多。</li>
+<li>当依赖的服务出现配置错误的时候，线程池会快速的反应出此问题（通过失败次数、延迟、超时、拒绝等指标的增加情况）。同时，我们可以在不影响应用功能的情况下通过实时的动态属性刷新（后续会通过Spring Cloud Config与Spring Cloud Bus的联合使用来介绍）来处理它。</li>
+<li>当依赖的服务因实现机制调整等原因造成其性能出现很大变化的时候，此时线程池的监控指标信息会反映出这样的变化。同时，我们也可以通过实时动态刷新自身应用对依赖服务的阈值进行调整以适应依赖方的改变。</li>
+<li>除了上面通过线程池隔离服务发挥的优点之外，每个专有线程池都提供了内置的并发实现，可以利用它为同步的依赖服务构建异步的访问。</li>
+</ul>
+<p>总之，通过对依赖服务实现线程池隔离，让我们的应用更加健壮，不会因为个别依赖服务出现问题而引起非相关服务的异常。同时，也使得我们的应用变得更加灵活，可以在不停止服务的情况下，配合动态配置刷新实现性能配置上的调整。</p>
+<p>虽然线程池隔离的方案带了如此多的好处，但是很多使用者可能会担心为每一个依赖服务都分配一个线程池是否会过多地增加系统的负载和开销。对于这一点，使用者不用过于担心，因为这些顾虑也是大部分工程师们会考虑到的，Netflix在设计Hystrix的时候，认为线程池上的开销相对于隔离所带来的好处是无法比拟的。同时，Netflix也针对线程池的开销做了相关的测试，以证明和打消Hystrix实现对性能影响的顾虑。</p>
+<p>下图是Netflix Hystrix官方提供的一个Hystrix命令的性能监控，该命令以每秒60个请求的速度（QPS）向一个单服务实例进行访问，该服务实例每秒运行的线程数峰值为350个。</p>
+<p><img src="http://img.blog.csdn.net/20171020165611141?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvV2ludGVyX2NoZW4wMDE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<table>
+<thead>
+<tr>
+<th>比较情况</th>
+<th>未使用线程池隔离</th>
+<th>使用了线程池隔离</th>
+<th>耗时差距</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>中位数</td>
+<td>2ms</td>
+<td>2ms</td>
+<td>2ms</td>
+</tr>
+<tr>
+<td>90百分位</td>
+<td>5ms</td>
+<td>8ms</td>
+<td>3ms</td>
+</tr>
+<tr>
+<td>99百分位</td>
+<td>28ms</td>
+<td>37ms</td>
+<td>9ms</td>
+</tr>
+</tbody>
+</table>
+<p>在99%的情况下，使用线程池隔离的延迟有9ms，对于大多数需求来说这样的消耗是微乎其微的，更何况为系统在稳定性和灵活性上所带来的巨大提升。虽然对于大部分的请求我们可以忽略线程池的额外开销，而对于小部分延迟本身就非常小的请求（可能只需要1ms），那么9ms的延迟开销还是非常昂贵的。实际上Hystrix也为此设计了另外的一个解决方案：信号量。</p>
+<p>Hystrix中除了使用线程池之外，还可以使用信号量来控制单个依赖服务的并发度，信号量的开销要远比线程池的开销小得多，但是它不能设置超时和实现异步访问。所以，只有在依赖服务是足够可靠的情况下才使用信号量。在HystrixCommand和HystrixObservableCommand中2处支持信号量的使用：</p>
+<ul>
+<li>命令执行：如果隔离策略参数execution.isolation.strategy设置为SEMAPHORE，Hystrix会使用信号量替代线程池来控制依赖服务的并发控制。</li>
+<li>降级逻辑：当Hystrix尝试降级逻辑时候，它会在调用线程中使用信号量。</li>
+</ul>
+<p>信号量的默认值为10，我们也可以通过动态刷新配置的方式来控制并发线程的数量。对于信号量大小的估算方法与线程池并发度的估算类似。仅访问内存数据的请求一般耗时在1ms以内，性能可以达到5000rps，这样级别的请求我们可以将信号量设置为1或者2，我们可以按此标准并根据实际请求耗时来设置信号量。</p>
+<h3 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h3><p>说了那么多依赖隔离的好处，那么我们如何使用Hystrix来实现依赖隔离呢？其实，我们在上一篇定义服务降级的时候，已经自动的实现了依赖隔离。</p>
+<p>在上一篇的示例中，我们使用了@HystrixCommand来将某个函数包装成了Hystrix命令，这里除了定义服务降级之外，Hystrix框架就会自动的为这个函数实现调用的隔离。所以，依赖隔离、服务降级在使用时候都是一体化实现的，这样利用Hystrix来实现服务容错保护在编程模型上就非常方便的，并且考虑更为全面。除了依赖隔离、服务降级之外，还有一个重要元素：断路器。我们将在下一篇做详细的介绍，这三个重要利器构成了Hystrix实现服务容错保护的强力组合拳。</p>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><p>样例工程将沿用之前在码云和GitHub上创建的SpringCloud-Learning项目，重新做了一下整理。通过不同目录来区分Brixton和Dalston的示例。</p>
+<ul>
+<li>码云: <a href="https://gitee.com/didispace/SpringCloud-Learning/tree/master/2-Dalston%E7%89%88%E6%95%99%E7%A8%8B%E7%A4%BA%E4%BE%8B" target="_blank" rel="external">点击查看</a></li>
+<li>GitHub: <a href="https://github.com/dyc87112/SpringCloud-Learning/tree/master/2-Dalston%E7%89%88%E6%95%99%E7%A8%8B%E7%A4%BA%E4%BE%8B" target="_blank" rel="external">点击查看</a></li>
+</ul>
+<p>原作者：程序员didi<br>原文出处：<a href="http://blog.didispace.com/spring-cloud-starter-dalston-2-1/" target="_blank" rel="external">http://blog.didispace.com/spring-cloud-starter-dalston-2-1/</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/21/spring-cloud-starter-dalston-4-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="winter chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://blog-1253516459.cossh.myqcloud.com/blog_img/2013010611300812.jpg?sign=sp7r7Suu4OZUAtsK8cuYA5FstKphPTEyNTM1MTY0NTkmaz1BS0lEWjJLUmx1ZGhLbjRGSEFHUW80Qjh4ZUJYd0dQTmFsQlEmZT0xNTA5MDA2NjE2JnQ9MTUwNjQxNDYxNiZyPTIxNDE4MjM5NjgmZj0vYmxvZ19pbWcvMjAxMzAxMDYxMTMwMDgxMi5qcGcmYj1ibG9n">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="winter的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/21/spring-cloud-starter-dalston-4-1/" itemprop="url">Spring Cloud构建微服务架构：服务容错保护（Hystrix服务降级）【Dalston版】</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T20:22:00+08:00">
+                2017-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring-Cloud/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring Cloud</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,220
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>在微服务架构中，我们将系统拆分成了一个个的服务单元，各单元应用间通过服务注册与订阅的方式互相依赖。由于每个单元都在不同的进程中运行，依赖通过远程调用的方式执行，这样就有可能因为网络原因或是依赖服务自身问题出现调用故障或延迟，而这些问题会直接导致调用方的对外服务也出现延迟，若此时调用方的请求不断增加，最后就会出现因等待出现故障的依赖方响应而形成任务积压，线程资源无法释放，最终导致自身服务的瘫痪，进一步甚至出现故障的蔓延最终导致整个系统的瘫痪。如果这样的架构存在如此严重的隐患，那么相较传统架构就更加的不稳定。为了解决这样的问题，因此产生了断路器等一系列的服务保护机制。</p>
+<p>针对上述问题，在Spring Cloud Hystrix中实现了线程隔离、断路器等一系列的服务保护功能。它也是基于Netflix的开源框架 Hystrix实现的，该框架目标在于通过控制那些访问远程系统、服务和第三方库的节点，从而对延迟和故障提供更强大的容错能力。Hystrix具备了服务降级、服务熔断、线程隔离、请求缓存、请求合并以及服务监控等强大功能。</p>
+<p>接下来，我们就从一个简单示例开始对Spring Cloud Hystrix的学习与使用。</p>
+<h3 id="动手试一试"><a href="#动手试一试" class="headerlink" title="动手试一试"></a>动手试一试</h3><p>在开始使用Spring Cloud Hystrix实现断路器之前，我们先拿之前实现的一些内容作为基础，其中包括：</p>
+<ul>
+<li><font color="#FFB90F">eureka-server</font> 工程：服务注册中心，端口：1001</li>
+<li><font color="#FFB90F">eureka-client</font> 工程：服务提供者，两个实例启动端口分别为2001</li>
+</ul>
+<p>下面我们可以复制一下之前实现的一个服务消费者： <font color="#FFB90F">eureka-consumer-ribbon</font> ，命名为 <font color="#FFB90F">eureka-consumer-ribbon-hystrix</font> 。下面我们开始对其进行改在：</p>
+<p>第一步： <font color="#FFB90F">pom.xml</font> 的dependencies节点中引入 <font color="#FFB90F">spring-cloud-starter-hystrix</font> 依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-hystrix<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>第二步：在应用主类中使用@EnableCircuitBreaker或@EnableHystrix注解开启Hystrix的使用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@EnableCircuitBreaker</span></div><div class="line"><span class="meta">@EnableDiscoveryClient</span></div><div class="line"><span class="meta">@SpringBootApplication</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Application</span> </span>&#123;</div><div class="line">	<span class="meta">@Bean</span></div><div class="line">	<span class="meta">@LoadBalanced</span></div><div class="line">	<span class="function"><span class="keyword">public</span> RestTemplate <span class="title">restTemplate</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">new</span> RestTemplate();</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">new</span> SpringApplicationBuilder(Application.class).web(<span class="keyword">true</span>).run(args);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>注意：这里我们还可以使用Spring Cloud应用中的@SpringCloudApplication注解来修饰应用主类，该注解的具体定义如下所示。我们可以看到该注解中包含了上我们所引用的三个注解，这也意味着一个Spring Cloud标准应用应包含服务发现以及断路器。</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)</div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</div><div class="line"><span class="meta">@Documented</span></div><div class="line"><span class="meta">@Inherited</span></div><div class="line"><span class="meta">@SpringBootApplication</span></div><div class="line"><span class="meta">@EnableDiscoveryClient</span></div><div class="line"><span class="meta">@EnableCircuitBreaker</span></div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> SpringCloudApplication &#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>第三步：改造服务消费方式，新增 <font color="#FFB90F">ConsumerService</font> 类，然后将在 <font color="#FFB90F">Controller</font> 中的逻辑迁移过去。最后，在为具体执行逻辑的函数上增加 <font color="#FFB90F">@HystrixCommand</font> 注解来指定服务降级方法，比如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@RestController</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DcController</span> </span>&#123;</div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    ConsumerService consumerService;</div><div class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/consumer"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">dc</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> consumerService.consumer();</div><div class="line">    &#125;</div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">ConsumerService</span> </span>&#123;</div><div class="line">        <span class="meta">@Autowired</span></div><div class="line">        RestTemplate restTemplate;</div><div class="line">        <span class="meta">@HystrixCommand</span>(fallbackMethod = <span class="string">"fallback"</span>)</div><div class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">consumer</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> restTemplate.getForObject(<span class="string">"http://eureka-client/dc"</span>, String.class);</div><div class="line">        &#125;</div><div class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">fallback</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="string">"fallback"</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>下面我们来验证一下上面Hystrix带来的一些基础功能。我们先把涉及的服务都启动起来，然后访问 <font color="#FFB90F">localhost:2101/consumer</font> ，此时可以获取正常的返回，比如： <font color="#FFB90F">Services: [eureka-consumer-ribbon-hystrix, eureka-client]</font> 。</p>
+<p>为了触发服务降级逻辑，我们可以将服务提供者 <font color="#FFB90F">eureka-client</font> 的逻辑加一些延迟，比如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@GetMapping</span>(<span class="string">"/dc"</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> String <span class="title">dc</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">    Thread.sleep(<span class="number">5000L</span>);</div><div class="line">    String services = <span class="string">"Services: "</span> + discoveryClient.getServices();</div><div class="line">    System.out.println(services);</div><div class="line">    <span class="keyword">return</span> services;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>重启 <font color="#FFB90F">eureka-client</font> 之后，再尝试访问 <font color="#FFB90F">localhost:2101/consumer</font> ，此时我们将获得的返回结果为： <font color="#FFB90F">fallback</font> 。我们从 <font color="#FFB90F">eureka-client</font> 的控制台中，可以看到服务提供方输出了原本要返回的结果，但是由于返回前延迟了5秒，而服务消费方触发了服务请求超时异常，服务消费者就通过 <font color="#FFB90F">HystrixCommand</font> 注解中指定的降级逻辑进行执行，因此该请求的结果返回了 <font color="#FFB90F">fallback</font> 。这样的机制，对自身服务起到了基础的保护，同时还为异常情况提供了自动的服务降级切换机制。</p>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><p>样例工程将沿用之前在码云和GitHub上创建的SpringCloud-Learning项目，重新做了一下整理。通过不同目录来区分Brixton和Dalston的示例。</p>
+<ul>
+<li>码云: <a href="https://gitee.com/didispace/SpringCloud-Learning/tree/master/2-Dalston%E7%89%88%E6%95%99%E7%A8%8B%E7%A4%BA%E4%BE%8B" target="_blank" rel="external">点击查看</a></li>
+<li>GitHub: <a href="https://github.com/dyc87112/SpringCloud-Learning/tree/master/2-Dalston%E7%89%88%E6%95%99%E7%A8%8B%E7%A4%BA%E4%BE%8B" target="_blank" rel="external">点击查看</a></li>
+</ul>
+<p>具体工程说明如下：</p>
+<ul>
+<li>eureka的服务注册中心：eureka-server</li>
+<li>eureka的服务提供方：eureka-client</li>
+<li>eureka的服务消费者：eureka-consumer-ribbon-hystrix</li>
+</ul>
+<p>原作者：程序员didi<br>原文出处：<a href="http://blog.didispace.com/spring-cloud-starter-dalston-2-1/" target="_blank" rel="external">http://blog.didispace.com/spring-cloud-starter-dalston-2-1/</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/21/spring-cloud-starter-dalston-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="winter chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://blog-1253516459.cossh.myqcloud.com/blog_img/2013010611300812.jpg?sign=sp7r7Suu4OZUAtsK8cuYA5FstKphPTEyNTM1MTY0NTkmaz1BS0lEWjJLUmx1ZGhLbjRGSEFHUW80Qjh4ZUJYd0dQTmFsQlEmZT0xNTA5MDA2NjE2JnQ9MTUwNjQxNDYxNiZyPTIxNDE4MjM5NjgmZj0vYmxvZ19pbWcvMjAxMzAxMDYxMTMwMDgxMi5qcGcmYj1ibG9n">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="winter的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/21/spring-cloud-starter-dalston-3/" itemprop="url">Spring Cloud构建微服务架构：分布式配置中心【Dalston版】</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T20:15:00+08:00">
+                2017-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring-Cloud/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring Cloud</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,642
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  7
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Spring Cloud Config是Spring Cloud团队创建的一个全新项目，用来为分布式系统中的基础设施和微服务应用提供集中化的外部配置支持，它分为服务端与客户端两个部分。其中服务端也称为分布式配置中心，它是一个独立的微服务应用，用来连接配置仓库并为客户端提供获取配置信息、加密/解密信息等访问接口；而客户端则是微服务架构中的各个微服务应用或基础设施，它们通过指定的配置中心来管理应用资源与业务相关的配置内容，并在启动的时候从配置中心获取和加载配置信息。Spring Cloud Config实现了对服务端和客户端中环境变量和属性配置的抽象映射，所以它除了适用于Spring构建的应用程序之外，也可以在任何其他语言运行的应用程序中使用。由于Spring Cloud Config实现的配置中心默认采用Git来存储配置信息，所以使用Spring Cloud Config构建的配置服务器，天然就支持对微服务应用配置信息的版本管理，并且可以通过Git客户端工具来方便的管理和访问配置内容。当然它也提供了对其他存储方式的支持，比如：SVN仓库、本地化文件系统。</p>
+<p>在本文中，我们将学习如何构建一个基于Git存储的分布式配置中心，并对客户端进行改造，并让其能够从配置中心获取配置信息并绑定到代码中的整个过程。</p>
+<h3 id="准备配置仓库"><a href="#准备配置仓库" class="headerlink" title="准备配置仓库"></a>准备配置仓库</h3><ul>
+<li>准备一个git仓库，可以在码云或Github上创建都可以。比如本文准备的仓库示例：<a href="https://gitee.com/winter_chen/config-repo" target="_blank" rel="external">https://gitee.com/winter_chen/config-repo</a></li>
+<li><p>假设我们读取配置中心的应用名为 <font color="#FFB90F">config-client</font>，那么我们可以在git仓库中该项目的默认配置文件 <font color="#FFB90F">config-client.yml</font>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">info:</div><div class="line">  profile: default</div></pre></td></tr></table></figure>
+</li>
+<li><p>为了演示加载不同环境的配置，我们可以在git仓库中再创建一个针对dev环境的配置文件 <font color="#FFB90F">config-client-dev.yml</font>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">info:</div><div class="line">  profile: dev</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="构建配置中心"><a href="#构建配置中心" class="headerlink" title="构建配置中心"></a>构建配置中心</h3><p>通过Spring Cloud Config来构建一个分布式配置中心非常简单，只需要三步：</p>
+<ul>
+<li>创建一个基础的Spring Boot工程，命名为： <font color="#FFB90F">config-server-git</font> ，并在 <font color="#FFB90F">pom.xml</font> 中引入下面的依赖（省略了parent和dependencyManagement部分）： </li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-config-server<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div></pre></td></tr></table></figure>
+<ul>
+<li>创建Spring Boot的程序主类，并添加 <font color="#FFB90F">@EnableConfigServer</font> 注解，开启Spring Cloud Config的服务端功能。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@EnableConfigServer</span></div><div class="line"><span class="meta">@SpringBootApplication</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Application</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">new</span> SpringApplicationBuilder(Application.class).web(<span class="keyword">true</span>).run(args);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>在 <font color="#FFB90F">application.yml</font> 中添加配置服务的基本信息以及Git仓库的相关信息，例如：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">spring</div><div class="line">  application:</div><div class="line">    name: config-server</div><div class="line">  cloud:</div><div class="line">    config:</div><div class="line">      server:</div><div class="line">        git:</div><div class="line">          uri: http://git.oschina.net/didispace/config-repo-demo/</div><div class="line">server:</div><div class="line">  port: 1201</div></pre></td></tr></table></figure>
+<p>到这里，使用一个通过Spring Cloud Config实现，并使用Git管理配置内容的分布式配置中心就已经完成了。我们可以将该应用先启动起来，确保没有错误产生，然后再尝试下面的内容。</p>
+<blockquote>
+<p>如果我们的Git仓库需要权限访问，那么可以通过配置下面的两个属性来实现；<br>spring.cloud.config.server.git.username：访问Git仓库的用户名<br>spring.cloud.config.server.git.password：访问Git仓库的用户密码</p>
+</blockquote>
+<p>完成了这些准备工作之后，我们就可以通过浏览器、POSTMAN或CURL等工具直接来访问到我们的配置内容了。访问配置信息的URL与配置文件的映射关系如下：</p>
+<ul>
+<li>/{application}/{profile}[/{label}]</li>
+<li>/{application}-{profile}.yml</li>
+<li>/{label}/{application}-{profile}.yml</li>
+<li>/{application}-{profile}.properties</li>
+<li>/{label}/{application}-{profile}.properties</li>
+</ul>
+<p>上面的url会映射<font color="#FFB90F">{application}-{profile}.properties</font>对应的配置文件，其中 <font color="#FFB90F">{label}</font> 对应Git上不同的分支，默认为master。我们可以尝试构造不同的url来访问不同的配置内容，比如，要访问master分支，config-client应用的dev环境，就可以访问这个url： <font color="#FFB90F"><a href="http://localhost:1201/config-client/dev/master" target="_blank" rel="external">http://localhost:1201/config-client/dev/master</a></font> ，并获得如下返回：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"name"</span>: <span class="string">"config-client"</span>,</div><div class="line">    <span class="attr">"profiles"</span>: [</div><div class="line">        <span class="string">"dev"</span></div><div class="line">    ],</div><div class="line">    <span class="attr">"label"</span>: <span class="string">"master"</span>,</div><div class="line">    <span class="attr">"version"</span>: <span class="literal">null</span>,</div><div class="line">    <span class="attr">"state"</span>: <span class="literal">null</span>,</div><div class="line">    <span class="attr">"propertySources"</span>: [</div><div class="line">        &#123;</div><div class="line">            <span class="attr">"name"</span>: <span class="string">"http://git.oschina.net/didispace/config-repo-demo/config-client-dev.yml"</span>,</div><div class="line">            <span class="attr">"source"</span>: &#123;</div><div class="line">                <span class="attr">"info.profile"</span>: <span class="string">"dev"</span></div><div class="line">            &#125;</div><div class="line">        &#125;,</div><div class="line">        &#123;</div><div class="line">            <span class="attr">"name"</span>: <span class="string">"http://git.oschina.net/didispace/config-repo-demo/config-client.yml"</span>,</div><div class="line">            <span class="attr">"source"</span>: &#123;</div><div class="line">                <span class="attr">"info.profile"</span>: <span class="string">"default"</span></div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们可以看到该Json中返回了应用名：config-client，环境名：dev，分支名：master，以及default环境和dev环境的配置内容。</p>
+<h3 id="构建客户端"><a href="#构建客户端" class="headerlink" title="构建客户端"></a>构建客户端</h3><p>在完成了上述验证之后，确定配置服务中心已经正常运作，下面我们尝试如何在微服务应用中获取上述的配置信息。</p>
+<ul>
+<li>创建一个Spring Boot应用，命名为config-client，并在pom.xml中引入下述依赖：</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-config<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div></pre></td></tr></table></figure>
+<ul>
+<li>创建Spring Boot的应用主类，具体如下：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@SpringBootApplication</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Application</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">new</span> SpringApplicationBuilder(Application.class).web(<span class="keyword">true</span>).run(args);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>创建 <font color="#FFB90F">bootstrap.yml</font> 配置，来指定获取配置文件的 <font color="#FFB90F">config-server-git</font> 位置，例如：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">spring:</div><div class="line">  application:</div><div class="line">    name: config-client</div><div class="line">  cloud:</div><div class="line">    config:</div><div class="line">      uri: http://localhost:1201/</div><div class="line">      profile: default</div><div class="line">      label: master</div><div class="line">server:</div><div class="line">  port: 2001</div></pre></td></tr></table></figure>
+<p>上述配置参数与Git中存储的配置文件中各个部分的对应关系如下：</p>
+<ul>
+<li>spring.application.name：对应配置文件规则中的{application}部分</li>
+<li>spring.cloud.config.profile：对应配置文件规则中的{profile}部分</li>
+<li>spring.cloud.config.label：对应配置文件规则中的{label}部分</li>
+<li>spring.cloud.config.uri：配置中心config-server的地址</li>
+</ul>
+<p><strong>这里需要格外注意：上面这些属性必须配置在bootstrap.properties中，这样config-server中的配置信息才能被正确加载。</strong></p>
+<p>在完成了上面你的代码编写之后，读者可以将config-server-git、config-client都启动起来，然后访问<a href="http://localhost:2001/info" target="_blank" rel="external">http://localhost:2001/info </a>，我们可以看到该端点将会返回从git仓库中获取的配置信息：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"profile"</span>: <span class="string">"default"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>另外，我们也可以修改config-client的profile为dev来观察加载配置的变化。</p>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><p>样例工程将沿用之前在码云和GitHub上创建的SpringCloud-Learning项目，重新做了一下整理。通过不同目录来区分Brixton和Dalston的示例。</p>
+<ul>
+<li>码云: <a href="https://gitee.com/didispace/SpringCloud-Learning/tree/master/2-Dalston%E7%89%88%E6%95%99%E7%A8%8B%E7%A4%BA%E4%BE%8B" target="_blank" rel="external">点击查看</a></li>
+<li>GitHub: <a href="https://github.com/dyc87112/SpringCloud-Learning/tree/master/2-Dalston%E7%89%88%E6%95%99%E7%A8%8B%E7%A4%BA%E4%BE%8B" target="_blank" rel="external">点击查看</a></li>
+</ul>
+<p>具体工程说明如下：</p>
+<ul>
+<li>基于Git仓库的配置中心：config-server-git</li>
+<li>使用配置中心的客户端：config-client</li>
+</ul>
+<p>原作者：程序员didi<br>原文出处：<a href="http://blog.didispace.com/spring-cloud-starter-dalston-2-1/" target="_blank" rel="external">http://blog.didispace.com/spring-cloud-starter-dalston-2-1/</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/21/java-make-excel-poi-to-upload-cloud/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="winter chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://blog-1253516459.cossh.myqcloud.com/blog_img/2013010611300812.jpg?sign=sp7r7Suu4OZUAtsK8cuYA5FstKphPTEyNTM1MTY0NTkmaz1BS0lEWjJLUmx1ZGhLbjRGSEFHUW80Qjh4ZUJYd0dQTmFsQlEmZT0xNTA5MDA2NjE2JnQ9MTUwNjQxNDYxNiZyPTIxNDE4MjM5NjgmZj0vYmxvZ19pbWcvMjAxMzAxMDYxMTMwMDgxMi5qcGcmYj1ibG9n">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="winter的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/21/java-make-excel-poi-to-upload-cloud/" itemprop="url">Java导出Excel文档（poi），并上传到腾讯云对象存储服务器</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T20:00:00+08:00">
+                2017-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaUtils/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaUtils</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,525
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  12
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p><strong>后台生成周报月报季报年报Excel，将文件下载链接推送给对应客户</strong></p>
+<h3 id="开发思路："><a href="#开发思路：" class="headerlink" title="开发思路："></a>开发思路：</h3><p><strong>1.根据选定日期生成周报，月报，季报，年报数据</strong><br><strong>2.将这些数据报告生成Excel表格</strong><br><strong>3.把生成的文件上传到腾讯云对象存储服务器</strong><br><strong>4.将服务器返回的url存储到数据库</strong></p>
+<h3 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h3><p><strong><a href="http://download.csdn.net/download/yaosir12/9475344" target="_blank" rel="external">poi-3.14-20160307.jar(点击可下载)</a></strong></p>
+<h3 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h3><p>获取数据部分省略了</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p><strong>主方法</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">addReportExcelToCloud</span><span class="params">(ReportResult rr)</span> </span>&#123;</div><div class="line"></div><div class="line">		OutputStream out = <span class="keyword">new</span> ByteArrayOutputStream();</div><div class="line">		ExcelProjectUtils eu = <span class="keyword">new</span> ExcelProjectUtils();</div><div class="line">		eu.exportExcel(rr, out);   <span class="comment">//&lt;1&gt;</span></div><div class="line">		ConvertUtil cu = <span class="keyword">new</span> ConvertUtil();</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			ByteArrayInputStream byteInput = cu.parse(out);</div><div class="line">			String rs = PicUploadToYun.uploadExcel(SysContent.getFileRename(<span class="string">"案场数据报.xls"</span>), byteInput);  <span class="comment">//&lt;2&gt;</span></div><div class="line">			addReportExcelToDB(rr, rs);  <span class="comment">//&lt;3&gt;</span></div><div class="line">			<span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">	&#125;</div></pre></td></tr></table></figure></p>
+<p><1> 将数据生成二进制Excel文件 (方法详细见下面代码)</1></p>
+<p><2> 将生成的二进制文件上传到腾讯云对象存储服务器 (方法详细见下面代码)</2></p>
+<p><3> 将服务器返回的url存储到数据库 (方法详细见下面代码)</3></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div><div class="line">288</div><div class="line">289</div><div class="line">290</div><div class="line">291</div><div class="line">292</div><div class="line">293</div><div class="line">294</div><div class="line">295</div><div class="line">296</div><div class="line">297</div><div class="line">298</div><div class="line">299</div><div class="line">300</div><div class="line">301</div><div class="line">302</div><div class="line">303</div><div class="line">304</div><div class="line">305</div><div class="line">306</div><div class="line">307</div><div class="line">308</div><div class="line">309</div><div class="line">310</div><div class="line">311</div><div class="line">312</div><div class="line">313</div><div class="line">314</div><div class="line">315</div><div class="line">316</div><div class="line">317</div><div class="line">318</div><div class="line">319</div><div class="line">320</div><div class="line">321</div><div class="line">322</div><div class="line">323</div><div class="line">324</div><div class="line">325</div><div class="line">326</div><div class="line">327</div><div class="line">328</div><div class="line">329</div><div class="line">330</div><div class="line">331</div><div class="line">332</div><div class="line">333</div><div class="line">334</div><div class="line">335</div><div class="line">336</div><div class="line">337</div><div class="line">338</div><div class="line">339</div><div class="line">340</div><div class="line">341</div><div class="line">342</div><div class="line">343</div><div class="line">344</div><div class="line">345</div><div class="line">346</div><div class="line">347</div><div class="line">348</div><div class="line">349</div><div class="line">350</div><div class="line">351</div><div class="line">352</div><div class="line">353</div><div class="line">354</div><div class="line">355</div><div class="line">356</div><div class="line">357</div><div class="line">358</div><div class="line">359</div><div class="line">360</div><div class="line">361</div><div class="line">362</div><div class="line">363</div><div class="line">364</div><div class="line">365</div><div class="line">366</div><div class="line">367</div><div class="line">368</div><div class="line">369</div><div class="line">370</div><div class="line">371</div><div class="line">372</div><div class="line">373</div><div class="line">374</div><div class="line">375</div><div class="line">376</div><div class="line">377</div><div class="line">378</div><div class="line">379</div><div class="line">380</div><div class="line">381</div><div class="line">382</div><div class="line">383</div><div class="line">384</div><div class="line">385</div><div class="line">386</div><div class="line">387</div><div class="line">388</div><div class="line">389</div><div class="line">390</div><div class="line">391</div><div class="line">392</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">	 * 周报年报生成excel</span></div><div class="line"><span class="comment">	 * </span></div><div class="line"><span class="comment">	 * <span class="doctag">@param</span> report</span></div><div class="line"><span class="comment">	 * <span class="doctag">@param</span> out</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exportExcel</span><span class="params">(ReportResult report, OutputStream out)</span> </span>&#123;</div><div class="line"></div><div class="line">		<span class="comment">// 判断传入的时间间隔</span></div><div class="line">		String dateStr = <span class="string">""</span>;</div><div class="line">		String reportName = <span class="string">""</span>;</div><div class="line">		List&lt;String&gt; dateCount = DateUtil.getTwoDateEveryDay(report.getStartTime(), report.getEndTime());</div><div class="line">		<span class="keyword">if</span> (dateCount.size() &lt;= <span class="number">7</span>) &#123;</div><div class="line">			dateStr += <span class="string">"本周"</span>;</div><div class="line">			reportName += <span class="string">"案场周报"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (dateCount.size() &gt;= <span class="number">28</span> &amp;&amp; dateCount.size() &lt;= <span class="number">31</span>) &#123;</div><div class="line">			dateStr += <span class="string">"本月"</span>;</div><div class="line">			reportName += <span class="string">"案场月报"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (dateCount.size() &gt;= <span class="number">85</span> &amp;&amp; dateCount.size() &lt;= <span class="number">100</span>) &#123;</div><div class="line">			dateStr += <span class="string">"本季度"</span>;</div><div class="line">			reportName += <span class="string">"案场季报"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (dateCount.size() &gt;= <span class="number">180</span> &amp;&amp; dateCount.size() &lt;= <span class="number">185</span>) &#123;</div><div class="line">			dateStr += <span class="string">"本半年度"</span>;</div><div class="line">			reportName += <span class="string">"案场半年报"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (dateCount.size() &gt;= <span class="number">360</span> &amp;&amp; dateCount.size() &lt;= <span class="number">367</span>) &#123;</div><div class="line">			dateStr += <span class="string">"本年度"</span>;</div><div class="line">			reportName += <span class="string">"案场年报"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			dateStr += <span class="string">"时间段内"</span>;</div><div class="line">			reportName += <span class="string">"案场阶段报"</span>;</div><div class="line">		&#125;</div><div class="line">		report.setReportName(reportName);</div><div class="line">		<span class="comment">// 声明一个工作薄</span></div><div class="line">		HSSFWorkbook workbook = <span class="keyword">new</span> HSSFWorkbook();</div><div class="line">		<span class="comment">// 生成一个表格</span></div><div class="line">		HSSFSheet sheet = workbook.createSheet(report.getReportName() + report.getStartTime() + <span class="string">" - "</span> + report.getEndTime());</div><div class="line">		<span class="comment">// 设置表格默认列宽度为100个字节</span></div><div class="line">		sheet.setDefaultColumnWidth((<span class="keyword">short</span>) <span class="number">100</span>);</div><div class="line">		<span class="comment">/** ----------样式一：标题 ------------ **/</span></div><div class="line">		HSSFCellStyle style = workbook.createCellStyle();</div><div class="line">		<span class="comment">// 设置这些样式</span></div><div class="line">		style.setBorderLeft(HSSFCellStyle.BORDER_THIN);</div><div class="line">		style.setBorderRight(HSSFCellStyle.BORDER_THIN);</div><div class="line">		<span class="comment">//style.setBorderTop(HSSFCellStyle.BORDER_THIN);</span></div><div class="line">		style.setAlignment(HSSFCellStyle.ALIGN_CENTER);</div><div class="line">		<span class="comment">// 生成一个字体</span></div><div class="line">		HSSFFont font = workbook.createFont();</div><div class="line">		font.setFontName(<span class="string">"宋体"</span>);</div><div class="line">		<span class="comment">//font.setColor(HSSFColor.VIOLET.index);</span></div><div class="line">		font.setFontHeightInPoints((<span class="keyword">short</span>) <span class="number">14</span>);</div><div class="line">		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);</div><div class="line">		<span class="comment">// 把字体应用到当前的样式</span></div><div class="line">		style.setFont(font);</div><div class="line">		<span class="comment">/***---------样式二：小标题---------***/</span></div><div class="line">		HSSFCellStyle style2 = workbook.createCellStyle();</div><div class="line">		style2.setBorderLeft(HSSFCellStyle.BORDER_THIN);</div><div class="line">		style2.setBorderRight(HSSFCellStyle.BORDER_THIN);</div><div class="line">		<span class="comment">//style2.setBorderTop(HSSFCellStyle.BORDER_THIN);</span></div><div class="line">		style2.setAlignment(HSSFCellStyle.ALIGN_LEFT);</div><div class="line">		</div><div class="line">		<span class="comment">//style2.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);</span></div><div class="line">		<span class="comment">// 生成另一个字体</span></div><div class="line">		HSSFFont font2 = workbook.createFont();</div><div class="line">		<span class="comment">//font2.setBoldweight(HSSFFont.BOLDWEIGHT_NORMAL);</span></div><div class="line">		font2.setFontName(<span class="string">"宋体"</span>);</div><div class="line">		font2.setFontHeightInPoints((<span class="keyword">short</span>) <span class="number">11</span>);</div><div class="line">		font2.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);</div><div class="line">		<span class="comment">// 把字体应用到当前的样式</span></div><div class="line">		style2.setFont(font2);</div><div class="line">		</div><div class="line">		<span class="comment">/***    样式三：右侧日期       ***/</span></div><div class="line">		HSSFCellStyle style3 = workbook.createCellStyle();</div><div class="line">		<span class="comment">//样式</span></div><div class="line">		style3.setBorderLeft(HSSFCellStyle.BORDER_THIN);</div><div class="line">		style3.setBorderRight(HSSFCellStyle.BORDER_THIN);</div><div class="line">		style3.setAlignment(HSSFCellStyle.ALIGN_RIGHT);</div><div class="line">		style3.setBorderBottom(HSSFCellStyle.BORDER_THIN);</div><div class="line">		<span class="comment">//字体</span></div><div class="line">		HSSFFont font3 = workbook.createFont();</div><div class="line">		font3.setFontName(<span class="string">"宋体"</span>);</div><div class="line">		font3.setFontHeightInPoints((<span class="keyword">short</span>) <span class="number">11</span>);</div><div class="line">		style3.setFont(font3);</div><div class="line">		</div><div class="line">		<span class="comment">/**       样式四：主内容        ***/</span></div><div class="line">		HSSFCellStyle style4 = workbook.createCellStyle();</div><div class="line">		<span class="comment">//样式</span></div><div class="line">		style4.setBorderLeft(HSSFCellStyle.BORDER_THIN);</div><div class="line">		style4.setBorderRight(HSSFCellStyle.BORDER_THIN);</div><div class="line">		style4.setAlignment(HSSFCellStyle.ALIGN_LEFT);</div><div class="line">		<span class="comment">//字体</span></div><div class="line">		HSSFFont font4 = workbook.createFont();</div><div class="line">		font4.setFontName(<span class="string">"宋体"</span>);</div><div class="line">		font4.setFontHeightInPoints((<span class="keyword">short</span>) <span class="number">11</span>);</div><div class="line">		style4.setFont(font4);</div><div class="line">		</div><div class="line">		<span class="comment">/**       样式五：底侧空内容       ***/</span></div><div class="line">		HSSFCellStyle style5 = workbook.createCellStyle();</div><div class="line">		<span class="comment">//样式</span></div><div class="line">		style5.setBorderLeft(HSSFCellStyle.BORDER_THIN);</div><div class="line">		style5.setBorderRight(HSSFCellStyle.BORDER_THIN);</div><div class="line">		style5.setAlignment(HSSFCellStyle.ALIGN_LEFT);</div><div class="line">		style5.setBorderBottom(HSSFCellStyle.BORDER_THIN);</div><div class="line">		<span class="comment">//字体</span></div><div class="line">		HSSFFont font5 = workbook.createFont();</div><div class="line">		font5.setFontName(<span class="string">"宋体"</span>);</div><div class="line">		font5.setFontHeightInPoints((<span class="keyword">short</span>) <span class="number">11</span>);</div><div class="line">		style5.setFont(font5);</div><div class="line">		</div><div class="line">		</div><div class="line">		<span class="comment">// 声明一个画图的顶级管理器</span></div><div class="line">		HSSFPatriarch patriarch = sheet.createDrawingPatriarch();</div><div class="line">		<span class="comment">// 定义注释的大小和位置,详见文档</span></div><div class="line">		HSSFComment comment = patriarch.createComment(<span class="keyword">new</span> HSSFClientAnchor(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, (<span class="keyword">short</span>) <span class="number">4</span>, <span class="number">2</span>, (<span class="keyword">short</span>) <span class="number">6</span>, <span class="number">5</span>));</div><div class="line">		<span class="comment">// 设置注释内容</span></div><div class="line">		comment.setString(<span class="keyword">new</span> HSSFRichTextString(<span class="string">"数据报"</span>));</div><div class="line">		<span class="comment">// 设置注释作者，当鼠标移动到单元格上是可以在状态栏中看到该内容.</span></div><div class="line">		comment.setAuthor(<span class="string">"saas"</span>);</div><div class="line"></div><div class="line">		<span class="comment">// 产生表格标题行 -- 项目名称</span></div><div class="line">		HSSFRow row = sheet.createRow(<span class="number">0</span>);</div><div class="line">		createCellAndRow(style4, report.getProjectName(), row);</div><div class="line"></div><div class="line">		<span class="comment">// 产生表格标题行 -- 周报名称</span></div><div class="line">		row = sheet.createRow(<span class="number">1</span>);</div><div class="line">		createCellAndRow(style, report.getReportName(), row);</div><div class="line"></div><div class="line">		<span class="comment">// 产生表格标题行 -- 起始时间-终止时间</span></div><div class="line">		row = sheet.createRow(<span class="number">2</span>);</div><div class="line">		String startTime = DateUtil.format(DateUtil.parse(report.getStartTime(), DateUtil.PATTERN_CLASSICAL_SIMPLE),</div><div class="line">				DateUtil.PATTERN_CLASSICAL_SIMPLE_YMD);</div><div class="line">		String endTime = DateUtil.format(DateUtil.parse(report.getEndTime(), DateUtil.PATTERN_CLASSICAL_SIMPLE),</div><div class="line">				DateUtil.PATTERN_CLASSICAL_SIMPLE_YMD);</div><div class="line">		String date = <span class="string">"日期："</span> + startTime + <span class="string">" - "</span> + endTime;</div><div class="line">		createCellAndRow(style3, date, row);</div><div class="line"></div><div class="line">		<span class="comment">// 接访情况标题</span></div><div class="line">		row = sheet.createRow(<span class="number">3</span>);</div><div class="line">		createCellAndRow(style2, <span class="string">"·接访情况"</span>, row);</div><div class="line"></div><div class="line">		<span class="comment">// 接访客户组数</span></div><div class="line">		row = sheet.createRow(<span class="number">4</span>);</div><div class="line">		Integer visitCount = report.getVisitCount();</div><div class="line">		String visitNum = <span class="string">"1、"</span> + dateStr + <span class="string">"共计接访客户"</span> + visitCount + <span class="string">"组，来访量"</span>;</div><div class="line">		<span class="keyword">if</span> (visitCount &lt; <span class="number">40</span>) &#123;</div><div class="line">			visitNum += <span class="string">"较少，有待提升"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (visitCount &gt;= <span class="number">41</span> &amp;&amp; visitCount &lt;= <span class="number">99</span>) &#123;</div><div class="line">			visitNum += <span class="string">"尚可，还有提高空间"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (visitCount &gt;= <span class="number">100</span> &amp;&amp; visitCount &lt;= <span class="number">139</span>) &#123;</div><div class="line">			visitNum += <span class="string">"很多"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (visitCount &gt; <span class="number">140</span>) &#123;</div><div class="line">			visitNum += <span class="string">"火爆"</span>;</div><div class="line">		&#125;</div><div class="line">		createCellAndRow(style4, visitNum, row);</div><div class="line"></div><div class="line">		<span class="comment">// 有效接访率</span></div><div class="line">		row = sheet.createRow(<span class="number">5</span>);</div><div class="line">		Double visitRate = <span class="keyword">new</span> Double(report.getValidVisitRate());</div><div class="line">		String visitRateStr = <span class="string">"2、有效接访率为"</span> + visitRate + <span class="string">"%，接访成效"</span>;</div><div class="line">		<span class="keyword">if</span> (visitRate &lt; <span class="number">50</span>) &#123;</div><div class="line">			visitRateStr += <span class="string">"较低，有待提升"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (visitRate &gt;= <span class="number">50</span> &amp;&amp; visitRate &lt;= <span class="number">65</span>) &#123;</div><div class="line">			visitRateStr += <span class="string">"尚可，还有提高空间"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (visitRate &gt;= <span class="number">65</span> &amp;&amp; visitRate &lt;= <span class="number">80</span>) &#123;</div><div class="line">			visitRateStr += <span class="string">"很高"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (visitRate &gt; <span class="number">80</span>) &#123;</div><div class="line">			visitRateStr += <span class="string">"极高"</span>;</div><div class="line">		&#125;</div><div class="line">		createCellAndRow(style4, visitRateStr, row);</div><div class="line"></div><div class="line">		<span class="comment">// 首访有效率</span></div><div class="line">		row = sheet.createRow(<span class="number">6</span>);</div><div class="line">		Double newVisitRate = <span class="keyword">new</span> Double(report.getValidNewCuVisitRate());</div><div class="line">		String newVisitStr = <span class="string">"3、首访有效率为"</span> + newVisitRate + <span class="string">"%，来访转储客的概率"</span>;</div><div class="line">		<span class="keyword">if</span> (newVisitRate &lt; <span class="number">40</span>) &#123;</div><div class="line">			newVisitStr += <span class="string">"较差，有待提升"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (newVisitRate &gt;= <span class="number">40</span> &amp;&amp; newVisitRate &lt;= <span class="number">60</span>) &#123;</div><div class="line">			newVisitStr += <span class="string">"尚可，还有提高空间"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (newVisitRate &gt;= <span class="number">60</span> &amp;&amp; newVisitRate &lt;= <span class="number">75</span>) &#123;</div><div class="line">			newVisitStr += <span class="string">"很高"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (newVisitRate &gt; <span class="number">75</span>) &#123;</div><div class="line">			newVisitStr += <span class="string">"极高"</span>;</div><div class="line">		&#125;</div><div class="line">		createCellAndRow(style4, newVisitStr, row);</div><div class="line"></div><div class="line">		<span class="comment">// 老客户接访占比</span></div><div class="line">		row = sheet.createRow(<span class="number">7</span>);</div><div class="line">		Double oldVisitRate = <span class="keyword">new</span> Double(report.getOldCuVisitRate());</div><div class="line">		String oldVisitStr = <span class="string">"4、老客户接访比为"</span> + oldVisitRate + <span class="string">"%，老客户接访的占比"</span>;</div><div class="line">		<span class="keyword">if</span> (oldVisitRate &lt; <span class="number">20</span>) &#123;</div><div class="line">			oldVisitStr += <span class="string">"较低"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (oldVisitRate &gt;= <span class="number">20</span> &amp;&amp; oldVisitRate &lt;= <span class="number">40</span>) &#123;</div><div class="line">			oldVisitStr += <span class="string">"尚可"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (oldVisitRate &gt;= <span class="number">40</span> &amp;&amp; oldVisitRate &lt;= <span class="number">60</span>) &#123;</div><div class="line">			oldVisitStr += <span class="string">"很高"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (oldVisitRate &gt; <span class="number">60</span>) &#123;</div><div class="line">			oldVisitStr += <span class="string">"极高"</span>;</div><div class="line">		&#125;</div><div class="line">		createCellAndRow(style4, oldVisitStr, row);</div><div class="line"></div><div class="line">		<span class="comment">//空行</span></div><div class="line">		row = sheet.createRow(<span class="number">8</span>);</div><div class="line">		createCellAndRow(style4, <span class="string">""</span>, row);</div><div class="line">		</div><div class="line">		<span class="comment">// 储客情况</span></div><div class="line">		row = sheet.createRow(<span class="number">9</span>);</div><div class="line">		createCellAndRow(style2, <span class="string">"·储客情况"</span>, row);</div><div class="line"></div><div class="line">		<span class="comment">// 新增储客</span></div><div class="line">		row = sheet.createRow(<span class="number">10</span>);</div><div class="line">		Integer newCuCount = report.getNewCuCount();</div><div class="line">		String newCuStr = <span class="string">"1、"</span> + dateStr + <span class="string">"新增储客"</span> + newCuCount + <span class="string">"组，新增量"</span>;</div><div class="line">		<span class="keyword">if</span> (newCuCount &lt; <span class="number">30</span>) &#123;</div><div class="line">			newCuStr += <span class="string">"较少，有待提升"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (newCuCount &gt;= <span class="number">31</span> &amp;&amp; newCuCount &lt;= <span class="number">60</span>) &#123;</div><div class="line">			newCuStr += <span class="string">"尚可，还有提高空间"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (newCuCount &gt;= <span class="number">61</span> &amp;&amp; newCuCount &lt;= <span class="number">79</span>) &#123;</div><div class="line">			newCuStr += <span class="string">"很多"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (newCuCount &gt; <span class="number">80</span>) &#123;</div><div class="line">			newCuStr += <span class="string">"爆满"</span>;</div><div class="line">		&#125;</div><div class="line">		createCellAndRow(style4, newCuStr, row);</div><div class="line"></div><div class="line">		<span class="comment">// 累计老客户</span></div><div class="line">		row = sheet.createRow(<span class="number">11</span>);</div><div class="line">		Integer oldCuCount = report.getTotalOldCuCount();</div><div class="line">		Integer totalCuCount = report.getTotalCuCount();</div><div class="line">		Double oldCuRate = <span class="keyword">new</span> Double(SysContent.getTwoNumberForValue(oldCuCount, totalCuCount));</div><div class="line">		String oldCuStr = <span class="string">"2、累计老客户总量为"</span> + oldCuCount + <span class="string">"组，老客户占比为"</span> + oldCuRate + <span class="string">"%，显示老客户关注度"</span>;</div><div class="line">		<span class="keyword">if</span> (oldCuRate &lt; <span class="number">15</span>) &#123;</div><div class="line">			oldCuStr += <span class="string">"较低，有待提升"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (oldCuRate &gt;= <span class="number">15</span> &amp;&amp; oldCuRate &lt;= <span class="number">25</span>) &#123;</div><div class="line">			oldCuStr += <span class="string">"尚可，还有提高空间"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (oldCuRate &gt;= <span class="number">25</span> &amp;&amp; oldCuRate &lt;= <span class="number">40</span>) &#123;</div><div class="line">			oldCuStr += <span class="string">"很高"</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (oldCuRate &gt; <span class="number">40</span>) &#123;</div><div class="line">			oldCuStr += <span class="string">"极高"</span>;</div><div class="line">		&#125;</div><div class="line">		createCellAndRow(style4, oldCuStr, row);</div><div class="line"></div><div class="line">		<span class="comment">// 累计总储客</span></div><div class="line">		row = sheet.createRow(<span class="number">12</span>);</div><div class="line">		String totalOldCuStr = <span class="string">"3、累计总储客"</span> + totalCuCount + <span class="string">"组"</span>;</div><div class="line">		createCellAndRow(style4, totalOldCuStr, row);</div><div class="line"></div><div class="line">		<span class="comment">// 成交情况(周报没有，其他有)</span></div><div class="line">		<span class="keyword">if</span> (report.getSubscribeHouseCount() != <span class="keyword">null</span>) &#123;</div><div class="line">			</div><div class="line">			<span class="comment">//空行</span></div><div class="line">			row = sheet.createRow(<span class="number">13</span>);</div><div class="line">			createCellAndRow(style4, <span class="string">""</span>, row);</div><div class="line">			</div><div class="line">			row = sheet.createRow(<span class="number">14</span>);</div><div class="line">			createCellAndRow(style2, <span class="string">"·成交情况"</span>, row);</div><div class="line"></div><div class="line">			<span class="comment">// 新增认购套数</span></div><div class="line">			row = sheet.createRow(<span class="number">15</span>);</div><div class="line">			Integer subscribeHouseCount = report.getSubscribeHouseCount();</div><div class="line">			Double subscribeHouseRate = <span class="keyword">new</span> Double(report.getSubscribeHouseRate());</div><div class="line">			String subscribeHouseStr = <span class="string">"1、"</span> + dateStr + <span class="string">"新增认购套数"</span> + subscribeHouseCount + <span class="string">"套，较"</span> + dateStr + <span class="string">"同期"</span>;</div><div class="line">			<span class="keyword">if</span> (subscribeHouseRate &lt; <span class="number">0</span>) &#123;</div><div class="line">				subscribeHouseStr += <span class="string">"减少"</span>;</div><div class="line">			&#125; <span class="keyword">else</span> &#123;</div><div class="line">				subscribeHouseStr += <span class="string">"增长"</span>;</div><div class="line">			&#125;</div><div class="line">			subscribeHouseStr += Math.abs(subscribeHouseRate) + <span class="string">"%"</span>;</div><div class="line">			createCellAndRow(style4, subscribeHouseStr, row);</div><div class="line"></div><div class="line">			<span class="comment">// 新增认购金额</span></div><div class="line">			row = sheet.createRow(<span class="number">16</span>);</div><div class="line">			Long subscribeMoney = report.getSubscribeMoney();</div><div class="line">			Double subscribeMoneyRate = <span class="keyword">new</span> Double(report.getSubscribeMoneyRate());</div><div class="line">			String subscribeMoneyStr = <span class="string">"   新增认购金额"</span> + subscribeMoney + <span class="string">"万元，较"</span> + dateStr + <span class="string">"同期"</span>;</div><div class="line">			<span class="keyword">if</span> (subscribeHouseRate &lt; <span class="number">0</span>) &#123;</div><div class="line">				subscribeMoneyStr += <span class="string">"减少"</span>;</div><div class="line">			&#125; <span class="keyword">else</span> &#123;</div><div class="line">				subscribeMoneyStr += <span class="string">"增长"</span>;</div><div class="line">			&#125;</div><div class="line">			subscribeMoneyStr += Math.abs(subscribeMoneyRate) + <span class="string">"%"</span>;</div><div class="line">			createCellAndRow(style4, subscribeMoneyStr, row);</div><div class="line"></div><div class="line">			<span class="comment">// 新增签约套数</span></div><div class="line">			row = sheet.createRow(<span class="number">17</span>);</div><div class="line">			Integer signCount = report.getSignCount();</div><div class="line">			Double signRate = <span class="keyword">new</span> Double(report.getSignRate());</div><div class="line">			String signStr = <span class="string">"2、新增签约套数"</span> + signCount + <span class="string">"套,较"</span> + dateStr + <span class="string">"同期"</span>;</div><div class="line">			<span class="keyword">if</span> (signRate &lt; <span class="number">0</span>) &#123;</div><div class="line">				signStr += <span class="string">"减少"</span>;</div><div class="line">			&#125; <span class="keyword">else</span> &#123;</div><div class="line">				signStr += <span class="string">"增长"</span>;</div><div class="line">			&#125;</div><div class="line">			signStr += Math.abs(signRate) + <span class="string">"%"</span>;</div><div class="line">			createCellAndRow(style4, signStr, row);</div><div class="line"></div><div class="line">			<span class="comment">// 新增签约金额</span></div><div class="line">			row = sheet.createRow(<span class="number">18</span>);</div><div class="line">			Long signHouseMoney = report.getSignHouseMoney();</div><div class="line">			Double signHouseMoneyRate = <span class="keyword">new</span> Double(report.getSignHouseMoneyRate());</div><div class="line">			String signHouseMoneyStr = <span class="string">"   新增签约金额"</span> + signHouseMoney + <span class="string">"万元，较"</span> + dateStr + <span class="string">"同期"</span>;</div><div class="line">			<span class="keyword">if</span> (signHouseMoneyRate &lt; <span class="number">0</span>) &#123;</div><div class="line">				signHouseMoneyStr += <span class="string">"减少"</span>;</div><div class="line">			&#125; <span class="keyword">else</span> &#123;</div><div class="line">				signHouseMoneyStr += <span class="string">"增长"</span>;</div><div class="line">			&#125;</div><div class="line">			signHouseMoneyStr += Math.abs(signHouseMoneyRate) + <span class="string">"%"</span>;</div><div class="line">			createCellAndRow(style4, signHouseMoneyStr, row);</div><div class="line"></div><div class="line">			<span class="comment">// 新接访签约率</span></div><div class="line">			row = sheet.createRow(<span class="number">19</span>);</div><div class="line">			Double newCustomerSignedRate = <span class="keyword">new</span> Double(report.getNewCustomerSignedRate());</div><div class="line">			String newCustomerSignedStr = <span class="string">"3、"</span> + dateStr + <span class="string">"新客户接访签约率"</span> + newCustomerSignedRate + <span class="string">"%，接访签约概率"</span>;</div><div class="line">			<span class="keyword">if</span> (newCustomerSignedRate &lt; <span class="number">4</span>) &#123;</div><div class="line">				newCustomerSignedStr += <span class="string">"较低，与理想值差距大"</span>;</div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (newCustomerSignedRate &gt;= <span class="number">4</span> &amp;&amp; newCustomerSignedRate &lt;= <span class="number">6</span>) &#123;</div><div class="line">				newCustomerSignedStr += <span class="string">"尚可，还有提高空间"</span>;</div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (newCustomerSignedRate &gt;= <span class="number">6</span> &amp;&amp; newCustomerSignedRate &lt;= <span class="number">7</span>) &#123;</div><div class="line">				newCustomerSignedStr += <span class="string">"很高"</span>;</div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (newCustomerSignedRate &gt; <span class="number">7</span>) &#123;</div><div class="line">				newCustomerSignedStr += <span class="string">"非常高"</span>;</div><div class="line">			&#125;</div><div class="line">			createCellAndRow(style4, newCustomerSignedStr, row);</div><div class="line"></div><div class="line">			<span class="comment">// 储客签约率</span></div><div class="line">			row = sheet.createRow(<span class="number">20</span>);</div><div class="line">			Double momeryCustomerSignedRate = <span class="keyword">new</span> Double(report.getMomeryCustomerSignedRate());</div><div class="line">			String momeryCustomerSignedStr = <span class="string">"4、储客签约率"</span> + momeryCustomerSignedRate + <span class="string">"%，储备客户签约概率"</span>;</div><div class="line">			<span class="keyword">if</span> (momeryCustomerSignedRate &lt; <span class="number">7</span>) &#123;</div><div class="line">				momeryCustomerSignedStr += <span class="string">"较低，与理想值差距大"</span>;</div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (momeryCustomerSignedRate &gt;= <span class="number">7</span> &amp;&amp; momeryCustomerSignedRate &lt;= <span class="number">12</span>) &#123;</div><div class="line">				momeryCustomerSignedStr += <span class="string">"尚可，还有提高空间"</span>;</div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (momeryCustomerSignedRate &gt;= <span class="number">12</span> &amp;&amp; momeryCustomerSignedRate &lt;= <span class="number">15</span>) &#123;</div><div class="line">				momeryCustomerSignedStr += <span class="string">"很高"</span>;</div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (momeryCustomerSignedRate &gt; <span class="number">15</span>) &#123;</div><div class="line">				momeryCustomerSignedStr += <span class="string">"非常高"</span>;</div><div class="line">			&#125;</div><div class="line">			createCellAndRow(style4, momeryCustomerSignedStr, row);</div><div class="line"></div><div class="line">			<span class="comment">// 老客户签约率</span></div><div class="line">			row = sheet.createRow(<span class="number">21</span>);</div><div class="line">			Double oldCustomerSignedRate = <span class="keyword">new</span> Double(report.getOldCustomerSignedRate());</div><div class="line">			String oldCustomerSignedStr = <span class="string">"5、老客户签约率为23.2%，高意向客户签约概率"</span>;</div><div class="line">			<span class="keyword">if</span> (oldCustomerSignedRate &lt; <span class="number">25</span>) &#123;</div><div class="line">				oldCustomerSignedStr += <span class="string">"较低，与理想值差距大"</span>;</div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (oldCustomerSignedRate &gt;= <span class="number">25</span> &amp;&amp; oldCustomerSignedRate &lt;= <span class="number">35</span>) &#123;</div><div class="line">				oldCustomerSignedStr += <span class="string">"尚可，还有提高空间"</span>;</div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (oldCustomerSignedRate &gt;= <span class="number">35</span> &amp;&amp; oldCustomerSignedRate &lt;= <span class="number">50</span>) &#123;</div><div class="line">				oldCustomerSignedStr += <span class="string">"很高"</span>;</div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (oldCustomerSignedRate &gt; <span class="number">50</span>) &#123;</div><div class="line">				oldCustomerSignedStr += <span class="string">"非常高"</span>;</div><div class="line">			&#125;</div><div class="line">			createCellAndRow(style4, oldCustomerSignedStr, row);</div><div class="line"></div><div class="line">			<span class="comment">// 认购客户签约率</span></div><div class="line">			row = sheet.createRow(<span class="number">22</span>);</div><div class="line">			Double contratCuSignedRate = <span class="keyword">new</span> Double(report.getContratCuSignedRate());</div><div class="line">			String contratCuSignedStr = <span class="string">"6、认购客户签约率为92%，已认购客户签约率"</span>;</div><div class="line">			<span class="keyword">if</span> (contratCuSignedRate &lt; <span class="number">95</span>) &#123;</div><div class="line">				contratCuSignedStr += <span class="string">"不高，较多退订或拒签"</span>;</div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (contratCuSignedRate &gt;= <span class="number">95</span> &amp;&amp; contratCuSignedRate &lt;= <span class="number">97</span>) &#123;</div><div class="line">				contratCuSignedStr += <span class="string">"尚可，一定数量退订或拒签"</span>;</div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (contratCuSignedRate &gt;= <span class="number">97</span> &amp;&amp; contratCuSignedRate &lt;= <span class="number">99</span>) &#123;</div><div class="line">				contratCuSignedStr += <span class="string">"很高"</span>;</div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (contratCuSignedRate &gt; <span class="number">99</span>) &#123;</div><div class="line">				contratCuSignedStr += <span class="string">"非常高"</span>;</div><div class="line">			&#125;</div><div class="line">			createCellAndRow(style4, contratCuSignedStr, row);</div><div class="line"></div><div class="line">			<span class="comment">//空行</span></div><div class="line">			row = sheet.createRow(<span class="number">23</span>);</div><div class="line">			createCellAndRow(style4, <span class="string">""</span>, row);</div><div class="line">			</div><div class="line">			<span class="comment">//底侧</span></div><div class="line">			row = sheet.createRow(<span class="number">24</span>);</div><div class="line">			createCellAndRow(style5, <span class="string">""</span>, row);</div><div class="line">			</div><div class="line">		&#125;<span class="keyword">else</span>&#123;</div><div class="line">			row = sheet.createRow(<span class="number">13</span>);</div><div class="line">			createCellAndRow(style5, <span class="string">""</span>, row);</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			workbook.write(out);</div><div class="line">		&#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">createCellAndRow</span><span class="params">(HSSFCellStyle style, String text, HSSFRow row)</span> </span>&#123;</div><div class="line">		HSSFCell cell = row.createCell(<span class="number">0</span>);</div><div class="line">		cell.setCellStyle(style);</div><div class="line">		HSSFRichTextString rs = <span class="keyword">new</span> HSSFRichTextString(text);</div><div class="line">		cell.setCellValue(rs);</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">	 * 上传Excel</span></div><div class="line"><span class="comment">	 * <span class="doctag">@param</span> fileNewName</span></div><div class="line"><span class="comment">	 * <span class="doctag">@param</span> uploadFile</span></div><div class="line"><span class="comment">	 * <span class="doctag">@return</span></span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">uploadExcel</span><span class="params">(String fileNewName,ByteArrayInputStream uploadFile)</span></span>&#123;</div><div class="line">		<span class="comment">// 设置用户属性, 包括appid, secretId和SecretKey</span></div><div class="line">				<span class="comment">// 这些属性可以通过cos控制台获取(https://console.qcloud.com/cos)</span></div><div class="line">				String version = PropertiesUtil.getValue(<span class="string">"version"</span>);</div><div class="line">					 <span class="keyword">long</span> appId = <span class="string">"你的appId"</span>;</div><div class="line">	                 String secretId = <span class="string">"你的secretId "</span>;</div><div class="line">	                 String secretKey = <span class="string">"你的secretKey "</span>;</div><div class="line">				</div><div class="line">				<span class="comment">// 设置要操作的bucket</span></div><div class="line">				String bucketName = <span class="string">"root"</span>;</div><div class="line">				<span class="comment">// 初始化客户端配置</span></div><div class="line">				ClientConfig clientConfig = <span class="keyword">new</span> ClientConfig();</div><div class="line">				<span class="comment">// 设置bucket所在的区域，比如广州(gz), 天津(tj)</span></div><div class="line">				clientConfig.setRegion(<span class="string">"sh"</span>);</div><div class="line">				<span class="comment">// 初始化秘钥信息</span></div><div class="line">				Credentials cred = <span class="keyword">new</span> Credentials(appId, secretId, secretKey);</div><div class="line">				<span class="comment">// 初始化cosClient</span></div><div class="line">				COSClient cosClient = <span class="keyword">new</span> COSClient(clientConfig, cred);</div><div class="line">				<span class="comment">// 文件操作 //</span></div><div class="line">				<span class="comment">// 1. 上传文件(默认不覆盖)</span></div><div class="line">				<span class="comment">// 将本地的local_file_1.txt上传到bucket下的根分区下,并命名为sample_file.txt</span></div><div class="line">				<span class="comment">// 默认不覆盖, 如果cos上已有文件, 则返回错误</span></div><div class="line">				String cosFilePath = <span class="string">"/report/"</span> + fileNewName;</div><div class="line">				</div><div class="line">				<span class="keyword">byte</span>[] localFilePath1 = <span class="keyword">null</span>;</div><div class="line">				<span class="keyword">try</span> &#123;</div><div class="line">					localFilePath1 = ConvertUtil.toByteArray(uploadFile);</div><div class="line">				&#125; <span class="keyword">catch</span> (IOException e1) &#123;</div><div class="line">					<span class="comment">// TODO Auto-generated catch block</span></div><div class="line">					e1.printStackTrace();</div><div class="line">				&#125;</div><div class="line">				</div><div class="line">				UploadFileRequest uploadFileRequest = <span class="keyword">new</span> UploadFileRequest(bucketName, cosFilePath, localFilePath1);</div><div class="line">				uploadFileRequest.setEnableShaDigest(<span class="keyword">false</span>);</div><div class="line">				String uploadFileRet = cosClient.uploadFile(uploadFileRequest);</div><div class="line">				System.out.println(<span class="string">"upload file ret:"</span> + uploadFileRet);</div><div class="line">				<span class="comment">//获取保存路径</span></div><div class="line">				ObjectMapper om = <span class="keyword">new</span> ObjectMapper();</div><div class="line">				HashMap map = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">				<span class="keyword">try</span> &#123;</div><div class="line">					map = om.readValue(uploadFileRet, HashMap.class);</div><div class="line">				&#125; <span class="keyword">catch</span> (JsonParseException e) &#123;</div><div class="line">					<span class="comment">// TODO Auto-generated catch block</span></div><div class="line">					e.printStackTrace();</div><div class="line">				&#125; <span class="keyword">catch</span> (JsonMappingException e) &#123;</div><div class="line">					<span class="comment">// TODO Auto-generated catch block</span></div><div class="line">					e.printStackTrace();</div><div class="line">				&#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">					<span class="comment">// TODO Auto-generated catch block</span></div><div class="line">					e.printStackTrace();</div><div class="line">				&#125;</div><div class="line">				HashMap&lt;String, String&gt; value = (HashMap&lt;String, String&gt;) map.get(<span class="string">"data"</span>);</div><div class="line">				<span class="keyword">return</span> value.get(<span class="string">"source_url"</span>);</div><div class="line">				</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">addReportExcelToDB</span><span class="params">(ReportResult rr, String url)</span> </span>&#123;</div><div class="line">		</div><div class="line">		<span class="keyword">if</span>(StringUtils.isEmpty(url))&#123;</div><div class="line">			<span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span>(rr == <span class="keyword">null</span>)&#123;</div><div class="line">			<span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">		&#125;</div><div class="line">		</div><div class="line">		ProjectReportRecord prr = <span class="keyword">new</span> ProjectReportRecord();</div><div class="line">		prr.setCreateTime(DateUtil.format(<span class="keyword">new</span> Date()));</div><div class="line">		prr.setProjectId(rr.getProjectId());</div><div class="line">		prr.setProjectName(rr.getProjectName());</div><div class="line">		prr.setStartTime(rr.getStartTime());</div><div class="line">		prr.setEndTime(rr.getEndTime());</div><div class="line">		prr.setUrl(url);</div><div class="line">		String report = <span class="string">""</span>;</div><div class="line">		<span class="keyword">if</span>(<span class="string">"案场周报"</span>.equals(rr.getReportName()))&#123;</div><div class="line">			report = <span class="string">"week"</span>;</div><div class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="string">"案场月报"</span>.equals(rr.getReportName()))&#123;</div><div class="line">			report = <span class="string">"month"</span>;</div><div class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="string">"案场季报"</span>.equals(rr.getReportName()))&#123;</div><div class="line">			report = <span class="string">"quarter"</span>;</div><div class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="string">"案场半年报"</span>.equals(rr.getReportName()))&#123;</div><div class="line">			report = <span class="string">"half"</span>;</div><div class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="string">"案场年报"</span>.equals(rr.getReportName()))&#123;</div><div class="line">			report = <span class="string">"year"</span>;</div><div class="line">		&#125;<span class="keyword">else</span>&#123;</div><div class="line">			report = <span class="string">"other"</span>;</div><div class="line">		&#125;</div><div class="line">		prr.setReportName(report);</div><div class="line">		</div><div class="line">		baseDao.save(prr);</div><div class="line">		</div><div class="line">		<span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<h3 id="生成的文件示例"><a href="#生成的文件示例" class="headerlink" title="生成的文件示例"></a>生成的文件示例</h3><p><strong>周报或者其他报告都是后台自动根据时间进行判断的</strong></p>
+<p><strong>周报</strong><br><img src="http://img.blog.csdn.net/20171020105154962?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvV2ludGVyX2NoZW4wMDE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p><strong>季报</strong></p>
+<p><img src="http://img.blog.csdn.net/20171020105212669?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvV2ludGVyX2NoZW4wMDE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>以上</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/17/spring-cloud-starter-dalston-2-3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -960,712 +2266,13 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/09/26/spring-log4j/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="winter chen">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://blog-1253516459.cossh.myqcloud.com/blog_img/2013010611300812.jpg?sign=sp7r7Suu4OZUAtsK8cuYA5FstKphPTEyNTM1MTY0NTkmaz1BS0lEWjJLUmx1ZGhLbjRGSEFHUW80Qjh4ZUJYd0dQTmFsQlEmZT0xNTA5MDA2NjE2JnQ9MTUwNjQxNDYxNiZyPTIxNDE4MjM5NjgmZj0vYmxvZ19pbWcvMjAxMzAxMDYxMTMwMDgxMi5qcGcmYj1ibG9n">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="winter的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/26/spring-log4j/" itemprop="url">Spring中使用log4j详细配置</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-26T16:39:00+08:00">
-                2017-09-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/spring/" itemprop="url" rel="index">
-                    <span itemprop="name">spring</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  476
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  2
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>第一步：导入log4j-1.2.17.jar包。<br>第二步：src同级创建并设置log4j.properties。<br>    log4j.properties的详细配置：<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/09/26/spring-log4j/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/09/26/mysql-text/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="winter chen">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://blog-1253516459.cossh.myqcloud.com/blog_img/2013010611300812.jpg?sign=sp7r7Suu4OZUAtsK8cuYA5FstKphPTEyNTM1MTY0NTkmaz1BS0lEWjJLUmx1ZGhLbjRGSEFHUW80Qjh4ZUJYd0dQTmFsQlEmZT0xNTA5MDA2NjE2JnQ9MTUwNjQxNDYxNiZyPTIxNDE4MjM5NjgmZj0vYmxvZ19pbWcvMjAxMzAxMDYxMTMwMDgxMi5qcGcmYj1ibG9n">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="winter的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/26/mysql-text/" itemprop="url">解决Mysql存入大量TEXT类型的数据报错</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-26T16:37:00+08:00">
-                2017-09-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mysql/" itemprop="url" rel="index">
-                    <span itemprop="name">mysql</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  128
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>主要的原因是因为max_sort_length的默认值为1024,=<br>解决办法：该参数是动态参数，任何客户端都可以在Mysql数据库运行时更改该参数的值，例如：<br>1.首先应该查询一下这个参数的默认值为多少<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT @@global.max_sort_length;</div></pre></td></tr></table></figure></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/09/26/mysql-text/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/09/25/springboot-mybatis/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="winter chen">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://blog-1253516459.cossh.myqcloud.com/blog_img/2013010611300812.jpg?sign=sp7r7Suu4OZUAtsK8cuYA5FstKphPTEyNTM1MTY0NTkmaz1BS0lEWjJLUmx1ZGhLbjRGSEFHUW80Qjh4ZUJYd0dQTmFsQlEmZT0xNTA5MDA2NjE2JnQ9MTUwNjQxNDYxNiZyPTIxNDE4MjM5NjgmZj0vYmxvZ19pbWcvMjAxMzAxMDYxMTMwMDgxMi5qcGcmYj1ibG9n">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="winter的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/25/springboot-mybatis/" itemprop="url">Spring boot Mybatis 整合（完整版）</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-25T23:41:00+08:00">
-                2017-09-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/spring-boot/" itemprop="url" rel="index">
-                    <span itemprop="name">spring boot</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  2,126
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  11
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="本项目使用的环境："><a href="#本项目使用的环境：" class="headerlink" title="本项目使用的环境："></a>本项目使用的环境：</h3><p>1.开发工具：Intellij IDEA 2017.1.3<br>2.jdk：1.7.0_79<br>3.maven:3.3.9</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/09/25/springboot-mybatis/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/09/25/java-print-helloworld/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="winter chen">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://blog-1253516459.cossh.myqcloud.com/blog_img/2013010611300812.jpg?sign=sp7r7Suu4OZUAtsK8cuYA5FstKphPTEyNTM1MTY0NTkmaz1BS0lEWjJLUmx1ZGhLbjRGSEFHUW80Qjh4ZUJYd0dQTmFsQlEmZT0xNTA5MDA2NjE2JnQ9MTUwNjQxNDYxNiZyPTIxNDE4MjM5NjgmZj0vYmxvZ19pbWcvMjAxMzAxMDYxMTMwMDgxMi5qcGcmYj1ibG9n">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="winter的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/25/java-print-helloworld/" itemprop="url">java优雅的输出helloWorld</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-25T22:41:00+08:00">
-                2017-09-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java基础/" itemprop="url" rel="index">
-                    <span itemprop="name">java基础</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  64
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="在java中很优雅的输出helloworld，可以试一试"><a href="#在java中很优雅的输出helloworld，可以试一试" class="headerlink" title="在java中很优雅的输出helloworld，可以试一试"></a>在java中很优雅的输出helloworld，可以试一试</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">    		System.out.println(randomString(-<span class="number">229985452</span>) + <span class="string">" "</span> + randomString(-<span class="number">147909649</span>));</div><div class="line">    	&#125;</div><div class="line">    	</div><div class="line">    	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">randomString</span><span class="params">(<span class="keyword">int</span> seed)</span></span>&#123;</div><div class="line">    		Random rand = <span class="keyword">new</span> Random(seed);</div><div class="line">    		StringBuilder sb = <span class="keyword">new</span> StringBuilder();</div><div class="line">    		<span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</div><div class="line">    			<span class="keyword">int</span> n = rand.nextInt(<span class="number">27</span>);</div><div class="line">    			<span class="keyword">if</span>(n==<span class="number">0</span>) <span class="keyword">break</span>;</div><div class="line">    			sb.append((<span class="keyword">char</span>)(<span class="string">'`'</span>+n));</div><div class="line">    				</div><div class="line">    		&#125;</div><div class="line">    		<span class="keyword">return</span> sb.toString();</div><div class="line">    	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -1712,7 +2319,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1723,7 +2330,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1734,7 +2341,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1817,7 +2424,7 @@
 
 <div class="theme-info">
     <div class="powered-by"></div>
-    <span class="post-count">博客全站共8.4k字</span>
+    <span class="post-count">博客全站共18.5k字</span>
   </div>
 
         
