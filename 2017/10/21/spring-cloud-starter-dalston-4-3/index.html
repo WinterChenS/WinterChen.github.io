@@ -78,18 +78,18 @@
 
 
 
-<meta name="description" content="前言 在前两篇《Spring Cloud构建微服务架构：服务容错保护（Hystrix服务降级）》和《Spring Cloud构建微服务架构：服务容错保护（Hystrix依赖隔离）》中，我们对Hystrix提供的服务降级和依赖隔离有了基本的认识。下面我们将继续说说Hystrix的另外一个重要元件：断路器。  断路器断路器模式源于Martin Fowler的Circuit Breaker一文。“断路器">
+<meta name="description" content="前言 在前两篇《Spring Cloud构建微服务架构：服务容错保护（Hystrix服务降级）》和《Spring Cloud构建微服务架构：服务容错保护（Hystrix依赖隔离）》中，我们对Hystrix提供的服务降级和依赖隔离有了基本的认识。下面我们将继续说说Hystrix的另外一个重要元件：断路器。">
 <meta name="keywords" content="Spring Cloud,Hystrix">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring Cloud构建微服务架构：服务容错保护（Hystrix断路器）【Dalston版】">
 <meta property="og:url" content="http://winterchens.github.io/2017/10/21/spring-cloud-starter-dalston-4-3/index.html">
 <meta property="og:site_name" content="winter的博客">
-<meta property="og:description" content="前言 在前两篇《Spring Cloud构建微服务架构：服务容错保护（Hystrix服务降级）》和《Spring Cloud构建微服务架构：服务容错保护（Hystrix依赖隔离）》中，我们对Hystrix提供的服务降级和依赖隔离有了基本的认识。下面我们将继续说说Hystrix的另外一个重要元件：断路器。  断路器断路器模式源于Martin Fowler的Circuit Breaker一文。“断路器">
+<meta property="og:description" content="前言 在前两篇《Spring Cloud构建微服务架构：服务容错保护（Hystrix服务降级）》和《Spring Cloud构建微服务架构：服务容错保护（Hystrix依赖隔离）》中，我们对Hystrix提供的服务降级和依赖隔离有了基本的认识。下面我们将继续说说Hystrix的另外一个重要元件：断路器。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-21T12:02:01.000Z">
+<meta property="og:updated_time" content="2017-10-21T12:06:41.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Cloud构建微服务架构：服务容错保护（Hystrix断路器）【Dalston版】">
-<meta name="twitter:description" content="前言 在前两篇《Spring Cloud构建微服务架构：服务容错保护（Hystrix服务降级）》和《Spring Cloud构建微服务架构：服务容错保护（Hystrix依赖隔离）》中，我们对Hystrix提供的服务降级和依赖隔离有了基本的认识。下面我们将继续说说Hystrix的另外一个重要元件：断路器。  断路器断路器模式源于Martin Fowler的Circuit Breaker一文。“断路器">
+<meta name="twitter:description" content="前言 在前两篇《Spring Cloud构建微服务架构：服务容错保护（Hystrix服务降级）》和《Spring Cloud构建微服务架构：服务容错保护（Hystrix依赖隔离）》中，我们对Hystrix提供的服务降级和依赖隔离有了基本的认识。下面我们将继续说说Hystrix的另外一个重要元件：断路器。">
 
 
 
@@ -383,7 +383,7 @@
 
       
         <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
-<p>在前两篇《Spring Cloud构建微服务架构：服务容错保护（Hystrix服务降级）》和《Spring Cloud构建微服务架构：服务容错保护（Hystrix依赖隔离）》中，我们对Hystrix提供的服务降级和依赖隔离有了基本的认识。下面我们将继续说说Hystrix的另外一个重要元件：断路器。</p>
+<p>在前两篇《Spring Cloud构建微服务架构：服务容错保护（Hystrix服务降级）》和《Spring Cloud构建微服务架构：服务容错保护（Hystrix依赖隔离）》中，我们对Hystrix提供的服务降级和依赖隔离有了基本的认识。下面我们将继续说说Hystrix的另外一个重要元件：断路器。<br><a id="more"></a></p>
 </blockquote>
 <h3 id="断路器"><a href="#断路器" class="headerlink" title="断路器"></a>断路器</h3><p>断路器模式源于Martin Fowler的Circuit Breaker一文。“断路器”本身是一种开关装置，用于在电路上保护线路过载，当线路中有电器发生短路时，“断路器”能够及时的切断故障电路，防止发生过载、发热、甚至起火等严重后果。</p>
 <p>在分布式架构中，断路器模式的作用也是类似的，当某个服务单元发生故障（类似用电器发生短路）之后，通过断路器的故障监控（类似熔断保险丝），直接切断原来的主逻辑调用。但是，在Hystrix中的断路器除了切断主逻辑的功能之外，还有更复杂的逻辑，下面我们来看看它更为深层次的处理逻辑。</p>
