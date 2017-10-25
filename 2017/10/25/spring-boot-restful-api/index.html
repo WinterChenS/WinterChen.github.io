@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Spring Boot," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="winter的博客" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="首先，回顾并详细说明一下在快速入门中使用的@Controller、@RestController、@RequestMapping注解。如果您对Spring MVC不熟悉并且还没有尝试过快速入门案例，建议先看一下快速入门的内容。">
+<meta name="keywords" content="Spring Boot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Boot构建RESTful API与单元测试">
+<meta property="og:url" content="http://winterchens.github.io/2017/10/25/spring-boot-restful-api/index.html">
+<meta property="og:site_name" content="winter的博客">
+<meta property="og:description" content="首先，回顾并详细说明一下在快速入门中使用的@Controller、@RestController、@RequestMapping注解。如果您对Spring MVC不熟悉并且还没有尝试过快速入门案例，建议先看一下快速入门的内容。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://blog.didispace.com/content/images/posts/springbootrestfulapi-1.png">
+<meta property="og:updated_time" content="2017-10-25T11:42:21.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring Boot构建RESTful API与单元测试">
+<meta name="twitter:description" content="首先，回顾并详细说明一下在快速入门中使用的@Controller、@RestController、@RequestMapping注解。如果您对Spring MVC不熟悉并且还没有尝试过快速入门案例，建议先看一下快速入门的内容。">
+<meta name="twitter:image" content="http://blog.didispace.com/content/images/posts/springbootrestfulapi-1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://winterchens.github.io/2017/10/25/spring-boot-restful-api/"/>
+
+
+
+
+
+  <title>Spring Boot构建RESTful API与单元测试 | winter的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">winter的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">coding is my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/25/spring-boot-restful-api/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="winter chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://blog-1253516459.cossh.myqcloud.com/blog_img/2013010611300812.jpg?sign=sp7r7Suu4OZUAtsK8cuYA5FstKphPTEyNTM1MTY0NTkmaz1BS0lEWjJLUmx1ZGhLbjRGSEFHUW80Qjh4ZUJYd0dQTmFsQlEmZT0xNTA5MDA2NjE2JnQ9MTUwNjQxNDYxNiZyPTIxNDE4MjM5NjgmZj0vYmxvZ19pbWcvMjAxMzAxMDYxMTMwMDgxMi5qcGcmYj1ibG9n">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="winter的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Spring Boot构建RESTful API与单元测试</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T20:18:00+08:00">
+                2017-10-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring-Boot/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring Boot</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  908
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>首先，回顾并详细说明一下在快速入门中使用的<code>@Controller</code>、<code>@RestController</code>、<code>@RequestMapping</code>注解。如果您对Spring MVC不熟悉并且还没有尝试过快速入门案例，建议先看一下<a href="http://blog.csdn.net/winter_chen001/article/details/78330002" target="_blank" rel="external">快速入门</a>的内容。<br><a id="more"></a></p>
+<ul>
+<li>@Controller：修饰class，用来创建处理http请求的对象</li>
+<li>@RestController：Spring4之后加入的注解，原来在@Controller中返回json需要@ResponseBody来配合，如果直接用@RestController替代@Controller就不需要再配置@ResponseBody，默认返回json格式。</li>
+<li>@RequestMapping：配置url映射</li>
+</ul>
+<p>下面我们尝试使用Spring MVC来实现一组对User对象操作的RESTful API，配合注释详细说明在Spring MVC中如何映射HTTP请求、如何传参、如何编写单元测试。</p>
+<p><strong>RESTful API具体设计如下：</strong></p>
+<p><img src="http://blog.didispace.com/content/images/posts/springbootrestfulapi-1.png" alt=""></p>
+<p>User实体定义：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123; </div><div class="line"> </div><div class="line">    <span class="keyword">private</span> Long id; </div><div class="line">    <span class="keyword">private</span> String name; </div><div class="line">    <span class="keyword">private</span> Integer age; </div><div class="line"> </div><div class="line">    <span class="comment">// 省略setter和getter </span></div><div class="line">     </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>实现对User对象的操作接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@RestController</span> </div><div class="line"><span class="meta">@RequestMapping</span>(value=<span class="string">"/users"</span>)     <span class="comment">// 通过这里配置使下面的映射都在/users下 </span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserController</span> </span>&#123; </div><div class="line"> </div><div class="line">    <span class="comment">// 创建线程安全的Map </span></div><div class="line">    <span class="keyword">static</span> Map&lt;Long, User&gt; users = Collections.synchronizedMap(<span class="keyword">new</span> HashMap&lt;Long, User&gt;()); </div><div class="line"> </div><div class="line">    <span class="meta">@RequestMapping</span>(value=<span class="string">"/"</span>, method=RequestMethod.GET) </div><div class="line">    <span class="function"><span class="keyword">public</span> List&lt;User&gt; <span class="title">getUserList</span><span class="params">()</span> </span>&#123; </div><div class="line">        <span class="comment">// 处理"/users/"的GET请求，用来获取用户列表 </span></div><div class="line">        <span class="comment">// 还可以通过@RequestParam从页面中传递参数来进行查询条件或者翻页信息的传递 </span></div><div class="line">        List&lt;User&gt; r = <span class="keyword">new</span> ArrayList&lt;User&gt;(users.values()); </div><div class="line">        <span class="keyword">return</span> r; </div><div class="line">    &#125; </div><div class="line"> </div><div class="line">    <span class="meta">@RequestMapping</span>(value=<span class="string">"/"</span>, method=RequestMethod.POST) </div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">postUser</span><span class="params">(@ModelAttribute User user)</span> </span>&#123; </div><div class="line">        <span class="comment">// 处理"/users/"的POST请求，用来创建User </span></div><div class="line">        <span class="comment">// 除了@ModelAttribute绑定参数之外，还可以通过@RequestParam从页面中传递参数 </span></div><div class="line">        users.put(user.getId(), user); </div><div class="line">        <span class="keyword">return</span> <span class="string">"success"</span>; </div><div class="line">    &#125; </div><div class="line"> </div><div class="line">    <span class="meta">@RequestMapping</span>(value=<span class="string">"/&#123;id&#125;"</span>, method=RequestMethod.GET) </div><div class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">getUser</span><span class="params">(@PathVariable Long id)</span> </span>&#123; </div><div class="line">        <span class="comment">// 处理"/users/&#123;id&#125;"的GET请求，用来获取url中id值的User信息 </span></div><div class="line">        <span class="comment">// url中的id可通过@PathVariable绑定到函数的参数中 </span></div><div class="line">        <span class="keyword">return</span> users.get(id); </div><div class="line">    &#125; </div><div class="line"> </div><div class="line">    <span class="meta">@RequestMapping</span>(value=<span class="string">"/&#123;id&#125;"</span>, method=RequestMethod.PUT) </div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">putUser</span><span class="params">(@PathVariable Long id, @ModelAttribute User user)</span> </span>&#123; </div><div class="line">        <span class="comment">// 处理"/users/&#123;id&#125;"的PUT请求，用来更新User信息 </span></div><div class="line">        User u = users.get(id); </div><div class="line">        u.setName(user.getName()); </div><div class="line">        u.setAge(user.getAge()); </div><div class="line">        users.put(id, u); </div><div class="line">        <span class="keyword">return</span> <span class="string">"success"</span>; </div><div class="line">    &#125; </div><div class="line"> </div><div class="line">    <span class="meta">@RequestMapping</span>(value=<span class="string">"/&#123;id&#125;"</span>, method=RequestMethod.DELETE) </div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">deleteUser</span><span class="params">(@PathVariable Long id)</span> </span>&#123; </div><div class="line">        <span class="comment">// 处理"/users/&#123;id&#125;"的DELETE请求，用来删除User </span></div><div class="line">        users.remove(id); </div><div class="line">        <span class="keyword">return</span> <span class="string">"success"</span>; </div><div class="line">    &#125; </div><div class="line"> </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>下面针对该Controller编写测试用例验证正确性，具体如下。当然也可以通过浏览器插件等进行请求提交验证。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@RunWith</span>(SpringJUnit4ClassRunner.class) </div><div class="line"><span class="meta">@SpringApplicationConfiguration</span>(classes = MockServletContext.class) </div><div class="line"><span class="meta">@WebAppConfiguration</span> </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ApplicationTests</span> </span>&#123; </div><div class="line"> </div><div class="line">	<span class="keyword">private</span> MockMvc mvc; </div><div class="line"> </div><div class="line">	<span class="meta">@Before</span> </div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUp</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123; </div><div class="line">		mvc = MockMvcBuilders.standaloneSetup(<span class="keyword">new</span> UserController()).build(); </div><div class="line">	&#125; </div><div class="line"> </div><div class="line">	<span class="meta">@Test</span> </div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testUserController</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123; </div><div class="line">        <span class="comment">// 测试UserController </span></div><div class="line">		RequestBuilder request = <span class="keyword">null</span>; </div><div class="line"> </div><div class="line">		<span class="comment">// 1、get查一下user列表，应该为空 </span></div><div class="line">		request = get(<span class="string">"/users/"</span>); </div><div class="line">		mvc.perform(request) </div><div class="line">				.andExpect(status().isOk()) </div><div class="line">				.andExpect(content().string(equalTo(<span class="string">"[]"</span>))); </div><div class="line"> </div><div class="line">		<span class="comment">// 2、post提交一个user </span></div><div class="line">		request = post(<span class="string">"/users/"</span>) </div><div class="line">				.param(<span class="string">"id"</span>, <span class="string">"1"</span>) </div><div class="line">				.param(<span class="string">"name"</span>, <span class="string">"测试大师"</span>) </div><div class="line">				.param(<span class="string">"age"</span>, <span class="string">"20"</span>); </div><div class="line">		mvc.perform(request) </div><div class="line">		        .andExpect(content().string(equalTo(<span class="string">"success"</span>))); </div><div class="line"> </div><div class="line">		<span class="comment">// 3、get获取user列表，应该有刚才插入的数据 </span></div><div class="line">		request = get(<span class="string">"/users/"</span>); </div><div class="line">		mvc.perform(request) </div><div class="line">				.andExpect(status().isOk()) </div><div class="line">				.andExpect(content().string(equalTo(<span class="string">"[&#123;\"id\":1,\"name\":\"测试大师\",\"age\":20&#125;]"</span>))); </div><div class="line"> </div><div class="line">		<span class="comment">// 4、put修改id为1的user </span></div><div class="line">		request = put(<span class="string">"/users/1"</span>) </div><div class="line">				.param(<span class="string">"name"</span>, <span class="string">"测试终极大师"</span>) </div><div class="line">				.param(<span class="string">"age"</span>, <span class="string">"30"</span>); </div><div class="line">		mvc.perform(request) </div><div class="line">				.andExpect(content().string(equalTo(<span class="string">"success"</span>))); </div><div class="line"> </div><div class="line">		<span class="comment">// 5、get一个id为1的user </span></div><div class="line">		request = get(<span class="string">"/users/1"</span>); </div><div class="line">		mvc.perform(request) </div><div class="line">				.andExpect(content().string(equalTo(<span class="string">"&#123;\"id\":1,\"name\":\"测试终极大师\",\"age\":30&#125;"</span>))); </div><div class="line"> </div><div class="line">		<span class="comment">// 6、del删除id为1的user </span></div><div class="line">		request = delete(<span class="string">"/users/1"</span>); </div><div class="line">		mvc.perform(request) </div><div class="line">				.andExpect(content().string(equalTo(<span class="string">"success"</span>))); </div><div class="line"> </div><div class="line">		<span class="comment">// 7、get查一下user列表，应该为空 </span></div><div class="line">		request = get(<span class="string">"/users/"</span>); </div><div class="line">		mvc.perform(request) </div><div class="line">				.andExpect(status().isOk()) </div><div class="line">				.andExpect(content().string(equalTo(<span class="string">"[]"</span>))); </div><div class="line"> </div><div class="line">	&#125; </div><div class="line"> </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>至此，我们通过引入web模块（没有做其他的任何配置），就可以轻松利用Spring MVC的功能，以非常简洁的代码完成了对User对象的RESTful API的创建以及单元测试的编写。其中同时介绍了Spring MVC中最为常用的几个核心注解：<code>@Controller</code>,<code>@RestController</code>,<code>RequestMapping</code>以及一些参数绑定的注解：<code>@PathVariable</code>,<code>@ModelAttribute</code>,<code>@RequestParam</code>等。</p>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><p><a href="https://gitee.com/didispace/SpringBoot-Learning" target="_blank" rel="external">springboot完整案例</a></p>
+<p>原作者：程序员didi<br>原文出处：<a href="http://blog.didispace.com/springbootrestfulapi/" target="_blank" rel="external">http://blog.didispace.com/springbootrestfulapi/</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring-Boot/" rel="tag"><i class="fa fa-tag"></i> Spring Boot</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/25/spring-boot-web/" rel="next" title="Spring Boot开发Web应用">
+                <i class="fa fa-chevron-left"></i> Spring Boot开发Web应用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/25/spring-boot-project/" rel="prev" title="Spring Boot工程结构推荐">
+                Spring Boot工程结构推荐 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+             
+               <div onclick="ShowGitment()" id="gitment-display-button">显示 Gitment 评论</div>
+               <div id="gitment-container" style="display:none"></div>
+             
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="http://blog-1253516459.cossh.myqcloud.com/blog_img/2013010611300812.jpg?sign=sp7r7Suu4OZUAtsK8cuYA5FstKphPTEyNTM1MTY0NTkmaz1BS0lEWjJLUmx1ZGhLbjRGSEFHUW80Qjh4ZUJYd0dQTmFsQlEmZT0xNTA5MDA2NjE2JnQ9MTUwNjQxNDYxNiZyPTIxNDE4MjM5NjgmZj0vYmxvZ19pbWcvMjAxMzAxMDYxMTMwMDgxMi5qcGcmYj1ibG9n"
+              alt="winter chen" />
+          
+            <p class="site-author-name" itemprop="name">winter chen</p>
+            <p class="site-description motion-element" itemprop="description">java开发工程师，喜欢代码，喜欢技术</p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WinterChenS" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:1085143002@qq.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#代码示例"><span class="nav-number">1.</span> <span class="nav-text">代码示例</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">winter chen</span>
+
+
+  
+</div>
+
+
+  <div class="powered-by">
+  <i class="fa fa-user-md"></i><<span id="busuanzi_container_site_uv">
+    本站总访问量<span id="busuanzi_value_site_uv"></span>次
+   </span>
+  </div>
+
+<div class="theme-info">
+    <div class="powered-by"></div>
+    <span class="post-count">博客全站共31.9k字</span>
+  </div>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+   
+   
+   
+   
+   <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+   <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+   
+       <script type="text/javascript">
+           function ShowGitment(){
+               document.getElementById("gitment-display-button").style.display = "none";
+               document.getElementById("gitment-container").style.display = "block";
+               var gitment = new Gitment({
+                   id: document.location.href,
+                   owner: 'WinterChenS',
+                   repo: 'winterchens.github.io',
+                   oauth: {
+                       client_id: 'c26c5abab389ac9a5ca0',
+                       client_secret: '2ea50b7f56976b89b22d61ecdd8b8096b202e578',
+                   }});
+               gitment.render('gitment-container');
+           }
+       </script>
+   
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

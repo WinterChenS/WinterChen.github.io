@@ -262,7 +262,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/21/spring-cloud-starter-dalston-5-1/">
+    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/25/layui-page-2.0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="winter chen">
@@ -281,7 +281,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/10/21/spring-cloud-starter-dalston-5-1/" itemprop="url">Spring Cloud构建微服务架构：Hystrix监控面板【Dalston版】</a></h1>
+                <a class="post-title-link" href="/2017/10/25/layui-page-2.0/" itemprop="url">layui完美分页，ajax请求分页（真分页） 【2.0版本】</a></h1>
         
 
         <div class="post-meta">
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T20:50:00+08:00">
-                2017-10-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T20:55:00+08:00">
+                2017-10-25
               </time>
             
 
@@ -316,8 +316,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spring-Cloud/" itemprop="url" rel="index">
-                    <span itemprop="name">Spring Cloud</span>
+                  <a href="/categories/layui/" itemprop="url" rel="index">
+                    <span itemprop="name">layui</span>
                   </a>
                 </span>
 
@@ -347,718 +347,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,471
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  6
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <blockquote>
-<p> 在上一篇<a href="https://winterchens.github.io/2017/10/21/spring-cloud-starter-dalston-4-3/">《服务容错保护（hystrix断路器）》</a>的介绍中，我们提到断路器是根据一段时间窗内的请求情况来判断并操作断路器的打开和关闭状态的。而这些请求情况的指标信息都是HystrixCommand和HystrixObservableCommand实例在执行过程中记录的重要度量信息，它们除了Hystrix断路器实现中使用之外，对于系统运维也有非常大的帮助。这些指标信息会以“滚动时间窗”与“桶”结合的方式进行汇总，并在内存中驻留一段时间，以供内部或外部进行查询使用，Hystrix Dashboard就是这些指标内容的消费者之一。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/10/21/spring-cloud-starter-dalston-5-1/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/21/spring-cloud-starter-dalston-4-3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="winter chen">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://blog-1253516459.cossh.myqcloud.com/blog_img/2013010611300812.jpg?sign=sp7r7Suu4OZUAtsK8cuYA5FstKphPTEyNTM1MTY0NTkmaz1BS0lEWjJLUmx1ZGhLbjRGSEFHUW80Qjh4ZUJYd0dQTmFsQlEmZT0xNTA5MDA2NjE2JnQ9MTUwNjQxNDYxNiZyPTIxNDE4MjM5NjgmZj0vYmxvZ19pbWcvMjAxMzAxMDYxMTMwMDgxMi5qcGcmYj1ibG9n">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="winter的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/21/spring-cloud-starter-dalston-4-3/" itemprop="url">Spring Cloud构建微服务架构：服务容错保护（Hystrix断路器）【Dalston版】</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T20:35:00+08:00">
-                2017-10-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spring-Cloud/" itemprop="url" rel="index">
-                    <span itemprop="name">Spring Cloud</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1,368
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  5
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
-<p>在前两篇<a href="https://winterchens.github.io/2017/10/21/spring-cloud-starter-dalston-4-1/">《Spring Cloud构建微服务架构：服务容错保护（Hystrix服务降级）》</a>和<a href="https://winterchens.github.io/2017/10/21/spring-cloud-starter-dalston-4-2/">《Spring Cloud构建微服务架构：服务容错保护（Hystrix依赖隔离）》</a>中，我们对Hystrix提供的服务降级和依赖隔离有了基本的认识。下面我们将继续说说Hystrix的另外一个重要元件：断路器。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/10/21/spring-cloud-starter-dalston-4-3/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/21/spring-cloud-starter-dalston-4-2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="winter chen">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://blog-1253516459.cossh.myqcloud.com/blog_img/2013010611300812.jpg?sign=sp7r7Suu4OZUAtsK8cuYA5FstKphPTEyNTM1MTY0NTkmaz1BS0lEWjJLUmx1ZGhLbjRGSEFHUW80Qjh4ZUJYd0dQTmFsQlEmZT0xNTA5MDA2NjE2JnQ9MTUwNjQxNDYxNiZyPTIxNDE4MjM5NjgmZj0vYmxvZ19pbWcvMjAxMzAxMDYxMTMwMDgxMi5qcGcmYj1ibG9n">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="winter的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/21/spring-cloud-starter-dalston-4-2/" itemprop="url">Spring Cloud构建微服务架构：服务容错保护（Hystrix依赖隔离）【Dalston版】</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T20:30:00+08:00">
-                2017-10-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spring-Cloud/" itemprop="url" rel="index">
-                    <span itemprop="name">Spring Cloud</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1,835
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  6
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
-<p> 在上一篇<a href="https://winterchens.github.io/2017/10/21/spring-cloud-starter-dalston-4-1/">《Spring Cloud构建微服务架构：服务容错保护（Hystrix服务降级）》</a>中，我们已经体验了如何使用@HystrixCommand来为一个依赖资源定义服务降级逻辑。实现方式非常简单，同时对于降级逻辑还能实现一些更加复杂的级联降级等策略。之前对于使用Hystrix来实现服务容错保护时，除了服务降级之外，我们还提到过线程隔离、断路器等功能。那么在本篇中我们就来具体说说线程隔离。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/10/21/spring-cloud-starter-dalston-4-2/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/21/spring-cloud-starter-dalston-4-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="winter chen">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://blog-1253516459.cossh.myqcloud.com/blog_img/2013010611300812.jpg?sign=sp7r7Suu4OZUAtsK8cuYA5FstKphPTEyNTM1MTY0NTkmaz1BS0lEWjJLUmx1ZGhLbjRGSEFHUW80Qjh4ZUJYd0dQTmFsQlEmZT0xNTA5MDA2NjE2JnQ9MTUwNjQxNDYxNiZyPTIxNDE4MjM5NjgmZj0vYmxvZ19pbWcvMjAxMzAxMDYxMTMwMDgxMi5qcGcmYj1ibG9n">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="winter的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/21/spring-cloud-starter-dalston-4-1/" itemprop="url">Spring Cloud构建微服务架构：服务容错保护（Hystrix服务降级）【Dalston版】</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T20:22:00+08:00">
-                2017-10-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spring-Cloud/" itemprop="url" rel="index">
-                    <span itemprop="name">Spring Cloud</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1,220
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  5
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>在微服务架构中，我们将系统拆分成了一个个的服务单元，各单元应用间通过服务注册与订阅的方式互相依赖。由于每个单元都在不同的进程中运行，依赖通过远程调用的方式执行，这样就有可能因为网络原因或是依赖服务自身问题出现调用故障或延迟，而这些问题会直接导致调用方的对外服务也出现延迟，若此时调用方的请求不断增加，最后就会出现因等待出现故障的依赖方响应而形成任务积压，线程资源无法释放，最终导致自身服务的瘫痪，进一步甚至出现故障的蔓延最终导致整个系统的瘫痪。如果这样的架构存在如此严重的隐患，那么相较传统架构就更加的不稳定。为了解决这样的问题，因此产生了断路器等一系列的服务保护机制。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/10/21/spring-cloud-starter-dalston-4-1/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/21/spring-cloud-starter-dalston-3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="winter chen">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://blog-1253516459.cossh.myqcloud.com/blog_img/2013010611300812.jpg?sign=sp7r7Suu4OZUAtsK8cuYA5FstKphPTEyNTM1MTY0NTkmaz1BS0lEWjJLUmx1ZGhLbjRGSEFHUW80Qjh4ZUJYd0dQTmFsQlEmZT0xNTA5MDA2NjE2JnQ9MTUwNjQxNDYxNiZyPTIxNDE4MjM5NjgmZj0vYmxvZ19pbWcvMjAxMzAxMDYxMTMwMDgxMi5qcGcmYj1ibG9n">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="winter的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/21/spring-cloud-starter-dalston-3/" itemprop="url">Spring Cloud构建微服务架构：分布式配置中心【Dalston版】</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T20:15:00+08:00">
-                2017-10-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spring-Cloud/" itemprop="url" rel="index">
-                    <span itemprop="name">Spring Cloud</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1,641
+                  1,334
                 </span>
               
 
@@ -1096,14 +385,20 @@
 
       
         
-          <p>Spring Cloud Config是Spring Cloud团队创建的一个全新项目，用来为分布式系统中的基础设施和微服务应用提供集中化的外部配置支持，它分为服务端与客户端两个部分。其中服务端也称为分布式配置中心，它是一个独立的微服务应用，用来连接配置仓库并为客户端提供获取配置信息、加密/解密信息等访问接口；而客户端则是微服务架构中的各个微服务应用或基础设施，它们通过指定的配置中心来管理应用资源与业务相关的配置内容，并在启动的时候从配置中心获取和加载配置信息。Spring Cloud Config实现了对服务端和客户端中环境变量和属性配置的抽象映射，所以它除了适用于Spring构建的应用程序之外，也可以在任何其他语言运行的应用程序中使用。由于Spring Cloud Config实现的配置中心默认采用Git来存储配置信息，所以使用Spring Cloud Config构建的配置服务器，天然就支持对微服务应用配置信息的版本管理，并且可以通过Git客户端工具来方便的管理和访问配置内容。当然它也提供了对其他存储方式的支持，比如：SVN仓库、本地化文件系统。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/10/21/spring-cloud-starter-dalston-3/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+          
+            <h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p><strong>使用的layui版本为：layui-v2.0以上版本，如果v1.0版本请看我另外一篇博客 <a href="http://blog.csdn.net/Winter_chen001/article/details/72820746" target="_blank" rel="external"> 《layui完美分页，ajax请求分页（真分页）》</a></strong></p>
+<p>最近因为以为学者在看了我上一篇关于layui分页的博客遇到了问题，原因是因为使用了新版本2.x，导致有一些属性改变了，所以出了这篇新版本的博客，本文是根据上一篇博客改变而成，如有疑问请联系我 email：1085143002@qq.com</p>
+<p>###完整代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">%@</span> <span class="attr">page</span> <span class="attr">language</span>=<span class="string">"java"</span> <span class="attr">contentType</span>=<span class="string">"text/html; charset=UTF-8"</span> <span class="attr">pageEncoding</span>=<span class="string">"UTF-8"</span>%&gt;</span></div><div class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"renderer"</span> <span class="attr">content</span>=<span class="string">"webkit"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"X-UA-Compatible"</span> <span class="attr">content</span>=<span class="string">"IE=edge,chrome=1"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1, maximum-scale=1"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"apple-mobile-web-app-status-bar-style"</span> <span class="attr">content</span>=<span class="string">"black"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"apple-mobile-web-app-capable"</span> <span class="attr">content</span>=<span class="string">"yes"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"format-detection"</span> <span class="attr">content</span>=<span class="string">"telephone=no"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">link</span>  <span class="attr">rel</span>=<span class="string">"icon"</span> <span class="attr">href</span>=<span class="string">"static/images/titleLogo.png"</span>  /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>门店管理后台<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"static/layui/plugins/layui/css/layui.css"</span> <span class="attr">media</span>=<span class="string">"all"</span> /&gt;</span></div><div class="line">    <span class="comment">&lt;!-- &lt;link rel="stylesheet" type="text/css" href="static/css/reset.css"&gt;</span></div><div class="line"><span class="comment">    &lt;link rel="stylesheet" type="text/css" href="static/css/commend.css"&gt; --&gt;</span></div><div class="line">    <span class="comment">&lt;!-- &lt;link rel="stylesheet" href="static/css/jqpagination.css" /&gt; --&gt;</span></div><div class="line">    <span class="comment">&lt;!-- &lt;link rel="stylesheet" type="text/css" href="static/css/shopCustomerManager.css"&gt; --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"static/js/jquery-3.1.1.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"static/layui/plugins/layui/layui.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!-- &lt;script type="text/javascript" src="static/js/jquery.jqpagination.js"&gt;&lt;/script&gt; --&gt;</span></div><div class="line">   	<span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="undefined">	   	$(document).ready(function()&#123;</span></div><div class="line"><span class="undefined">	   		  //ajax请求后台数据</span></div><div class="line"><span class="undefined">		      getShopCustomerManagePageInfo();</span></div><div class="line"><span class="undefined">		      </span></div><div class="line"><span class="undefined">		</span></div><div class="line"><span class="undefined">	   		  //点击搜索时 搜索数据</span></div><div class="line"><span class="undefined">	   		  $("#selectButton").click(function()&#123; </span></div><div class="line"><span class="undefined">	   			getShopCustomerManagePageInfo();</span></div><div class="line"><span class="undefined">	   			currentPageAllAppoint = 1; //当点击搜索的时候，应该回到第一页</span></div><div class="line"><span class="undefined">	   			toPage();//然后进行分页的初始化</span></div><div class="line"><span class="undefined">	   			</span></div><div class="line"><span class="undefined">	   	      &#125;)</span></div><div class="line"><span class="undefined">	   	   toPage();</span></div><div class="line"><span class="undefined">	   	&#125;);</span></div><div class="line"><span class="undefined">	   	</span></div><div class="line"><span class="undefined">	  	//分页参数设置 这些全局变量关系到分页的功能</span></div><div class="line"><span class="undefined">	   	var startAllAppoint = 0;//开始页数</span></div><div class="line"><span class="undefined">	   	var limitAllAppoint = 10;//每页显示数据条数</span></div><div class="line"><span class="undefined">	   	var currentPageAllAppoint = 1;//当前页数</span></div><div class="line"><span class="undefined">	   	var dataLength = 0;//数据总条数</span></div><div class="line"><span class="undefined">	   	//ajax请求后台数据</span></div><div class="line"><span class="undefined">	   	function getShopCustomerManagePageInfo()&#123;</span></div><div class="line"><span class="undefined">	   		$.ajax(&#123;</span></div><div class="line"><span class="undefined">	   			type:"post",</span></div><div class="line"><span class="undefined">	   			async:false,</span></div><div class="line"><span class="undefined">	   			url:"list_shop_customers_info",</span></div><div class="line"><span class="undefined">	   			data:&#123;start:startAllAppoint, limit:limitAllAppoint,selectValue:$("#selectValue").val()&#125;,</span></div><div class="line"><span class="undefined">	   			success:function(data,status)&#123;</span></div><div class="line"><span class="undefined">	   				data=eval("("+data+")");</span></div><div class="line"><span class="undefined">	   				getShopCustomesInfo(data.root);</span></div><div class="line"><span class="undefined">	   				startAllAppoint = data.currentResult;//当前页数(后台返回)</span></div><div class="line"><span class="undefined">	   				dataLength  = data.total;//数据总条数</span></div><div class="line"><span class="undefined">	   			&#125;</span></div><div class="line"><span class="undefined">	   		&#125;);</span></div><div class="line"><span class="undefined">	   		</span></div><div class="line"><span class="undefined">	   	&#125;</span></div><div class="line"><span class="undefined">	   	</span></div><div class="line"><span class="undefined">	   </span></div><div class="line"><span class="undefined">	   	</span></div><div class="line"><span class="undefined">	   	function getShopCustomesInfo(data)&#123;</span></div><div class="line"><span class="xml">	   		var s = "<span class="tag">&lt;<span class="name">tr</span>&gt;</span><span class="tag">&lt;<span class="name">th</span>&gt;</span>姓名<span class="tag">&lt;/<span class="name">th</span>&gt;</span><span class="tag">&lt;<span class="name">th</span>&gt;</span>性别<span class="tag">&lt;/<span class="name">th</span>&gt;</span><span class="tag">&lt;<span class="name">th</span>&gt;</span>电话<span class="tag">&lt;/<span class="name">th</span>&gt;</span><span class="tag">&lt;<span class="name">th</span>&gt;</span>备案楼盘<span class="tag">&lt;/<span class="name">th</span>&gt;</span><span class="tag">&lt;<span class="name">th</span>&gt;</span>已成交<span class="tag">&lt;/<span class="name">th</span>&gt;</span><span class="tag">&lt;<span class="name">th</span>&gt;</span>归属经纪人<span class="tag">&lt;/<span class="name">th</span>&gt;</span><span class="tag">&lt;<span class="name">th</span>&gt;</span>添加时间<span class="tag">&lt;/<span class="name">th</span>&gt;</span><span class="tag">&lt;/<span class="name">tr</span>&gt;</span>";</span></div><div class="line"><span class="undefined">	   		$.each(data,function(v,o)&#123;</span></div><div class="line"><span class="xml">	   				s+='<span class="tag">&lt;<span class="name">tr</span>&gt;</span><span class="tag">&lt;<span class="name">td</span>&gt;</span>'+o.cusName+'<span class="tag">&lt;/<span class="name">td</span>&gt;</span>';</span></div><div class="line"><span class="xml">	   				s+='<span class="tag">&lt;<span class="name">td</span>&gt;</span>'+o.cusSex+'<span class="tag">&lt;/<span class="name">td</span>&gt;</span>';</span></div><div class="line"><span class="xml">	   				s+='<span class="tag">&lt;<span class="name">td</span>&gt;</span>'+o.phone+'<span class="tag">&lt;/<span class="name">td</span>&gt;</span>';</span></div><div class="line"><span class="xml">	   				s+='<span class="tag">&lt;<span class="name">td</span>&gt;</span>'+o.records+'<span class="tag">&lt;/<span class="name">td</span>&gt;</span>';</span></div><div class="line"><span class="xml">	   				s+='<span class="tag">&lt;<span class="name">td</span>&gt;</span>'+o.alreadyDeal+'<span class="tag">&lt;/<span class="name">td</span>&gt;</span>';</span></div><div class="line"><span class="xml">	   				s+='<span class="tag">&lt;<span class="name">td</span>&gt;</span>'+o.theMedi+'<span class="tag">&lt;/<span class="name">td</span>&gt;</span>';</span></div><div class="line"><span class="xml">	   				s+='<span class="tag">&lt;<span class="name">td</span>&gt;</span>'+o.addTime+'<span class="tag">&lt;/<span class="name">td</span>&gt;</span><span class="tag">&lt;/<span class="name">tr</span>&gt;</span>';</span></div><div class="line"><span class="undefined">	   		&#125;);</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="undefined">	   		if(data.length&gt;0)&#123;</span></div><div class="line"><span class="undefined">	   			$("#t_customerInfo").html(s);</span></div><div class="line"><span class="undefined">	   		&#125;else&#123;</span></div><div class="line"><span class="undefined">	   			$("#page1").hide();</span></div><div class="line"><span class="xml">	   			$("#t_customerInfo").html("<span class="tag">&lt;<span class="name">br</span>/&gt;</span><span class="tag">&lt;<span class="name">span</span> <span class="attr">style</span>=<span class="string">'width:10%;height:30px;display:block;margin:0 auto;'</span>&gt;</span>暂无数据<span class="tag">&lt;/<span class="name">span</span>&gt;</span>");</span></div><div class="line"><span class="undefined">	   		&#125;</span></div><div class="line"><span class="undefined">	   		</span></div><div class="line"><span class="undefined">	   		</span></div><div class="line"><span class="undefined">	   	&#125;</span></div><div class="line"><span class="undefined">   		</span></div><div class="line"><span class="undefined">	   	</span></div><div class="line"><span class="undefined">	   	</span></div><div class="line"><span class="undefined">	   	function toPage()&#123;</span></div><div class="line"><span class="undefined">	   		</span></div><div class="line"><span class="undefined">	   		layui.use(['form', 'laypage', 'layedit','layer', 'laydate'], function() &#123;</span></div><div class="line"><span class="undefined">				var form = layui.form(),</span></div><div class="line"><span class="undefined">					layer = layui.layer,</span></div><div class="line"><span class="undefined">					layedit = layui.layedit,</span></div><div class="line"><span class="undefined">					laydate = layui.laydate,</span></div><div class="line"><span class="undefined">					laypage = layui.laypage;</span></div><div class="line"><span class="undefined">				</span></div><div class="line"><span class="undefined">				var nums = 10;</span></div><div class="line"><span class="undefined">				//调用分页</span></div><div class="line"><span class="undefined">				  laypage(&#123;</span></div><div class="line"><span class="undefined">				    cont: 'paged'</span></div><div class="line"><span class="undefined">				    ,count: dataLength //这个是后台返回的数据的总条数</span></div><div class="line"><span class="undefined">				    ,limit: limitAllAppoint   //每页显示的数据的条数,layui会根据count，limit进行分页的计算</span></div><div class="line"><span class="undefined">				    ,curr: currentPageAllAppoint</span></div><div class="line"><span class="undefined">				    ,skip: true</span></div><div class="line"><span class="undefined">				    ,jump: function(obj, first)&#123;</span></div><div class="line"><span class="undefined">				    	</span></div><div class="line"><span class="undefined">				    	currentPageAllAppoint = obj.curr;</span></div><div class="line"><span class="undefined">				    	startAllAppoint = (obj.curr-1)*obj.limit;</span></div><div class="line"><span class="undefined">				      //document.getElementById('biuuu_city_list').innerHTML = render(obj, obj.curr);</span></div><div class="line"><span class="undefined">				      if(!first)&#123; //一定要加此判断，否则初始时会无限刷新</span></div><div class="line"><span class="undefined">				      getShopCustomerManagePageInfo();//一定要把翻页的ajax请求放到这里，不然会请求两次。</span></div><div class="line"><span class="undefined">				          //location.href = '?page='+obj.curr;</span></div><div class="line"><span class="undefined">				        &#125;</span></div><div class="line"><span class="undefined">				    &#125;</span></div><div class="line"><span class="undefined">				  &#125;);</span></div><div class="line"><span class="undefined">				</span></div><div class="line"><span class="undefined">				</span></div><div class="line"><span class="undefined">			&#125;);</span></div><div class="line"><span class="undefined">	   	&#125;;</span></div><div class="line"><span class="undefined">	   	</span></div><div class="line"><span class="undefined">   	</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"admin-main"</span>&gt;</span></div><div class="line">	</div><div class="line">	</div><div class="line">				<span class="tag">&lt;<span class="name">blockquote</span> <span class="attr">class</span>=<span class="string">"layui-elem-quote"</span>&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">form</span> <span class="attr">class</span>=<span class="string">"layui-form"</span> <span class="attr">action</span>=<span class="string">""</span> &gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"layui-form-item"</span>&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"layui-input-inline"</span>&gt;</span></div><div class="line">					<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">id</span>=<span class="string">"selectValue"</span> <span class="attr">lay-verify</span>=<span class="string">"required"</span> <span class="attr">placeholder</span>=<span class="string">"客户姓名，电话"</span> <span class="attr">autocomplete</span>=<span class="string">"off"</span> <span class="attr">class</span>=<span class="string">"layui-input"</span>&gt;</span></div><div class="line">			    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">			    <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">"layui-btn"</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">id</span>=<span class="string">"selectButton"</span>&gt;</span>搜索<span class="tag">&lt;/<span class="name">button</span>&gt;</span></div><div class="line">				<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">				<span class="tag">&lt;/<span class="name">form</span>&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">span</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"shop_customer_manager_page_info"</span>&gt;</span>显示所有客户<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></div><div class="line">				<span class="tag">&lt;/<span class="name">blockquote</span>&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">fieldset</span> <span class="attr">class</span>=<span class="string">"layui-elem-field"</span>&gt;</span></div><div class="line">					<span class="tag">&lt;<span class="name">legend</span>&gt;</span>客户列表<span class="tag">&lt;/<span class="name">legend</span>&gt;</span></div><div class="line">					<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"layui-field-box layui-form"</span>&gt;</span></div><div class="line">						<span class="tag">&lt;<span class="name">table</span> <span class="attr">class</span>=<span class="string">"layui-table admin-table"</span> <span class="attr">id</span>=<span class="string">"t_customerInfo"</span>&gt;</span></div><div class="line">							</div><div class="line">						<span class="tag">&lt;/<span class="name">table</span>&gt;</span></div><div class="line">					<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">				<span class="tag">&lt;/<span class="name">fieldset</span>&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"admin-table-page"</span>&gt;</span></div><div class="line">					<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"paged"</span> <span class="attr">class</span>=<span class="string">"page"</span>&gt;</span></div><div class="line">					<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">				<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">			<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">	</div><div class="line">   </div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>###java代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">	 * shop 客户管理 list</span></div><div class="line"><span class="comment">	 * <span class="doctag">@param</span> start</span></div><div class="line"><span class="comment">	 * <span class="doctag">@param</span> limit</span></div><div class="line"><span class="comment">	 * <span class="doctag">@param</span> selectValue</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="meta">@ResponseBody</span></div><div class="line">	<span class="meta">@RequestMapping</span>(<span class="string">"/list_shop_customers_info"</span>)</div><div class="line">	<span class="function"><span class="keyword">public</span> Object <span class="title">listShopCustomerInfo</span><span class="params">(Integer start, Integer limit, String selectValue)</span> </span>&#123;</div><div class="line">		Page page = <span class="keyword">new</span> Page();</div><div class="line">		page.setStart(start);</div><div class="line">		page.setLimit(limit);</div><div class="line">		<span class="comment">// 获取session中的用户信息</span></div><div class="line">		User u = (User) <span class="keyword">this</span>.request.getSession().getAttribute(<span class="string">"userInfo"</span>);</div><div class="line">		<span class="comment">// 获取持久化用户对象</span></div><div class="line">		User user = userService.findById(u.getUserId());</div><div class="line">		<span class="keyword">if</span> (user != <span class="keyword">null</span>) &#123;</div><div class="line">			projectCustomerService.findShopCustomersByUser(user, selectValue, page);</div><div class="line">			<span class="keyword">return</span> page;</div><div class="line">		&#125;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>###sevice层</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">findShopCustomersByUser</span><span class="params">(User user, String selectValue, Page page)</span> </span>&#123;</div><div class="line">		List cmList = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">		<span class="keyword">int</span> total = <span class="number">0</span>;</div><div class="line">		<span class="keyword">if</span>(user!=<span class="keyword">null</span> &amp;&amp; user.getParentId()!=<span class="keyword">null</span> &amp;&amp; !user.getParentId().equals(<span class="string">""</span>))&#123;</div><div class="line">			String hql = <span class="string">"from ShopCustomers as model where model.shopId = "</span> + Integer.parseInt(user.getParentId());</div><div class="line">			<span class="keyword">if</span>(selectValue!=<span class="keyword">null</span> &amp;&amp; !selectValue.equals(<span class="string">""</span>))&#123;</div><div class="line">				hql+=<span class="string">"and model.shopCustomerName like '%"</span> +selectValue+<span class="string">"%' or model.shopCustomerPhone like '%"</span> +selectValue+<span class="string">"%'"</span>;</div><div class="line">			&#125;</div><div class="line">			List&lt;ShopCustomers&gt; list = baseDao.findByHql(hql,page.getStart(),page.getLimit());</div><div class="line">			<span class="keyword">for</span>(ShopCustomers sc : list)&#123;</div><div class="line">				User u = (User) baseDao.loadById(User.class, sc.getUserId());</div><div class="line">				String cGRSHql = <span class="string">"select count(*) from GuideRecords where shopCustomerId = '"</span>+sc.getShopCustomerId()+<span class="string">"'"</span>;</div><div class="line">				String cDealHql = <span class="string">"select count(*) from GuideRecords where shopCustomerId = '"</span>+sc.getShopCustomerId()+<span class="string">"' and isDeal = 1"</span>;</div><div class="line">				<span class="keyword">int</span> floorCounts = baseDao.countQuery(cGRSHql);<span class="comment">//备案楼盘数</span></div><div class="line">				<span class="keyword">int</span> dealCounts = baseDao.countQuery(cDealHql);<span class="comment">//已成交数</span></div><div class="line">				CustomerManager cm = <span class="keyword">new</span> CustomerManager();</div><div class="line">				CustomerManager cmObj = cm.createCusManObj(sc,u);</div><div class="line">				cmObj.setRecords(floorCounts);</div><div class="line">				cmObj.setAlreadyDeal(dealCounts);</div><div class="line">				cmList.add(cmObj);</div><div class="line">			&#125;</div><div class="line">			String cHql = <span class="string">"select count(*) "</span>+hql;</div><div class="line">			total = baseDao.countQuery(cHql);</div><div class="line">		&#125;</div><div class="line">		page.setRoot(cmList);</div><div class="line">		page.setTotal(total);</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>###分页对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.sc.tradmaster.utils;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 分页对象</span></div><div class="line"><span class="comment"> * <span class="doctag">@author</span> grl 2017-01-05</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Page</span> </span>&#123;</div><div class="line">	<span class="comment">/** 总记录数 */</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> total;</div><div class="line">	<span class="comment">/** 分页结果 */</span></div><div class="line">	<span class="keyword">private</span> List root;</div><div class="line">	<span class="comment">/** 开始页码 */</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> start;</div><div class="line">	<span class="comment">/** 每页多少 */</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> limit;</div><div class="line">	<span class="comment">/** 查询条件 */</span></div><div class="line">	<span class="keyword">private</span> String wheres;</div><div class="line">	</div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> currentPage;	<span class="comment">//当前页</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> currentResult;	<span class="comment">//当前记录起始索引</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> totalPage;		<span class="comment">//总页数</span></div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCurrentPage</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">if</span>(currentPage&lt;=<span class="number">0</span>)</div><div class="line">			currentPage = <span class="number">1</span>;</div><div class="line">		<span class="keyword">return</span> currentPage;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCurrentPage</span><span class="params">(<span class="keyword">int</span> currentPage)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.currentPage = currentPage;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCurrentResult</span><span class="params">()</span> </span>&#123;</div><div class="line">		currentResult = (getCurrentPage()-<span class="number">1</span>)*getLimit();</div><div class="line">		<span class="keyword">if</span>(currentResult&lt;<span class="number">0</span>)</div><div class="line">			currentResult = <span class="number">0</span>;</div><div class="line">		<span class="keyword">return</span> currentResult;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCurrentResult</span><span class="params">(<span class="keyword">int</span> currentResult)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.currentResult = currentResult;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getTotalPage</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">if</span>(total%limit==<span class="number">0</span>)</div><div class="line">			totalPage = total/limit;</div><div class="line">		<span class="keyword">else</span></div><div class="line">			totalPage = total/limit+<span class="number">1</span>;</div><div class="line">		<span class="keyword">return</span> totalPage;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTotalPage</span><span class="params">(<span class="keyword">int</span> totalPage)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.totalPage = totalPage;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getTotal</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> total;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTotal</span><span class="params">(<span class="keyword">int</span> total)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.total = total;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> List <span class="title">getRoot</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> root;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setRoot</span><span class="params">(List root)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.root = root;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getStart</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> start;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setStart</span><span class="params">(<span class="keyword">int</span> start)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.start = start;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getLimit</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> limit;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLimit</span><span class="params">(<span class="keyword">int</span> limit)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.limit = limit;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getWheres</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> wheres;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setWheres</span><span class="params">(String wheres)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.wheres = wheres;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> start+<span class="string">" "</span>+total +<span class="string">" "</span> +root;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果遇到问题请联系我</p>
+
+          
         
       
     </div>
@@ -1150,7 +445,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/21/java-make-excel-poi-to-upload-cloud/">
+    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/25/layui-page-1.0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="winter chen">
@@ -1169,7 +464,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/10/21/java-make-excel-poi-to-upload-cloud/" itemprop="url">Java导出Excel文档（poi），并上传到腾讯云对象存储服务器</a></h1>
+                <a class="post-title-link" href="/2017/10/25/layui-page-1.0/" itemprop="url">layui完美分页，ajax请求分页（真分页）</a></h1>
         
 
         <div class="post-meta">
@@ -1181,8 +476,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T20:00:00+08:00">
-                2017-10-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T20:34:00+08:00">
+                2017-10-25
               </time>
             
 
@@ -1204,8 +499,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaUtils/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaUtils</span>
+                  <a href="/categories/layui/" itemprop="url" rel="index">
+                    <span itemprop="name">layui</span>
                   </a>
                 </span>
 
@@ -1235,7 +530,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,525
+                  1,308
                 </span>
               
 
@@ -1251,7 +546,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  12
+                  7
                 </span>
               
             </div>
@@ -1273,10 +568,191 @@
 
       
         
-          <h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p><strong>后台生成周报月报季报年报Excel，将文件下载链接推送给对应客户</strong><br>
+          
+            <h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p><strong>使用的layui版本为：layui-v1.0.9，现在新版本已经2.X了有些属性改变了，如果你的版本是2.0以上请参照我的博客：<a href="http://blog.csdn.net/winter_chen001/article/details/78340227" target="_blank" rel="external">《 layui完美分页，ajax请求分页（真分页） 【2.0版本】》</a></strong></p>
+<p>这几天在工作当中需要使用分页控件，然后研究了一下layui的分页控件，这个控件页面非常简洁，功能齐全，而且可以通过异步进行数据的分页，如果大家遇到什么问题可以联系我 email：1085143002@qq.com</p>
+<p>###完整代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">%@</span> <span class="attr">page</span> <span class="attr">language</span>=<span class="string">"java"</span> <span class="attr">contentType</span>=<span class="string">"text/html; charset=UTF-8"</span> <span class="attr">pageEncoding</span>=<span class="string">"UTF-8"</span>%&gt;</span></div><div class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"renderer"</span> <span class="attr">content</span>=<span class="string">"webkit"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"X-UA-Compatible"</span> <span class="attr">content</span>=<span class="string">"IE=edge,chrome=1"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1, maximum-scale=1"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"apple-mobile-web-app-status-bar-style"</span> <span class="attr">content</span>=<span class="string">"black"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"apple-mobile-web-app-capable"</span> <span class="attr">content</span>=<span class="string">"yes"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"format-detection"</span> <span class="attr">content</span>=<span class="string">"telephone=no"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">link</span>  <span class="attr">rel</span>=<span class="string">"icon"</span> <span class="attr">href</span>=<span class="string">"static/images/titleLogo.png"</span>  /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>门店管理后台<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"static/layui/plugins/layui/css/layui.css"</span> <span class="attr">media</span>=<span class="string">"all"</span> /&gt;</span></div><div class="line">    <span class="comment">&lt;!-- &lt;link rel="stylesheet" type="text/css" href="static/css/reset.css"&gt;</span></div><div class="line"><span class="comment">    &lt;link rel="stylesheet" type="text/css" href="static/css/commend.css"&gt; --&gt;</span></div><div class="line">    <span class="comment">&lt;!-- &lt;link rel="stylesheet" href="static/css/jqpagination.css" /&gt; --&gt;</span></div><div class="line">    <span class="comment">&lt;!-- &lt;link rel="stylesheet" type="text/css" href="static/css/shopCustomerManager.css"&gt; --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"static/js/jquery-3.1.1.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"static/layui/plugins/layui/layui.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!-- &lt;script type="text/javascript" src="static/js/jquery.jqpagination.js"&gt;&lt;/script&gt; --&gt;</span></div><div class="line">   	<span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="undefined">	   	$(document).ready(function()&#123;</span></div><div class="line"><span class="undefined">	   		  //ajax请求后台数据</span></div><div class="line"><span class="undefined">		      getShopCustomerManagePageInfo();</span></div><div class="line"><span class="undefined">		      </span></div><div class="line"><span class="undefined">		</span></div><div class="line"><span class="undefined">	   		  //点击搜索时 搜索数据</span></div><div class="line"><span class="undefined">	   		  $("#selectButton").click(function()&#123; </span></div><div class="line"><span class="undefined">	   			getShopCustomerManagePageInfo();</span></div><div class="line"><span class="undefined">	   			currentPageAllAppoint = 1; //当点击搜索的时候，应该回到第一页</span></div><div class="line"><span class="undefined">	   			toPage();//然后进行分页的初始化</span></div><div class="line"><span class="undefined">	   			</span></div><div class="line"><span class="undefined">	   	      &#125;)</span></div><div class="line"><span class="undefined">	   	   toPage();</span></div><div class="line"><span class="undefined">	   	&#125;);</span></div><div class="line"><span class="undefined">	   	</span></div><div class="line"><span class="undefined">	  	//分页参数设置 这些全局变量关系到分页的功能</span></div><div class="line"><span class="undefined">	   	var startAllAppoint = 0;</span></div><div class="line"><span class="undefined">	   	var limitAllAppoint = 10;</span></div><div class="line"><span class="undefined">	   	var currentPageAllAppoint = 1;</span></div><div class="line"><span class="undefined">	   	var totalPageAllAppoint = 0;</span></div><div class="line"><span class="undefined">	   	var dataLength = 0;</span></div><div class="line"><span class="undefined">	   	//ajax请求后台数据</span></div><div class="line"><span class="undefined">	   	function getShopCustomerManagePageInfo()&#123;</span></div><div class="line"><span class="undefined">	   		$.ajax(&#123;</span></div><div class="line"><span class="undefined">	   			type:"post",</span></div><div class="line"><span class="undefined">	   			async:false,</span></div><div class="line"><span class="undefined">	   			url:"list_shop_customers_info",</span></div><div class="line"><span class="undefined">	   			data:&#123;start:startAllAppoint, limit:limitAllAppoint,selectValue:$("#selectValue").val()&#125;,</span></div><div class="line"><span class="undefined">	   			success:function(data,status)&#123;</span></div><div class="line"><span class="undefined">	   				data=eval("("+data+")");</span></div><div class="line"><span class="undefined">	   				getShopCustomesInfo(data.root);</span></div><div class="line"><span class="undefined">	   				startAllAppoint = data.currentResult;//当前页数(后台返回)</span></div><div class="line"><span class="undefined">	   				totalPageAllAppoint = data.totalPage;//总页数(后台返回)</span></div><div class="line"><span class="undefined">	   				</span></div><div class="line"><span class="undefined">	   			&#125;</span></div><div class="line"><span class="undefined">	   		&#125;);</span></div><div class="line"><span class="undefined">	   		</span></div><div class="line"><span class="undefined">	   	&#125;</span></div><div class="line"><span class="undefined">	   	</span></div><div class="line"><span class="undefined">	   </span></div><div class="line"><span class="undefined">	   	</span></div><div class="line"><span class="undefined">	   	function getShopCustomesInfo(data)&#123;</span></div><div class="line"><span class="xml">	   		var s = "<span class="tag">&lt;<span class="name">tr</span>&gt;</span><span class="tag">&lt;<span class="name">th</span>&gt;</span>姓名<span class="tag">&lt;/<span class="name">th</span>&gt;</span><span class="tag">&lt;<span class="name">th</span>&gt;</span>性别<span class="tag">&lt;/<span class="name">th</span>&gt;</span><span class="tag">&lt;<span class="name">th</span>&gt;</span>电话<span class="tag">&lt;/<span class="name">th</span>&gt;</span><span class="tag">&lt;<span class="name">th</span>&gt;</span>备案楼盘<span class="tag">&lt;/<span class="name">th</span>&gt;</span><span class="tag">&lt;<span class="name">th</span>&gt;</span>已成交<span class="tag">&lt;/<span class="name">th</span>&gt;</span><span class="tag">&lt;<span class="name">th</span>&gt;</span>归属经纪人<span class="tag">&lt;/<span class="name">th</span>&gt;</span><span class="tag">&lt;<span class="name">th</span>&gt;</span>添加时间<span class="tag">&lt;/<span class="name">th</span>&gt;</span><span class="tag">&lt;/<span class="name">tr</span>&gt;</span>";</span></div><div class="line"><span class="undefined">	   		$.each(data,function(v,o)&#123;</span></div><div class="line"><span class="xml">	   				s+='<span class="tag">&lt;<span class="name">tr</span>&gt;</span><span class="tag">&lt;<span class="name">td</span>&gt;</span>'+o.cusName+'<span class="tag">&lt;/<span class="name">td</span>&gt;</span>';</span></div><div class="line"><span class="xml">	   				s+='<span class="tag">&lt;<span class="name">td</span>&gt;</span>'+o.cusSex+'<span class="tag">&lt;/<span class="name">td</span>&gt;</span>';</span></div><div class="line"><span class="xml">	   				s+='<span class="tag">&lt;<span class="name">td</span>&gt;</span>'+o.phone+'<span class="tag">&lt;/<span class="name">td</span>&gt;</span>';</span></div><div class="line"><span class="xml">	   				s+='<span class="tag">&lt;<span class="name">td</span>&gt;</span>'+o.records+'<span class="tag">&lt;/<span class="name">td</span>&gt;</span>';</span></div><div class="line"><span class="xml">	   				s+='<span class="tag">&lt;<span class="name">td</span>&gt;</span>'+o.alreadyDeal+'<span class="tag">&lt;/<span class="name">td</span>&gt;</span>';</span></div><div class="line"><span class="xml">	   				s+='<span class="tag">&lt;<span class="name">td</span>&gt;</span>'+o.theMedi+'<span class="tag">&lt;/<span class="name">td</span>&gt;</span>';</span></div><div class="line"><span class="xml">	   				s+='<span class="tag">&lt;<span class="name">td</span>&gt;</span>'+o.addTime+'<span class="tag">&lt;/<span class="name">td</span>&gt;</span><span class="tag">&lt;/<span class="name">tr</span>&gt;</span>';</span></div><div class="line"><span class="undefined">	   		&#125;);</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="undefined">	   		if(data.length&gt;0)&#123;</span></div><div class="line"><span class="undefined">	   			$("#t_customerInfo").html(s);</span></div><div class="line"><span class="undefined">	   		&#125;else&#123;</span></div><div class="line"><span class="undefined">	   			$("#page1").hide();</span></div><div class="line"><span class="xml">	   			$("#t_customerInfo").html("<span class="tag">&lt;<span class="name">br</span>/&gt;</span><span class="tag">&lt;<span class="name">span</span> <span class="attr">style</span>=<span class="string">'width:10%;height:30px;display:block;margin:0 auto;'</span>&gt;</span>暂无数据<span class="tag">&lt;/<span class="name">span</span>&gt;</span>");</span></div><div class="line"><span class="undefined">	   		&#125;</span></div><div class="line"><span class="undefined">	   		</span></div><div class="line"><span class="undefined">	   		</span></div><div class="line"><span class="undefined">	   	&#125;</span></div><div class="line"><span class="undefined">   		</span></div><div class="line"><span class="undefined">	   	</span></div><div class="line"><span class="undefined">	   	</span></div><div class="line"><span class="undefined">	   	function toPage()&#123;</span></div><div class="line"><span class="undefined">	   		</span></div><div class="line"><span class="undefined">	   		layui.use(['form', 'laypage', 'layedit','layer', 'laydate'], function() &#123;</span></div><div class="line"><span class="undefined">				var form = layui.form(),</span></div><div class="line"><span class="undefined">					layer = layui.layer,</span></div><div class="line"><span class="undefined">					layedit = layui.layedit,</span></div><div class="line"><span class="undefined">					laydate = layui.laydate,</span></div><div class="line"><span class="undefined">					laypage = layui.laypage;</span></div><div class="line"><span class="undefined">				</span></div><div class="line"><span class="undefined">				var nums = 10;</span></div><div class="line"><span class="undefined">				//调用分页</span></div><div class="line"><span class="undefined">				  laypage(&#123;</span></div><div class="line"><span class="undefined">				    cont: 'paged'</span></div><div class="line"><span class="undefined">				    ,pages: totalPageAllAppoint //得到总页数，在layui2.X中使用count替代了，并且不是使用"总页数"，而是"总记录条数"</span></div><div class="line"><span class="undefined">				    ,curr: currentPageAllAppoint</span></div><div class="line"><span class="undefined">				    ,skip: true</span></div><div class="line"><span class="undefined">				    ,jump: function(obj, first)&#123;</span></div><div class="line"><span class="undefined">				    	</span></div><div class="line"><span class="undefined">				    	currentPageAllAppoint = obj.curr;</span></div><div class="line"><span class="undefined">				    	startAllAppoint = (obj.curr-1)*limitAllAppoint;</span></div><div class="line"><span class="undefined">				      //document.getElementById('biuuu_city_list').innerHTML = render(obj, obj.curr);</span></div><div class="line"><span class="undefined">				      if(!first)&#123; //一定要加此判断，否则初始时会无限刷新</span></div><div class="line"><span class="undefined">				      getShopCustomerManagePageInfo();//一定要把翻页的ajax请求放到这里，不然会请求两次。</span></div><div class="line"><span class="undefined">				          //location.href = '?page='+obj.curr;</span></div><div class="line"><span class="undefined">				        &#125;</span></div><div class="line"><span class="undefined">				    &#125;</span></div><div class="line"><span class="undefined">				  &#125;);</span></div><div class="line"><span class="undefined">				</span></div><div class="line"><span class="undefined">				</span></div><div class="line"><span class="undefined">			&#125;);</span></div><div class="line"><span class="undefined">	   	&#125;;</span></div><div class="line"><span class="undefined">	   	</span></div><div class="line"><span class="undefined">   	</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"admin-main"</span>&gt;</span></div><div class="line">	</div><div class="line">	</div><div class="line">				<span class="tag">&lt;<span class="name">blockquote</span> <span class="attr">class</span>=<span class="string">"layui-elem-quote"</span>&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">form</span> <span class="attr">class</span>=<span class="string">"layui-form"</span> <span class="attr">action</span>=<span class="string">""</span> &gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"layui-form-item"</span>&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"layui-input-inline"</span>&gt;</span></div><div class="line">					<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">id</span>=<span class="string">"selectValue"</span> <span class="attr">lay-verify</span>=<span class="string">"required"</span> <span class="attr">placeholder</span>=<span class="string">"客户姓名，电话"</span> <span class="attr">autocomplete</span>=<span class="string">"off"</span> <span class="attr">class</span>=<span class="string">"layui-input"</span>&gt;</span></div><div class="line">			    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">			    <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">"layui-btn"</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">id</span>=<span class="string">"selectButton"</span>&gt;</span>搜索<span class="tag">&lt;/<span class="name">button</span>&gt;</span></div><div class="line">				<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">				<span class="tag">&lt;/<span class="name">form</span>&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">span</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"shop_customer_manager_page_info"</span>&gt;</span>显示所有客户<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></div><div class="line">				<span class="tag">&lt;/<span class="name">blockquote</span>&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">fieldset</span> <span class="attr">class</span>=<span class="string">"layui-elem-field"</span>&gt;</span></div><div class="line">					<span class="tag">&lt;<span class="name">legend</span>&gt;</span>客户列表<span class="tag">&lt;/<span class="name">legend</span>&gt;</span></div><div class="line">					<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"layui-field-box layui-form"</span>&gt;</span></div><div class="line">						<span class="tag">&lt;<span class="name">table</span> <span class="attr">class</span>=<span class="string">"layui-table admin-table"</span> <span class="attr">id</span>=<span class="string">"t_customerInfo"</span>&gt;</span></div><div class="line">							</div><div class="line">						<span class="tag">&lt;/<span class="name">table</span>&gt;</span></div><div class="line">					<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">				<span class="tag">&lt;/<span class="name">fieldset</span>&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"admin-table-page"</span>&gt;</span></div><div class="line">					<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"paged"</span> <span class="attr">class</span>=<span class="string">"page"</span>&gt;</span></div><div class="line">					<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">				<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">			<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">	</div><div class="line">   </div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>###java代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">	 * shop 客户管理 list</span></div><div class="line"><span class="comment">	 * <span class="doctag">@param</span> start</span></div><div class="line"><span class="comment">	 * <span class="doctag">@param</span> limit</span></div><div class="line"><span class="comment">	 * <span class="doctag">@param</span> selectValue</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="meta">@ResponseBody</span></div><div class="line">	<span class="meta">@RequestMapping</span>(<span class="string">"/list_shop_customers_info"</span>)</div><div class="line">	<span class="function"><span class="keyword">public</span> Object <span class="title">listShopCustomerInfo</span><span class="params">(Integer start, Integer limit, String selectValue)</span> </span>&#123;</div><div class="line">		Page page = <span class="keyword">new</span> Page();</div><div class="line">		page.setStart(start);</div><div class="line">		page.setLimit(limit);</div><div class="line">		<span class="comment">// 获取session中的用户信息</span></div><div class="line">		User u = (User) <span class="keyword">this</span>.request.getSession().getAttribute(<span class="string">"userInfo"</span>);</div><div class="line">		<span class="comment">// 获取持久化用户对象</span></div><div class="line">		User user = userService.findById(u.getUserId());</div><div class="line">		<span class="keyword">if</span> (user != <span class="keyword">null</span>) &#123;</div><div class="line">			projectCustomerService.findShopCustomersByUser(user, selectValue, page);</div><div class="line">			<span class="keyword">return</span> page;</div><div class="line">		&#125;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>###sevice层</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">findShopCustomersByUser</span><span class="params">(User user, String selectValue, Page page)</span> </span>&#123;</div><div class="line">		List cmList = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">		<span class="keyword">int</span> total = <span class="number">0</span>;</div><div class="line">		<span class="keyword">if</span>(user!=<span class="keyword">null</span> &amp;&amp; user.getParentId()!=<span class="keyword">null</span> &amp;&amp; !user.getParentId().equals(<span class="string">""</span>))&#123;</div><div class="line">			String hql = <span class="string">"from ShopCustomers as model where model.shopId = "</span> + Integer.parseInt(user.getParentId());</div><div class="line">			<span class="keyword">if</span>(selectValue!=<span class="keyword">null</span> &amp;&amp; !selectValue.equals(<span class="string">""</span>))&#123;</div><div class="line">				hql+=<span class="string">"and model.shopCustomerName like '%"</span> +selectValue+<span class="string">"%' or model.shopCustomerPhone like '%"</span> +selectValue+<span class="string">"%'"</span>;</div><div class="line">			&#125;</div><div class="line">			List&lt;ShopCustomers&gt; list = baseDao.findByHql(hql,page.getStart(),page.getLimit());</div><div class="line">			<span class="keyword">for</span>(ShopCustomers sc : list)&#123;</div><div class="line">				User u = (User) baseDao.loadById(User.class, sc.getUserId());</div><div class="line">				String cGRSHql = <span class="string">"select count(*) from GuideRecords where shopCustomerId = '"</span>+sc.getShopCustomerId()+<span class="string">"'"</span>;</div><div class="line">				String cDealHql = <span class="string">"select count(*) from GuideRecords where shopCustomerId = '"</span>+sc.getShopCustomerId()+<span class="string">"' and isDeal = 1"</span>;</div><div class="line">				<span class="keyword">int</span> floorCounts = baseDao.countQuery(cGRSHql);<span class="comment">//备案楼盘数</span></div><div class="line">				<span class="keyword">int</span> dealCounts = baseDao.countQuery(cDealHql);<span class="comment">//已成交数</span></div><div class="line">				CustomerManager cm = <span class="keyword">new</span> CustomerManager();</div><div class="line">				CustomerManager cmObj = cm.createCusManObj(sc,u);</div><div class="line">				cmObj.setRecords(floorCounts);</div><div class="line">				cmObj.setAlreadyDeal(dealCounts);</div><div class="line">				cmList.add(cmObj);</div><div class="line">			&#125;</div><div class="line">			String cHql = <span class="string">"select count(*) "</span>+hql;</div><div class="line">			total = baseDao.countQuery(cHql);</div><div class="line">		&#125;</div><div class="line">		page.setRoot(cmList);</div><div class="line">		page.setTotal(total);</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>###分页对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.sc.tradmaster.utils;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 分页对象</span></div><div class="line"><span class="comment"> * <span class="doctag">@author</span> grl 2017-01-05</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Page</span> </span>&#123;</div><div class="line">	<span class="comment">/** 总记录数 */</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> total;</div><div class="line">	<span class="comment">/** 分页结果 */</span></div><div class="line">	<span class="keyword">private</span> List root;</div><div class="line">	<span class="comment">/** 开始页码 */</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> start;</div><div class="line">	<span class="comment">/** 每页多少 */</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> limit;</div><div class="line">	<span class="comment">/** 查询条件 */</span></div><div class="line">	<span class="keyword">private</span> String wheres;</div><div class="line">	</div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> currentPage;	<span class="comment">//当前页</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> currentResult;	<span class="comment">//当前记录起始索引</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> totalPage;		<span class="comment">//总页数</span></div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCurrentPage</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">if</span>(currentPage&lt;=<span class="number">0</span>)</div><div class="line">			currentPage = <span class="number">1</span>;</div><div class="line">		<span class="keyword">return</span> currentPage;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCurrentPage</span><span class="params">(<span class="keyword">int</span> currentPage)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.currentPage = currentPage;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCurrentResult</span><span class="params">()</span> </span>&#123;</div><div class="line">		currentResult = (getCurrentPage()-<span class="number">1</span>)*getLimit();</div><div class="line">		<span class="keyword">if</span>(currentResult&lt;<span class="number">0</span>)</div><div class="line">			currentResult = <span class="number">0</span>;</div><div class="line">		<span class="keyword">return</span> currentResult;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCurrentResult</span><span class="params">(<span class="keyword">int</span> currentResult)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.currentResult = currentResult;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getTotalPage</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">if</span>(total%limit==<span class="number">0</span>)</div><div class="line">			totalPage = total/limit;</div><div class="line">		<span class="keyword">else</span></div><div class="line">			totalPage = total/limit+<span class="number">1</span>;</div><div class="line">		<span class="keyword">return</span> totalPage;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTotalPage</span><span class="params">(<span class="keyword">int</span> totalPage)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.totalPage = totalPage;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getTotal</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> total;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTotal</span><span class="params">(<span class="keyword">int</span> total)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.total = total;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> List <span class="title">getRoot</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> root;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setRoot</span><span class="params">(List root)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.root = root;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getStart</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> start;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setStart</span><span class="params">(<span class="keyword">int</span> start)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.start = start;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getLimit</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> limit;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLimit</span><span class="params">(<span class="keyword">int</span> limit)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.limit = limit;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getWheres</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> wheres;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setWheres</span><span class="params">(String wheres)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.wheres = wheres;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> start+<span class="string">" "</span>+total +<span class="string">" "</span> +root;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/25/spring-boot-swagger2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="winter chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://blog-1253516459.cossh.myqcloud.com/blog_img/2013010611300812.jpg?sign=sp7r7Suu4OZUAtsK8cuYA5FstKphPTEyNTM1MTY0NTkmaz1BS0lEWjJLUmx1ZGhLbjRGSEFHUW80Qjh4ZUJYd0dQTmFsQlEmZT0xNTA5MDA2NjE2JnQ9MTUwNjQxNDYxNiZyPTIxNDE4MjM5NjgmZj0vYmxvZ19pbWcvMjAxMzAxMDYxMTMwMDgxMi5qcGcmYj1ibG9n">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="winter的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/25/spring-boot-swagger2/" itemprop="url">Spring Boot中使用Swagger2构建强大的RESTful API文档</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T20:25:00+08:00">
+                2017-10-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring-Boot/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring Boot</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,638
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  7
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>由于Spring Boot能够快速开发、便捷部署等特性，相信有很大一部分Spring Boot的用户会用来构建RESTful API。而我们构建RESTful API的目的通常都是由于多终端的原因，这些终端会共用很多底层业务逻辑，因此我们会抽象出这样一层来同时服务于多个移动端或者Web前端。<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/10/21/java-make-excel-poi-to-upload-cloud/#more" rel="contents">
+            <a class="btn" href="/2017/10/25/spring-boot-swagger2/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1327,7 +803,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/17/spring-cloud-starter-dalston-2-3/">
+    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/25/spring-boot-project/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="winter chen">
@@ -1346,7 +822,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/10/17/spring-cloud-starter-dalston-2-3/" itemprop="url">Spring Cloud构建微服务架构：服务消费（Feign）【Dalston版】</a></h1>
+                <a class="post-title-link" href="/2017/10/25/spring-boot-project/" itemprop="url">Spring Boot工程结构推荐</a></h1>
         
 
         <div class="post-meta">
@@ -1358,8 +834,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-17T20:30:00+08:00">
-                2017-10-17
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T20:18:00+08:00">
+                2017-10-25
               </time>
             
 
@@ -1381,8 +857,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spring-Cloud/" itemprop="url" rel="index">
-                    <span itemprop="name">Spring Cloud</span>
+                  <a href="/categories/Spring-Boot/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring Boot</span>
                   </a>
                 </span>
 
@@ -1412,7 +888,185 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  938
+                  356
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <blockquote>
+<p>今天看了一位简书上朋友发来的工程，于是想到应该要写这么一篇。前人总结的最佳实践案例可以帮助我们免去很多不必要的麻烦。花点时间来看一下本文，绝对物超所值。<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/10/25/spring-boot-project/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/25/spring-boot-restful-api/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="winter chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://blog-1253516459.cossh.myqcloud.com/blog_img/2013010611300812.jpg?sign=sp7r7Suu4OZUAtsK8cuYA5FstKphPTEyNTM1MTY0NTkmaz1BS0lEWjJLUmx1ZGhLbjRGSEFHUW80Qjh4ZUJYd0dQTmFsQlEmZT0xNTA5MDA2NjE2JnQ9MTUwNjQxNDYxNiZyPTIxNDE4MjM5NjgmZj0vYmxvZ19pbWcvMjAxMzAxMDYxMTMwMDgxMi5qcGcmYj1ibG9n">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="winter的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/25/spring-boot-restful-api/" itemprop="url">Spring Boot构建RESTful API与单元测试</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T20:18:00+08:00">
+                2017-10-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring-Boot/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring Boot</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  908
                 </span>
               
 
@@ -1450,11 +1104,10 @@
 
       
         
-          <blockquote>
-<p>通过前两篇<a href="https://winterchens.github.io/2017/10/17/spring-cloud-starter-dalston-2-1/">《Spring Cloud构建微服务架构：服务消费（基础）》</a>和<a href="https://winterchens.github.io/2017/09/27/spring-cloud-starter-dalston-2-2/">《Spring Cloud构建微服务架构：服务消费（Ribbon）》</a>，我们已经学会了在Spring Cloud中基本的服务调用方式。本文我们将继续介绍Spring Cloud中的另外一个服务消费的工具：Spring Cloud Feign。<br>
+          <p>首先，回顾并详细说明一下在快速入门中使用的<code>@Controller</code>、<code>@RestController</code>、<code>@RequestMapping</code>注解。如果您对Spring MVC不熟悉并且还没有尝试过快速入门案例，建议先看一下<a href="http://blog.csdn.net/winter_chen001/article/details/78330002" target="_blank" rel="external">快速入门</a>的内容。<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/10/17/spring-cloud-starter-dalston-2-3/#more" rel="contents">
+            <a class="btn" href="/2017/10/25/spring-boot-restful-api/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1505,7 +1158,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/17/spring-cloud-starter-dalston-2-2/">
+    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/25/spring-boot-web/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="winter chen">
@@ -1524,7 +1177,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/10/17/spring-cloud-starter-dalston-2-2/" itemprop="url">Spring Cloud构建微服务架构：服务消费（Ribbon）【Dalston版】</a></h1>
+                <a class="post-title-link" href="/2017/10/25/spring-boot-web/" itemprop="url">Spring Boot开发Web应用</a></h1>
         
 
         <div class="post-meta">
@@ -1536,8 +1189,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-17T19:49:00+08:00">
-                2017-10-17
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T20:10:00+08:00">
+                2017-10-25
               </time>
             
 
@@ -1559,8 +1212,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spring-Cloud/" itemprop="url" rel="index">
-                    <span itemprop="name">Spring Cloud</span>
+                  <a href="/categories/Spring-Boot/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring Boot</span>
                   </a>
                 </span>
 
@@ -1590,7 +1243,185 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,023
+                  1,258
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <blockquote>
+<p><a href="http://blog.csdn.net/winter_chen001/article/details/78330002" target="_blank" rel="external">Spring Boot快速入门</a>中我们完成了一个简单的RESTful Service，体验了快速开发的特性。在留言中也有朋友提到如何把处理结果渲染到页面上。那么本篇就在上篇基础上介绍一下如何进行Web应用的开发。<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/10/25/spring-boot-web/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/25/spring-boot-learning-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="winter chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://blog-1253516459.cossh.myqcloud.com/blog_img/2013010611300812.jpg?sign=sp7r7Suu4OZUAtsK8cuYA5FstKphPTEyNTM1MTY0NTkmaz1BS0lEWjJLUmx1ZGhLbjRGSEFHUW80Qjh4ZUJYd0dQTmFsQlEmZT0xNTA5MDA2NjE2JnQ9MTUwNjQxNDYxNiZyPTIxNDE4MjM5NjgmZj0vYmxvZ19pbWcvMjAxMzAxMDYxMTMwMDgxMi5qcGcmYj1ibG9n">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="winter的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/25/spring-boot-learning-1/" itemprop="url">Spring Boot快速入门</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T19:55:00+08:00">
+                2017-10-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring-Boot/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring Boot</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  969
                 </span>
               
 
@@ -1628,11 +1459,10 @@
 
       
         
-          <blockquote>
-<p>通过上一篇<a href="https://winterchens.github.io/2017/09/27/spring-cloud-starter-dalston-2-1/">《Spring Cloud构建微服务架构：服务消费（基础）》</a>，我们已经学会如何通过<code>LoadBalancerClient</code>接口来获取某个服务的具体实例，并根据实例信息来发起服务接口消费请求。但是这样的做法需要我们手工的去编写服务选取、链接拼接等繁琐的工作，对于开发人员来说非常的不友好。所以，下来我们看看Spring Cloud中针对客户端负载均衡的工具包：Spring Cloud Ribbon。<br>
+          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>在您第1次接触和学习Spring框架的时候，是否因为其繁杂的配置而退却了？在你第n次使用Spring框架的时候，是否觉得一堆反复黏贴的配置有一些厌烦？那么您就不妨来试试使用Spring Boot来让你更易上手，更简单快捷地构建Spring应用！<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/10/17/spring-cloud-starter-dalston-2-2/#more" rel="contents">
+            <a class="btn" href="/2017/10/25/spring-boot-learning-1/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1683,7 +1513,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/17/spring-cloud-starter-dalston-2-1/">
+    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/25/spring-cloud-starter-dalston-6-3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="winter chen">
@@ -1702,7 +1532,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/10/17/spring-cloud-starter-dalston-2-1/" itemprop="url">Spring Cloud构建微服务架构：服务消费（基础）【Dalston版】</a></h1>
+                <a class="post-title-link" href="/2017/10/25/spring-cloud-starter-dalston-6-3/" itemprop="url">Spring Cloud构建微服务架构：服务网关（过滤器）【Dalston版】</a></h1>
         
 
         <div class="post-meta">
@@ -1714,8 +1544,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-17T19:37:00+08:00">
-                2017-10-17
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T19:46:00+08:00">
+                2017-10-25
               </time>
             
 
@@ -1768,7 +1598,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  896
+                  1,602
                 </span>
               
 
@@ -1784,7 +1614,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  4
+                  6
                 </span>
               
             </div>
@@ -1807,10 +1637,10 @@
       
         
           <blockquote>
-<p>通过上一篇 <a href="https://winterchens.github.io/2017/09/27/spring-cloud-starter-dalston-1/">《Spring Cloud构建微服务架构：服务注册与发现》</a>，我们已经成功地将服务提供者：eureka-client或consul-client注册到了Eureka服务注册中心或Consul服务端上了，同时我们也通过DiscoveryClient接口的getServices获取了当前客户端缓存的所有服务清单，那么接下来我们要学习的就是：如何去消费服务提供者的接口？<br>
+<p>在前两篇文章：<a href="http://blog.csdn.net/winter_chen001/article/details/78329132" target="_blank" rel="external">服务网关（基础）</a>、<a href="http://blog.csdn.net/winter_chen001/article/details/78329351" target="_blank" rel="external">服务网关（路由配置）</a>中，我们了解了Spring Cloud Zuul作为网关所具备的最基本功能：路由。本文我们将具体介绍一下Spring Cloud Zuul的另一项核心功能：过滤器。<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/10/17/spring-cloud-starter-dalston-2-1/#more" rel="contents">
+            <a class="btn" href="/2017/10/25/spring-cloud-starter-dalston-6-3/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1861,7 +1691,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/09/27/spring-cloud-starter-dalston-1/">
+    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/25/spring-cloud-starter-dalston-6-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="winter chen">
@@ -1880,7 +1710,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/09/27/spring-cloud-starter-dalston-1/" itemprop="url">Spring Cloud构建微服务架构：服务注册与发现（Eureka、Consul）【Dalston版】</a></h1>
+                <a class="post-title-link" href="/2017/10/25/spring-cloud-starter-dalston-6-2/" itemprop="url">Spring Cloud构建微服务架构：服务网关（路由配置）【Dalston版】</a></h1>
         
 
         <div class="post-meta">
@@ -1892,8 +1722,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-27T21:37:00+08:00">
-                2017-09-27
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T19:39:00+08:00">
+                2017-10-25
               </time>
             
 
@@ -1946,7 +1776,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,782
+                  1,319
                 </span>
               
 
@@ -1962,7 +1792,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  12
+                  5
                 </span>
               
             </div>
@@ -1984,10 +1814,188 @@
 
       
         
-          <h3 id="Spring-Cloud简介"><a href="#Spring-Cloud简介" class="headerlink" title="Spring Cloud简介"></a>Spring Cloud简介</h3><p>Spring Cloud是一个基于Spring Boot实现的云应用开发工具，它为基于JVM的云应用开发中涉及的配置管理、服务发现、断路器、智能路由、微代理、控制总线、全局锁、决策竞选、分布式会话和集群状态管理等操作提供了一种简单的开发方式。<br>
+          <blockquote>
+<p>在上一篇<a href="http://blog.csdn.net/winter_chen001/article/details/78329132" target="_blank" rel="external">《Spring Cloud构建微服务架构：服务网关（基础）》</a>一文中，我们通过使用Spring Cloud Zuul构建了一个基础的API网关服务，同时也演示了Spring Cloud Zuul基于服务的自动路由功能。在本文中，我们将进一步详细地介绍关于Spring Cloud Zuul的路由功能，以帮助读者可以更好的理解和使用它，以完成更复杂的路由配置。<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/09/27/spring-cloud-starter-dalston-1/#more" rel="contents">
+            <a class="btn" href="/2017/10/25/spring-cloud-starter-dalston-6-2/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/25/spring-cloud-starter-dalston-6-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="winter chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://blog-1253516459.cossh.myqcloud.com/blog_img/2013010611300812.jpg?sign=sp7r7Suu4OZUAtsK8cuYA5FstKphPTEyNTM1MTY0NTkmaz1BS0lEWjJLUmx1ZGhLbjRGSEFHUW80Qjh4ZUJYd0dQTmFsQlEmZT0xNTA5MDA2NjE2JnQ9MTUwNjQxNDYxNiZyPTIxNDE4MjM5NjgmZj0vYmxvZ19pbWcvMjAxMzAxMDYxMTMwMDgxMi5qcGcmYj1ibG9n">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="winter的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/25/spring-cloud-starter-dalston-6-1/" itemprop="url">Spring Cloud构建微服务架构：服务网关（基础）【Dalston版】</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T19:30:00+08:00">
+                2017-10-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring-Cloud/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring Cloud</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,420
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>通过之前几篇Spring Cloud中几个核心组件的介绍，我们已经可以构建一个简略的（不够完善）微服务架构了。比如下图所示：<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/10/25/spring-cloud-starter-dalston-6-1/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -2029,7 +2037,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2078,7 +2086,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">25</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2089,7 +2097,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -2100,7 +2108,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -2183,7 +2191,7 @@
 
 <div class="theme-info">
     <div class="powered-by"></div>
-    <span class="post-count">博客全站共18.5k字</span>
+    <span class="post-count">博客全站共31.9k字</span>
   </div>
 
         

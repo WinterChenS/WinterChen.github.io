@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="layui," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="winter的博客" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="注意使用的layui版本为：layui-v1.0.9，现在新版本已经2.X了有些属性改变了，如果你的版本是2.0以上请参照我的博客：《 layui完美分页，ajax请求分页（真分页） 【2.0版本】》 这几天在工作当中需要使用分页控件，然后研究了一下layui的分页控件，这个控件页面非常简洁，功能齐全，而且可以通过异步进行数据的分页，如果大家遇到什么问题可以联系我 email：1085143002">
+<meta name="keywords" content="layui">
+<meta property="og:type" content="article">
+<meta property="og:title" content="layui完美分页，ajax请求分页（真分页）">
+<meta property="og:url" content="http://winterchens.github.io/2017/10/25/layui-page-1.0/index.html">
+<meta property="og:site_name" content="winter的博客">
+<meta property="og:description" content="注意使用的layui版本为：layui-v1.0.9，现在新版本已经2.X了有些属性改变了，如果你的版本是2.0以上请参照我的博客：《 layui完美分页，ajax请求分页（真分页） 【2.0版本】》 这几天在工作当中需要使用分页控件，然后研究了一下layui的分页控件，这个控件页面非常简洁，功能齐全，而且可以通过异步进行数据的分页，如果大家遇到什么问题可以联系我 email：1085143002">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-10-25T11:40:35.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="layui完美分页，ajax请求分页（真分页）">
+<meta name="twitter:description" content="注意使用的layui版本为：layui-v1.0.9，现在新版本已经2.X了有些属性改变了，如果你的版本是2.0以上请参照我的博客：《 layui完美分页，ajax请求分页（真分页） 【2.0版本】》 这几天在工作当中需要使用分页控件，然后研究了一下layui的分页控件，这个控件页面非常简洁，功能齐全，而且可以通过异步进行数据的分页，如果大家遇到什么问题可以联系我 email：1085143002">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://winterchens.github.io/2017/10/25/layui-page-1.0/"/>
+
+
+
+
+
+  <title>layui完美分页，ajax请求分页（真分页） | winter的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">winter的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">coding is my life</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://winterchens.github.io/2017/10/25/layui-page-1.0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="winter chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://blog-1253516459.cossh.myqcloud.com/blog_img/2013010611300812.jpg?sign=sp7r7Suu4OZUAtsK8cuYA5FstKphPTEyNTM1MTY0NTkmaz1BS0lEWjJLUmx1ZGhLbjRGSEFHUW80Qjh4ZUJYd0dQTmFsQlEmZT0xNTA5MDA2NjE2JnQ9MTUwNjQxNDYxNiZyPTIxNDE4MjM5NjgmZj0vYmxvZ19pbWcvMjAxMzAxMDYxMTMwMDgxMi5qcGcmYj1ibG9n">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="winter的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">layui完美分页，ajax请求分页（真分页）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T20:34:00+08:00">
+                2017-10-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/layui/" itemprop="url" rel="index">
+                    <span itemprop="name">layui</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,308
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  7
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p><strong>使用的layui版本为：layui-v1.0.9，现在新版本已经2.X了有些属性改变了，如果你的版本是2.0以上请参照我的博客：<a href="http://blog.csdn.net/winter_chen001/article/details/78340227" target="_blank" rel="external">《 layui完美分页，ajax请求分页（真分页） 【2.0版本】》</a></strong></p>
+<p>这几天在工作当中需要使用分页控件，然后研究了一下layui的分页控件，这个控件页面非常简洁，功能齐全，而且可以通过异步进行数据的分页，如果大家遇到什么问题可以联系我 email：1085143002@qq.com</p>
+<p>###完整代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">%@</span> <span class="attr">page</span> <span class="attr">language</span>=<span class="string">"java"</span> <span class="attr">contentType</span>=<span class="string">"text/html; charset=UTF-8"</span> <span class="attr">pageEncoding</span>=<span class="string">"UTF-8"</span>%&gt;</span></div><div class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"renderer"</span> <span class="attr">content</span>=<span class="string">"webkit"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"X-UA-Compatible"</span> <span class="attr">content</span>=<span class="string">"IE=edge,chrome=1"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1, maximum-scale=1"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"apple-mobile-web-app-status-bar-style"</span> <span class="attr">content</span>=<span class="string">"black"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"apple-mobile-web-app-capable"</span> <span class="attr">content</span>=<span class="string">"yes"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"format-detection"</span> <span class="attr">content</span>=<span class="string">"telephone=no"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">link</span>  <span class="attr">rel</span>=<span class="string">"icon"</span> <span class="attr">href</span>=<span class="string">"static/images/titleLogo.png"</span>  /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>门店管理后台<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"static/layui/plugins/layui/css/layui.css"</span> <span class="attr">media</span>=<span class="string">"all"</span> /&gt;</span></div><div class="line">    <span class="comment">&lt;!-- &lt;link rel="stylesheet" type="text/css" href="static/css/reset.css"&gt;</span></div><div class="line"><span class="comment">    &lt;link rel="stylesheet" type="text/css" href="static/css/commend.css"&gt; --&gt;</span></div><div class="line">    <span class="comment">&lt;!-- &lt;link rel="stylesheet" href="static/css/jqpagination.css" /&gt; --&gt;</span></div><div class="line">    <span class="comment">&lt;!-- &lt;link rel="stylesheet" type="text/css" href="static/css/shopCustomerManager.css"&gt; --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"static/js/jquery-3.1.1.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"static/layui/plugins/layui/layui.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!-- &lt;script type="text/javascript" src="static/js/jquery.jqpagination.js"&gt;&lt;/script&gt; --&gt;</span></div><div class="line">   	<span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="undefined">	   	$(document).ready(function()&#123;</span></div><div class="line"><span class="undefined">	   		  //ajax请求后台数据</span></div><div class="line"><span class="undefined">		      getShopCustomerManagePageInfo();</span></div><div class="line"><span class="undefined">		      </span></div><div class="line"><span class="undefined">		</span></div><div class="line"><span class="undefined">	   		  //点击搜索时 搜索数据</span></div><div class="line"><span class="undefined">	   		  $("#selectButton").click(function()&#123; </span></div><div class="line"><span class="undefined">	   			getShopCustomerManagePageInfo();</span></div><div class="line"><span class="undefined">	   			currentPageAllAppoint = 1; //当点击搜索的时候，应该回到第一页</span></div><div class="line"><span class="undefined">	   			toPage();//然后进行分页的初始化</span></div><div class="line"><span class="undefined">	   			</span></div><div class="line"><span class="undefined">	   	      &#125;)</span></div><div class="line"><span class="undefined">	   	   toPage();</span></div><div class="line"><span class="undefined">	   	&#125;);</span></div><div class="line"><span class="undefined">	   	</span></div><div class="line"><span class="undefined">	  	//分页参数设置 这些全局变量关系到分页的功能</span></div><div class="line"><span class="undefined">	   	var startAllAppoint = 0;</span></div><div class="line"><span class="undefined">	   	var limitAllAppoint = 10;</span></div><div class="line"><span class="undefined">	   	var currentPageAllAppoint = 1;</span></div><div class="line"><span class="undefined">	   	var totalPageAllAppoint = 0;</span></div><div class="line"><span class="undefined">	   	var dataLength = 0;</span></div><div class="line"><span class="undefined">	   	//ajax请求后台数据</span></div><div class="line"><span class="undefined">	   	function getShopCustomerManagePageInfo()&#123;</span></div><div class="line"><span class="undefined">	   		$.ajax(&#123;</span></div><div class="line"><span class="undefined">	   			type:"post",</span></div><div class="line"><span class="undefined">	   			async:false,</span></div><div class="line"><span class="undefined">	   			url:"list_shop_customers_info",</span></div><div class="line"><span class="undefined">	   			data:&#123;start:startAllAppoint, limit:limitAllAppoint,selectValue:$("#selectValue").val()&#125;,</span></div><div class="line"><span class="undefined">	   			success:function(data,status)&#123;</span></div><div class="line"><span class="undefined">	   				data=eval("("+data+")");</span></div><div class="line"><span class="undefined">	   				getShopCustomesInfo(data.root);</span></div><div class="line"><span class="undefined">	   				startAllAppoint = data.currentResult;//当前页数(后台返回)</span></div><div class="line"><span class="undefined">	   				totalPageAllAppoint = data.totalPage;//总页数(后台返回)</span></div><div class="line"><span class="undefined">	   				</span></div><div class="line"><span class="undefined">	   			&#125;</span></div><div class="line"><span class="undefined">	   		&#125;);</span></div><div class="line"><span class="undefined">	   		</span></div><div class="line"><span class="undefined">	   	&#125;</span></div><div class="line"><span class="undefined">	   	</span></div><div class="line"><span class="undefined">	   </span></div><div class="line"><span class="undefined">	   	</span></div><div class="line"><span class="undefined">	   	function getShopCustomesInfo(data)&#123;</span></div><div class="line"><span class="xml">	   		var s = "<span class="tag">&lt;<span class="name">tr</span>&gt;</span><span class="tag">&lt;<span class="name">th</span>&gt;</span>姓名<span class="tag">&lt;/<span class="name">th</span>&gt;</span><span class="tag">&lt;<span class="name">th</span>&gt;</span>性别<span class="tag">&lt;/<span class="name">th</span>&gt;</span><span class="tag">&lt;<span class="name">th</span>&gt;</span>电话<span class="tag">&lt;/<span class="name">th</span>&gt;</span><span class="tag">&lt;<span class="name">th</span>&gt;</span>备案楼盘<span class="tag">&lt;/<span class="name">th</span>&gt;</span><span class="tag">&lt;<span class="name">th</span>&gt;</span>已成交<span class="tag">&lt;/<span class="name">th</span>&gt;</span><span class="tag">&lt;<span class="name">th</span>&gt;</span>归属经纪人<span class="tag">&lt;/<span class="name">th</span>&gt;</span><span class="tag">&lt;<span class="name">th</span>&gt;</span>添加时间<span class="tag">&lt;/<span class="name">th</span>&gt;</span><span class="tag">&lt;/<span class="name">tr</span>&gt;</span>";</span></div><div class="line"><span class="undefined">	   		$.each(data,function(v,o)&#123;</span></div><div class="line"><span class="xml">	   				s+='<span class="tag">&lt;<span class="name">tr</span>&gt;</span><span class="tag">&lt;<span class="name">td</span>&gt;</span>'+o.cusName+'<span class="tag">&lt;/<span class="name">td</span>&gt;</span>';</span></div><div class="line"><span class="xml">	   				s+='<span class="tag">&lt;<span class="name">td</span>&gt;</span>'+o.cusSex+'<span class="tag">&lt;/<span class="name">td</span>&gt;</span>';</span></div><div class="line"><span class="xml">	   				s+='<span class="tag">&lt;<span class="name">td</span>&gt;</span>'+o.phone+'<span class="tag">&lt;/<span class="name">td</span>&gt;</span>';</span></div><div class="line"><span class="xml">	   				s+='<span class="tag">&lt;<span class="name">td</span>&gt;</span>'+o.records+'<span class="tag">&lt;/<span class="name">td</span>&gt;</span>';</span></div><div class="line"><span class="xml">	   				s+='<span class="tag">&lt;<span class="name">td</span>&gt;</span>'+o.alreadyDeal+'<span class="tag">&lt;/<span class="name">td</span>&gt;</span>';</span></div><div class="line"><span class="xml">	   				s+='<span class="tag">&lt;<span class="name">td</span>&gt;</span>'+o.theMedi+'<span class="tag">&lt;/<span class="name">td</span>&gt;</span>';</span></div><div class="line"><span class="xml">	   				s+='<span class="tag">&lt;<span class="name">td</span>&gt;</span>'+o.addTime+'<span class="tag">&lt;/<span class="name">td</span>&gt;</span><span class="tag">&lt;/<span class="name">tr</span>&gt;</span>';</span></div><div class="line"><span class="undefined">	   		&#125;);</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="undefined">	   		if(data.length&gt;0)&#123;</span></div><div class="line"><span class="undefined">	   			$("#t_customerInfo").html(s);</span></div><div class="line"><span class="undefined">	   		&#125;else&#123;</span></div><div class="line"><span class="undefined">	   			$("#page1").hide();</span></div><div class="line"><span class="xml">	   			$("#t_customerInfo").html("<span class="tag">&lt;<span class="name">br</span>/&gt;</span><span class="tag">&lt;<span class="name">span</span> <span class="attr">style</span>=<span class="string">'width:10%;height:30px;display:block;margin:0 auto;'</span>&gt;</span>暂无数据<span class="tag">&lt;/<span class="name">span</span>&gt;</span>");</span></div><div class="line"><span class="undefined">	   		&#125;</span></div><div class="line"><span class="undefined">	   		</span></div><div class="line"><span class="undefined">	   		</span></div><div class="line"><span class="undefined">	   	&#125;</span></div><div class="line"><span class="undefined">   		</span></div><div class="line"><span class="undefined">	   	</span></div><div class="line"><span class="undefined">	   	</span></div><div class="line"><span class="undefined">	   	function toPage()&#123;</span></div><div class="line"><span class="undefined">	   		</span></div><div class="line"><span class="undefined">	   		layui.use(['form', 'laypage', 'layedit','layer', 'laydate'], function() &#123;</span></div><div class="line"><span class="undefined">				var form = layui.form(),</span></div><div class="line"><span class="undefined">					layer = layui.layer,</span></div><div class="line"><span class="undefined">					layedit = layui.layedit,</span></div><div class="line"><span class="undefined">					laydate = layui.laydate,</span></div><div class="line"><span class="undefined">					laypage = layui.laypage;</span></div><div class="line"><span class="undefined">				</span></div><div class="line"><span class="undefined">				var nums = 10;</span></div><div class="line"><span class="undefined">				//调用分页</span></div><div class="line"><span class="undefined">				  laypage(&#123;</span></div><div class="line"><span class="undefined">				    cont: 'paged'</span></div><div class="line"><span class="undefined">				    ,pages: totalPageAllAppoint //得到总页数，在layui2.X中使用count替代了，并且不是使用"总页数"，而是"总记录条数"</span></div><div class="line"><span class="undefined">				    ,curr: currentPageAllAppoint</span></div><div class="line"><span class="undefined">				    ,skip: true</span></div><div class="line"><span class="undefined">				    ,jump: function(obj, first)&#123;</span></div><div class="line"><span class="undefined">				    	</span></div><div class="line"><span class="undefined">				    	currentPageAllAppoint = obj.curr;</span></div><div class="line"><span class="undefined">				    	startAllAppoint = (obj.curr-1)*limitAllAppoint;</span></div><div class="line"><span class="undefined">				      //document.getElementById('biuuu_city_list').innerHTML = render(obj, obj.curr);</span></div><div class="line"><span class="undefined">				      if(!first)&#123; //一定要加此判断，否则初始时会无限刷新</span></div><div class="line"><span class="undefined">				      getShopCustomerManagePageInfo();//一定要把翻页的ajax请求放到这里，不然会请求两次。</span></div><div class="line"><span class="undefined">				          //location.href = '?page='+obj.curr;</span></div><div class="line"><span class="undefined">				        &#125;</span></div><div class="line"><span class="undefined">				    &#125;</span></div><div class="line"><span class="undefined">				  &#125;);</span></div><div class="line"><span class="undefined">				</span></div><div class="line"><span class="undefined">				</span></div><div class="line"><span class="undefined">			&#125;);</span></div><div class="line"><span class="undefined">	   	&#125;;</span></div><div class="line"><span class="undefined">	   	</span></div><div class="line"><span class="undefined">   	</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"admin-main"</span>&gt;</span></div><div class="line">	</div><div class="line">	</div><div class="line">				<span class="tag">&lt;<span class="name">blockquote</span> <span class="attr">class</span>=<span class="string">"layui-elem-quote"</span>&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">form</span> <span class="attr">class</span>=<span class="string">"layui-form"</span> <span class="attr">action</span>=<span class="string">""</span> &gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"layui-form-item"</span>&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"layui-input-inline"</span>&gt;</span></div><div class="line">					<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">id</span>=<span class="string">"selectValue"</span> <span class="attr">lay-verify</span>=<span class="string">"required"</span> <span class="attr">placeholder</span>=<span class="string">"客户姓名，电话"</span> <span class="attr">autocomplete</span>=<span class="string">"off"</span> <span class="attr">class</span>=<span class="string">"layui-input"</span>&gt;</span></div><div class="line">			    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">			    <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">"layui-btn"</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">id</span>=<span class="string">"selectButton"</span>&gt;</span>搜索<span class="tag">&lt;/<span class="name">button</span>&gt;</span></div><div class="line">				<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">				<span class="tag">&lt;/<span class="name">form</span>&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">span</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"shop_customer_manager_page_info"</span>&gt;</span>显示所有客户<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></div><div class="line">				<span class="tag">&lt;/<span class="name">blockquote</span>&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">fieldset</span> <span class="attr">class</span>=<span class="string">"layui-elem-field"</span>&gt;</span></div><div class="line">					<span class="tag">&lt;<span class="name">legend</span>&gt;</span>客户列表<span class="tag">&lt;/<span class="name">legend</span>&gt;</span></div><div class="line">					<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"layui-field-box layui-form"</span>&gt;</span></div><div class="line">						<span class="tag">&lt;<span class="name">table</span> <span class="attr">class</span>=<span class="string">"layui-table admin-table"</span> <span class="attr">id</span>=<span class="string">"t_customerInfo"</span>&gt;</span></div><div class="line">							</div><div class="line">						<span class="tag">&lt;/<span class="name">table</span>&gt;</span></div><div class="line">					<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">				<span class="tag">&lt;/<span class="name">fieldset</span>&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"admin-table-page"</span>&gt;</span></div><div class="line">					<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"paged"</span> <span class="attr">class</span>=<span class="string">"page"</span>&gt;</span></div><div class="line">					<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">				<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">			<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">	</div><div class="line">   </div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>###java代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">	 * shop 客户管理 list</span></div><div class="line"><span class="comment">	 * <span class="doctag">@param</span> start</span></div><div class="line"><span class="comment">	 * <span class="doctag">@param</span> limit</span></div><div class="line"><span class="comment">	 * <span class="doctag">@param</span> selectValue</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="meta">@ResponseBody</span></div><div class="line">	<span class="meta">@RequestMapping</span>(<span class="string">"/list_shop_customers_info"</span>)</div><div class="line">	<span class="function"><span class="keyword">public</span> Object <span class="title">listShopCustomerInfo</span><span class="params">(Integer start, Integer limit, String selectValue)</span> </span>&#123;</div><div class="line">		Page page = <span class="keyword">new</span> Page();</div><div class="line">		page.setStart(start);</div><div class="line">		page.setLimit(limit);</div><div class="line">		<span class="comment">// 获取session中的用户信息</span></div><div class="line">		User u = (User) <span class="keyword">this</span>.request.getSession().getAttribute(<span class="string">"userInfo"</span>);</div><div class="line">		<span class="comment">// 获取持久化用户对象</span></div><div class="line">		User user = userService.findById(u.getUserId());</div><div class="line">		<span class="keyword">if</span> (user != <span class="keyword">null</span>) &#123;</div><div class="line">			projectCustomerService.findShopCustomersByUser(user, selectValue, page);</div><div class="line">			<span class="keyword">return</span> page;</div><div class="line">		&#125;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>###sevice层</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">findShopCustomersByUser</span><span class="params">(User user, String selectValue, Page page)</span> </span>&#123;</div><div class="line">		List cmList = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">		<span class="keyword">int</span> total = <span class="number">0</span>;</div><div class="line">		<span class="keyword">if</span>(user!=<span class="keyword">null</span> &amp;&amp; user.getParentId()!=<span class="keyword">null</span> &amp;&amp; !user.getParentId().equals(<span class="string">""</span>))&#123;</div><div class="line">			String hql = <span class="string">"from ShopCustomers as model where model.shopId = "</span> + Integer.parseInt(user.getParentId());</div><div class="line">			<span class="keyword">if</span>(selectValue!=<span class="keyword">null</span> &amp;&amp; !selectValue.equals(<span class="string">""</span>))&#123;</div><div class="line">				hql+=<span class="string">"and model.shopCustomerName like '%"</span> +selectValue+<span class="string">"%' or model.shopCustomerPhone like '%"</span> +selectValue+<span class="string">"%'"</span>;</div><div class="line">			&#125;</div><div class="line">			List&lt;ShopCustomers&gt; list = baseDao.findByHql(hql,page.getStart(),page.getLimit());</div><div class="line">			<span class="keyword">for</span>(ShopCustomers sc : list)&#123;</div><div class="line">				User u = (User) baseDao.loadById(User.class, sc.getUserId());</div><div class="line">				String cGRSHql = <span class="string">"select count(*) from GuideRecords where shopCustomerId = '"</span>+sc.getShopCustomerId()+<span class="string">"'"</span>;</div><div class="line">				String cDealHql = <span class="string">"select count(*) from GuideRecords where shopCustomerId = '"</span>+sc.getShopCustomerId()+<span class="string">"' and isDeal = 1"</span>;</div><div class="line">				<span class="keyword">int</span> floorCounts = baseDao.countQuery(cGRSHql);<span class="comment">//备案楼盘数</span></div><div class="line">				<span class="keyword">int</span> dealCounts = baseDao.countQuery(cDealHql);<span class="comment">//已成交数</span></div><div class="line">				CustomerManager cm = <span class="keyword">new</span> CustomerManager();</div><div class="line">				CustomerManager cmObj = cm.createCusManObj(sc,u);</div><div class="line">				cmObj.setRecords(floorCounts);</div><div class="line">				cmObj.setAlreadyDeal(dealCounts);</div><div class="line">				cmList.add(cmObj);</div><div class="line">			&#125;</div><div class="line">			String cHql = <span class="string">"select count(*) "</span>+hql;</div><div class="line">			total = baseDao.countQuery(cHql);</div><div class="line">		&#125;</div><div class="line">		page.setRoot(cmList);</div><div class="line">		page.setTotal(total);</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>###分页对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.sc.tradmaster.utils;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 分页对象</span></div><div class="line"><span class="comment"> * <span class="doctag">@author</span> grl 2017-01-05</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Page</span> </span>&#123;</div><div class="line">	<span class="comment">/** 总记录数 */</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> total;</div><div class="line">	<span class="comment">/** 分页结果 */</span></div><div class="line">	<span class="keyword">private</span> List root;</div><div class="line">	<span class="comment">/** 开始页码 */</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> start;</div><div class="line">	<span class="comment">/** 每页多少 */</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> limit;</div><div class="line">	<span class="comment">/** 查询条件 */</span></div><div class="line">	<span class="keyword">private</span> String wheres;</div><div class="line">	</div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> currentPage;	<span class="comment">//当前页</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> currentResult;	<span class="comment">//当前记录起始索引</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> totalPage;		<span class="comment">//总页数</span></div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCurrentPage</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">if</span>(currentPage&lt;=<span class="number">0</span>)</div><div class="line">			currentPage = <span class="number">1</span>;</div><div class="line">		<span class="keyword">return</span> currentPage;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCurrentPage</span><span class="params">(<span class="keyword">int</span> currentPage)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.currentPage = currentPage;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCurrentResult</span><span class="params">()</span> </span>&#123;</div><div class="line">		currentResult = (getCurrentPage()-<span class="number">1</span>)*getLimit();</div><div class="line">		<span class="keyword">if</span>(currentResult&lt;<span class="number">0</span>)</div><div class="line">			currentResult = <span class="number">0</span>;</div><div class="line">		<span class="keyword">return</span> currentResult;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCurrentResult</span><span class="params">(<span class="keyword">int</span> currentResult)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.currentResult = currentResult;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getTotalPage</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">if</span>(total%limit==<span class="number">0</span>)</div><div class="line">			totalPage = total/limit;</div><div class="line">		<span class="keyword">else</span></div><div class="line">			totalPage = total/limit+<span class="number">1</span>;</div><div class="line">		<span class="keyword">return</span> totalPage;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTotalPage</span><span class="params">(<span class="keyword">int</span> totalPage)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.totalPage = totalPage;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getTotal</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> total;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTotal</span><span class="params">(<span class="keyword">int</span> total)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.total = total;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> List <span class="title">getRoot</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> root;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setRoot</span><span class="params">(List root)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.root = root;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getStart</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> start;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setStart</span><span class="params">(<span class="keyword">int</span> start)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.start = start;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getLimit</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> limit;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLimit</span><span class="params">(<span class="keyword">int</span> limit)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.limit = limit;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getWheres</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> wheres;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setWheres</span><span class="params">(String wheres)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.wheres = wheres;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> start+<span class="string">" "</span>+total +<span class="string">" "</span> +root;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/layui/" rel="tag"><i class="fa fa-tag"></i> layui</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/25/spring-boot-swagger2/" rel="next" title="Spring Boot中使用Swagger2构建强大的RESTful API文档">
+                <i class="fa fa-chevron-left"></i> Spring Boot中使用Swagger2构建强大的RESTful API文档
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/25/layui-page-2.0/" rel="prev" title="layui完美分页，ajax请求分页（真分页） 【2.0版本】">
+                layui完美分页，ajax请求分页（真分页） 【2.0版本】 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+             
+               <div onclick="ShowGitment()" id="gitment-display-button">显示 Gitment 评论</div>
+               <div id="gitment-container" style="display:none"></div>
+             
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="http://blog-1253516459.cossh.myqcloud.com/blog_img/2013010611300812.jpg?sign=sp7r7Suu4OZUAtsK8cuYA5FstKphPTEyNTM1MTY0NTkmaz1BS0lEWjJLUmx1ZGhLbjRGSEFHUW80Qjh4ZUJYd0dQTmFsQlEmZT0xNTA5MDA2NjE2JnQ9MTUwNjQxNDYxNiZyPTIxNDE4MjM5NjgmZj0vYmxvZ19pbWcvMjAxMzAxMDYxMTMwMDgxMi5qcGcmYj1ibG9n"
+              alt="winter chen" />
+          
+            <p class="site-author-name" itemprop="name">winter chen</p>
+            <p class="site-description motion-element" itemprop="description">java开发工程师，喜欢代码，喜欢技术</p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WinterChenS" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:1085143002@qq.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#注意"><span class="nav-number">1.</span> <span class="nav-text">注意</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">winter chen</span>
+
+
+  
+</div>
+
+
+  <div class="powered-by">
+  <i class="fa fa-user-md"></i><<span id="busuanzi_container_site_uv">
+    本站总访问量<span id="busuanzi_value_site_uv"></span>次
+   </span>
+  </div>
+
+<div class="theme-info">
+    <div class="powered-by"></div>
+    <span class="post-count">博客全站共31.9k字</span>
+  </div>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+   
+   
+   
+   
+   <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+   <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+   
+       <script type="text/javascript">
+           function ShowGitment(){
+               document.getElementById("gitment-display-button").style.display = "none";
+               document.getElementById("gitment-container").style.display = "block";
+               var gitment = new Gitment({
+                   id: document.location.href,
+                   owner: 'WinterChenS',
+                   repo: 'winterchens.github.io',
+                   oauth: {
+                       client_id: 'c26c5abab389ac9a5ca0',
+                       client_secret: '2ea50b7f56976b89b22d61ecdd8b8096b202e578',
+                   }});
+               gitment.render('gitment-container');
+           }
+       </script>
+   
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
