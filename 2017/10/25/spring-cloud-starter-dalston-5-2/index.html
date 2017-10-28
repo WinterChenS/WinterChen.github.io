@@ -89,7 +89,9 @@
 <meta property="og:description" content="上一篇我们介绍了使用Hystrix Dashboard来展示Hystrix用于熔断的各项度量指标。通过Hystrix Dashboard，我们可以方便的查看服务实例的综合情况，比如：服务调用次数、服务调用延迟等。但是仅通过Hystrix Dashboard我们只能实现对服务当个实例的数据展现，在生产环境我们的服务是肯定需要做高可用的，那么对于多实例的情况，我们就需要将这些度量指标数据进行聚合。下">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://blog.didispace.com/content/images/posts/spring-cloud-starter-dalston-5-2-1.png">
-<meta property="og:updated_time" content="2017-10-25T11:23:25.000Z">
+<meta property="og:image" content="http://blog.didispace.com/content/images/posts/spring-cloud-starter-dalston-5-2-2.png">
+<meta property="og:image" content="http://blog.didispace.com/content/images/posts/spring-cloud-starter-dalston-5-2-3.png">
+<meta property="og:updated_time" content="2017-10-28T03:55:38.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Cloud构建微服务架构：Hystrix监控数据聚合【Dalston版】">
 <meta name="twitter:description" content="上一篇我们介绍了使用Hystrix Dashboard来展示Hystrix用于熔断的各项度量指标。通过Hystrix Dashboard，我们可以方便的查看服务实例的综合情况，比如：服务调用次数、服务调用延迟等。但是仅通过Hystrix Dashboard我们只能实现对服务当个实例的数据展现，在生产环境我们的服务是肯定需要做高可用的，那么对于多实例的情况，我们就需要将这些度量指标数据进行聚合。下">
@@ -371,6 +373,11 @@
           
 
           
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
 
           
             <div class="post-wordcount">
@@ -383,7 +390,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,315
+                  1,399
                 </span>
               
 
@@ -399,7 +406,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  5
+                  6
                 </span>
               
             </div>
@@ -429,24 +436,51 @@
 <li>eureka-server：服务注册中心</li>
 <li>eureka-client：服务提供者</li>
 <li>eureka-consumer-ribbon-hystrix：使用ribbon和hystrix实现的服务消费者</li>
-<li><p>hystrix-dashboard：用于展示<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line">### 动手试一试</div><div class="line"></div><div class="line">具体实现步骤如下：</div><div class="line"></div><div class="line">* 创建一个标准的Spring Boot工程，命名为：turbine。</div><div class="line">* 编辑pom.xml，具体依赖内容如下：</div><div class="line"></div><div class="line">```xml</div><div class="line">&lt;parent&gt;</div><div class="line">	&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">	&lt;artifactId&gt;spring-cloud-starter-parent&lt;/artifactId&gt;</div><div class="line">	&lt;version&gt;Dalston.SR1&lt;/version&gt;</div><div class="line">	&lt;relativePath /&gt; &lt;!-- lookup parent from repository --&gt;</div><div class="line">&lt;/parent&gt;</div><div class="line">&lt;dependencies&gt;</div><div class="line">	&lt;dependency&gt;</div><div class="line">		&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;spring-cloud-starter-turbine&lt;/artifactId&gt;</div><div class="line">	&lt;/dependency&gt;</div><div class="line">	&lt;dependency&gt;</div><div class="line">		&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;</div><div class="line">	&lt;/dependency&gt;</div><div class="line">&lt;/dependencies&gt;</div></pre></td></tr></table></figure></p>
-</li>
-<li><p>创建应用主类<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">```java</div><div class="line">@Configuration</div><div class="line">@EnableAutoConfiguration</div><div class="line">@EnableTurbine</div><div class="line">@EnableDiscoveryClient</div><div class="line">public class TurbineApplication &#123;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		SpringApplication.run(TurbineApplication.class, args);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-</li>
-<li><p>在<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">```properties</div><div class="line">spring.application.name=turbine</div><div class="line">server.port=8989</div><div class="line">management.port=8990</div><div class="line">eureka.client.serviceUrl.defaultZone=http://localhost:1001/eureka/</div><div class="line">turbine.app-config=eureka-consumer-ribbon-hystrix</div><div class="line">turbine.cluster-name-expression=&quot;default&quot;</div><div class="line">turbine.combine-host-port=true</div></pre></td></tr></table></figure></p>
-</li>
+<li>hystrix-dashboard：用于展示<code>eureka-consumer-ribbon-hystrix</code>服务的Hystrix数据</li>
 </ul>
+<h3 id="动手试一试"><a href="#动手试一试" class="headerlink" title="动手试一试"></a>动手试一试</h3><p>具体实现步骤如下：</p>
+<ul>
+<li>创建一个标准的Spring Boot工程，命名为：turbine。</li>
+<li>编辑pom.xml，具体依赖内容如下：</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">parent</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>Dalston.SR1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">relativePath</span> /&gt;</span> <span class="comment">&lt;!-- lookup parent from repository --&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">parent</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-turbine<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div></pre></td></tr></table></figure>
+<ul>
+<li>创建应用主类<code>TurbineApplication</code>，并使用<code>@EnableTurbine</code>注解开启Turbine。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Configuration</span></div><div class="line"><span class="meta">@EnableAutoConfiguration</span></div><div class="line"><span class="meta">@EnableTurbine</span></div><div class="line"><span class="meta">@EnableDiscoveryClient</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TurbineApplication</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SpringApplication.run(TurbineApplication.class, args);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>在<code>application.properties</code>加入eureka和turbine的相关配置，具体如下：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">spring.application.name=turbine</div><div class="line">server.port=8989</div><div class="line">management.port=8990</div><div class="line">eureka.client.serviceUrl.defaultZone=http://localhost:1001/eureka/</div><div class="line">turbine.app-config=eureka-consumer-ribbon-hystrix</div><div class="line">turbine.cluster-name-expression=&quot;default&quot;</div><div class="line">turbine.combine-host-port=true</div></pre></td></tr></table></figure>
 <p><strong>参数说明</strong></p>
 <ul>
-<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">* ```turbine.cluster-name-expression``` 参数指定了集群名称为default，当我们服务数量非常多的时候，可以启动多个Turbine服务来构建不同的聚合集群，而该参数可以用来区分这些不同的聚合集群，同时该参数值可以在Hystrix仪表盘中用来定位不同的聚合集群，只需要在Hystrix Stream的URL中通过```cluster```参数来指定；</div><div class="line">* ```turbine.combine-host-port```参数设置为```true```，可以让同一主机上的服务通过主机名与端口号的组合来进行区分，默认情况下会以host来区分不同的服务，这会使得在本地调试的时候，本机上的不同服务聚合成一个服务来统计。</div><div class="line"></div><div class="line">在完成了上面的内容构建之后，我们来体验一下Turbine对集群的监控能力。分别启动```eureka-server、eureka-client、eureka-consumer-ribbon-hystrix、turbine```以及```hystrix-dashboard```。访问```Hystrix Dashboard```，并开启对http://localhost:8989/turbine.stream`的监控，这时候，我们将看到针对服务```eureka-consumer-ribbon-hystrix```的聚合监控数据。</div><div class="line"></div><div class="line">而此时的架构如下图所示：</div><div class="line"></div><div class="line">![](http://blog.didispace.com/content/images/posts/spring-cloud-starter-dalston-5-2-2.png)</div><div class="line"></div><div class="line">### 通过消息代理收集聚合</div><div class="line"></div><div class="line">Spring Cloud在封装Turbine的时候，还实现了基于消息代理的收集实现。所以，我们可以将所有需要收集的监控信息都输出到消息代理中，然后Turbine服务再从消息代理中异步的获取这些监控信息，最后将这些监控信息聚合并输出到Hystrix Dashboard中。通过引入消息代理，我们的Turbine和Hystrix Dashoard实现的监控架构可以改成如下图所示的结构：</div><div class="line"></div><div class="line">![](http://blog.didispace.com/content/images/posts/spring-cloud-starter-dalston-5-2-3.png)</div><div class="line"></div><div class="line">从图中我们可以看到，这里多了一个重要元素：RabbitMQ。对于RabbitMQ的安装与基本时候我们可以查看之前的[《Spring Boot中使用RabbitMQ》](http://blog.didispace.com/spring-boot-rabbitmq/)一文，这里不做过多的说明。下面，我们可以来构建一个新的应用来实现基于消息代理的Turbine聚合服务，具体步骤如下：</div><div class="line"></div><div class="line">* 创建一个标准的Spring Boot工程，命名为：turbine-amqp。</div><div class="line">* 编辑pom.xml，具体依赖内容如下：</div><div class="line"></div><div class="line">```xml</div><div class="line">&lt;parent&gt;</div><div class="line">	&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">	&lt;artifactId&gt;spring-cloud-starter-parent&lt;/artifactId&gt;</div><div class="line">	&lt;version&gt;Dalston.SR1&lt;/version&gt;</div><div class="line">	&lt;relativePath /&gt; &lt;!-- lookup parent from repository --&gt;</div><div class="line">&lt;/parent&gt;</div><div class="line">&lt;dependencies&gt;</div><div class="line">	&lt;dependency&gt;</div><div class="line">		&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;spring-cloud-starter-turbine-amqp&lt;/artifactId&gt;</div><div class="line">	&lt;/dependency&gt;</div><div class="line">	&lt;dependency&gt;</div><div class="line">		&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;</div><div class="line">	&lt;/dependency&gt;</div><div class="line">&lt;/dependencies&gt;</div></pre></td></tr></table></figure>
-</li>
+<li><code>turbine.app-config</code>参数指定了需要收集监控信息的服务名；</li>
+<li><code>turbine.cluster-name-expression</code> 参数指定了集群名称为default，当我们服务数量非常多的时候，可以启动多个Turbine服务来构建不同的聚合集群，而该参数可以用来区分这些不同的聚合集群，同时该参数值可以在Hystrix仪表盘中用来定位不同的聚合集群，只需要在Hystrix Stream的URL中通过<code>cluster</code>参数来指定；</li>
+<li><code>turbine.combine-host-port</code>参数设置为<code>true</code>，可以让同一主机上的服务通过主机名与端口号的组合来进行区分，默认情况下会以host来区分不同的服务，这会使得在本地调试的时候，本机上的不同服务聚合成一个服务来统计。</li>
 </ul>
-<p>可以看到这里主要引入了<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">**注意：这里我们需要使用Java 8来运行**</div><div class="line"></div><div class="line">* 在应用主类中使用@EnableTurbineStream注解来启用Turbine Stream的配置。</div><div class="line"></div><div class="line">```java</div><div class="line">@Configuration</div><div class="line">@EnableAutoConfiguration</div><div class="line">@EnableTurbineStream</div><div class="line">@EnableDiscoveryClient</div><div class="line">public class TurbineApplication &#123;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		SpringApplication.run(TurbineApplication.class, args);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在完成了上面的内容构建之后，我们来体验一下Turbine对集群的监控能力。分别启动eureka-server、eureka-client、eureka-consumer-ribbon-hystrix、turbine<code>以及</code>hystrix-dashboard<code>。访问</code>Hystrix Dashboard<code>，并开启对http://localhost:8989/turbine.stream</code>的监控，这时候，我们将看到针对服务<code>eureka-consumer-ribbon-hystrix</code>的聚合监控数据。</p>
+<p>而此时的架构如下图所示：</p>
+<p><img src="http://blog.didispace.com/content/images/posts/spring-cloud-starter-dalston-5-2-2.png" alt=""></p>
+<h3 id="通过消息代理收集聚合"><a href="#通过消息代理收集聚合" class="headerlink" title="通过消息代理收集聚合"></a>通过消息代理收集聚合</h3><p>Spring Cloud在封装Turbine的时候，还实现了基于消息代理的收集实现。所以，我们可以将所有需要收集的监控信息都输出到消息代理中，然后Turbine服务再从消息代理中异步的获取这些监控信息，最后将这些监控信息聚合并输出到Hystrix Dashboard中。通过引入消息代理，我们的Turbine和Hystrix Dashoard实现的监控架构可以改成如下图所示的结构：</p>
+<p><img src="http://blog.didispace.com/content/images/posts/spring-cloud-starter-dalston-5-2-3.png" alt=""></p>
+<p>从图中我们可以看到，这里多了一个重要元素：RabbitMQ。对于RabbitMQ的安装与基本时候我们可以查看之前的<a href="http://blog.didispace.com/spring-boot-rabbitmq/" target="_blank" rel="external">《Spring Boot中使用RabbitMQ》</a>一文，这里不做过多的说明。下面，我们可以来构建一个新的应用来实现基于消息代理的Turbine聚合服务，具体步骤如下：</p>
+<ul>
+<li>创建一个标准的Spring Boot工程，命名为：turbine-amqp。</li>
+<li>编辑pom.xml，具体依赖内容如下：</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">parent</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>Dalston.SR1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">relativePath</span> /&gt;</span> <span class="comment">&lt;!-- lookup parent from repository --&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">parent</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-turbine-amqp<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>可以看到这里主要引入了spring-cloud-starter-turbine-amqp<code>依赖，它实际上就是包装了</code>spring-cloud-starter-turbine-stream<code>和</code>pring-cloud-starter-stream-rabbit`。</p>
+<p><strong>注意：这里我们需要使用Java 8来运行</strong></p>
+<ul>
+<li>在应用主类中使用@EnableTurbineStream注解来启用Turbine Stream的配置。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Configuration</span></div><div class="line"><span class="meta">@EnableAutoConfiguration</span></div><div class="line"><span class="meta">@EnableTurbineStream</span></div><div class="line"><span class="meta">@EnableDiscoveryClient</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TurbineApplication</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SpringApplication.run(TurbineApplication.class, args);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <ul>
 <li>配置application.properties文件：</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">spring.application.name=turbine-amqp</div><div class="line">server.port=8989</div><div class="line">management.port=8990</div><div class="line">eureka.client.serviceUrl.defaultZone=http://localhost:1001/eureka/</div></pre></td></tr></table></figure>
-<p>对于Turbine的配置已经完成了，下面我们需要对服务消费者<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">```xml</div><div class="line">&lt;dependencies&gt;</div><div class="line">	...</div><div class="line">	&lt;dependency&gt;</div><div class="line">		&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;spring-cloud-netflix-hystrix-amqp&lt;/artifactId&gt;</div><div class="line">	&lt;/dependency&gt;</div><div class="line">&lt;/dependencies&gt;</div></pre></td></tr></table></figure></p>
+<p>对于Turbine的配置已经完成了，下面我们需要对服务消费者<code>eureka-consumer-ribbon-hystrix</code>做一些修改，使其监控信息能够输出到RabbitMQ上。这个修改也非常简单，只需要在<code>pom.xml</code>中增加对<code>spring-cloud-netflix-hystrix-amqp</code>依赖，具体如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">	...</div><div class="line">	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-netflix-hystrix-amqp<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div></pre></td></tr></table></figure>
 <p>在完成了上面的配置之后，我们可以继续之前的所有项目（除turbine以外），并通过Hystrix Dashboard开启对<a href="http://localhost:8989/turbine.stream的监控，我们可以获得如之前实现的同样效果，只是这里我们的监控信息收集时是通过了消息代理异步实现的。" target="_blank" rel="external">http://localhost:8989/turbine.stream的监控，我们可以获得如之前实现的同样效果，只是这里我们的监控信息收集时是通过了消息代理异步实现的。</a></p>
 <h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><p>样例工程将沿用之前在码云和GitHub上创建的SpringCloud-Learning项目，重新做了一下整理。通过不同目录来区分Brixton和Dalston的示例。</p>
 <ul>
@@ -516,32 +550,6 @@
 
 
     <div class="post-spread">
-      
-        <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style">
-<span class="jiathis_txt">分享到：</span>
-<a class="jiathis_button_fav">收藏夹</a>
-<a class="jiathis_button_copy">复制网址</a>
-<a class="jiathis_button_email">邮件</a>
-<a class="jiathis_button_weixin">微信</a>
-<a class="jiathis_button_qzone">QQ空间</a>
-<a class="jiathis_button_tqq">腾讯微博</a>
-<a class="jiathis_button_douban">豆瓣</a>
-<a class="jiathis_button_share">一键分享</a>
-
-<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
-<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" >
-var jiathis_config={
-  data_track_clickback:true,
-  summary:"",
-  shortUrl:false,
-  hideMore:false
-}
-</script>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
-<!-- JiaThis Button END -->
       
     </div>
   </div>
@@ -687,7 +695,7 @@ var jiathis_config={
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#准备工作"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码示例"><span class="nav-number">2.</span> <span class="nav-text">代码示例</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#准备工作"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动手试一试"><span class="nav-number">2.</span> <span class="nav-text">动手试一试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过消息代理收集聚合"><span class="nav-number">3.</span> <span class="nav-text">通过消息代理收集聚合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码示例"><span class="nav-number">4.</span> <span class="nav-text">代码示例</span></a></li></ol></div>
             
 
           </div>
@@ -707,8 +715,7 @@ var jiathis_config={
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div class="copyright" >
+        <div class="copyright" >
   
   &copy; 
   <span itemprop="copyrightYear">2017</span>
@@ -722,20 +729,34 @@ var jiathis_config={
 </div>
 
 
-  <div class="powered-by">
-  <i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
-  本站访客数:<span id="busuanzi_value_site_uv"></span>
-</span><span id="busuanzi_container_site_pv">
-    本站总访问量<span id="busuanzi_value_site_pv"></span>次
-</span>
-  </div>
+  
 
 <div class="theme-info">
     <div class="powered-by"></div>
-    <span class="post-count">博客全站共31.9k字</span>
+    <span class="post-count">博客全站共32.7k字</span>
   </div>
 
         
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
 
 
 

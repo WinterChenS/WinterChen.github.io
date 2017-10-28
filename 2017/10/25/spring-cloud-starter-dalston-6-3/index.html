@@ -88,7 +88,7 @@
 <meta property="og:site_name" content="winter的博客">
 <meta property="og:description" content="在前两篇文章：服务网关（基础）、服务网关（路由配置）中，我们了解了Spring Cloud Zuul作为网关所具备的最基本功能：路由。本文我们将具体介绍一下Spring Cloud Zuul的另一项核心功能：过滤器。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-25T12:14:15.000Z">
+<meta property="og:updated_time" content="2017-10-28T03:58:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Cloud构建微服务架构：服务网关（过滤器）【Dalston版】">
 <meta name="twitter:description" content="在前两篇文章：服务网关（基础）、服务网关（路由配置）中，我们了解了Spring Cloud Zuul作为网关所具备的最基本功能：路由。本文我们将具体介绍一下Spring Cloud Zuul的另一项核心功能：过滤器。">
@@ -369,6 +369,11 @@
           
 
           
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
 
           
             <div class="post-wordcount">
@@ -381,7 +386,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,602
+                  1,680
                 </span>
               
 
@@ -427,8 +432,20 @@
 <p>Zuul允许开发者在API网关上通过定义过滤器来实现对请求的拦截与过滤，实现的方法非常简单，我们只需要继承ZuulFilter抽象类并实现它定义的四个抽象函数就可以完成对请求的拦截和过滤了。</p>
 <h3 id="过滤器的实现"><a href="#过滤器的实现" class="headerlink" title="过滤器的实现"></a>过滤器的实现</h3><p>比如下面的代码，我们定义了一个简单的Zuul过滤器，它实现了在请求被路由之前检查HttpServletRequest中是否有accessToken参数，若有就进行路由，若没有就拒绝访问，返回401 Unauthorized错误。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AccessFilter</span> <span class="keyword">extends</span> <span class="title">ZuulFilter</span>  </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Logger log = LoggerFactory.getLogger(AccessFilter.class);</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">filterType</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"pre"</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">filterOrder</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">shouldFilter</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        RequestContext ctx = RequestContext.getCurrentContext();</div><div class="line">        HttpServletRequest request = ctx.getRequest();</div><div class="line">      	log.info(<span class="string">"send &#123;&#125; request to &#123;&#125;"</span>, request.getMethod(), request.getRequestURL().toString());</div><div class="line">        Object accessToken = request.getParameter(<span class="string">"accessToken"</span>);</div><div class="line">        <span class="keyword">if</span>(accessToken == <span class="keyword">null</span>) &#123;</div><div class="line">            log.warn(<span class="string">"access token is empty"</span>);</div><div class="line">            ctx.setSendZuulResponse(<span class="keyword">false</span>);</div><div class="line">            ctx.setResponseStatusCode(<span class="number">401</span>);</div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line">        log.info(<span class="string">"access token ok"</span>);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>在上面实现的过滤器代码中，我们通过继承<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">* ```filterType```：过滤器的类型，它决定过滤器在请求的哪个生命周期中执行。这里定义为```pre```，代表会在请求被路由之前执行。</div><div class="line">* ```filterOrder```：过滤器的执行顺序。当请求在一个阶段中存在多个过滤器时，需要根据该方法返回的值来依次执行。</div><div class="line">* ```shouldFilter```：判断该过滤器是否需要被执行。这里我们直接返回了```true```，因此该过滤器对所有请求都会生效。实际运用中我们可以利用该函数来指定过滤器的有效范围。</div><div class="line">* ```run```：过滤器的具体逻辑。这里我们通过```ctx.setSendZuulResponse(false)```令```zuul```过滤该请求，不对其进行路由，然后通过```ctx.setResponseStatusCode(401)```设置了其返回的错误码，当然我们也可以进一步优化我们的返回，比如，通过```ctx.setResponseBody(body)```对返回```body```内容进行编辑等。</div><div class="line"></div><div class="line">在实现了自定义过滤器之后，它并不会直接生效，我们还需要为其创建具体的Bean才能启动该过滤器，比如，在应用主类中增加如下内容：</div><div class="line"></div><div class="line">```java</div><div class="line">@EnableZuulProxy</div><div class="line">@SpringCloudApplication</div><div class="line">public class Application &#123;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		new SpringApplicationBuilder(Application.class).web(true).run(args);</div><div class="line">	&#125;</div><div class="line">	@Bean</div><div class="line">	public AccessFilter accessFilter() &#123;</div><div class="line">		return new AccessFilter();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在对<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">* http://localhost:1101/api-a/hello：返回401错误</div><div class="line">* http://localhost:1101/api-a/hello&amp;accessToken=token：正确路由到```hello-service```的```/hello```接口，并返回```Hello World</div></pre></td></tr></table></figure></p>
+<p>在上面实现的过滤器代码中，我们通过继承<code>ZuulFilter</code>抽象类并重写了下面的四个方法来实现自定义的过滤器。这四个方法分别定义了：</p>
+<ul>
+<li><code>filterType</code>：过滤器的类型，它决定过滤器在请求的哪个生命周期中执行。这里定义为<code>pre</code>，代表会在请求被路由之前执行。</li>
+<li><code>filterOrder</code>：过滤器的执行顺序。当请求在一个阶段中存在多个过滤器时，需要根据该方法返回的值来依次执行。</li>
+<li><code>shouldFilter</code>：判断该过滤器是否需要被执行。这里我们直接返回了<code>true</code>，因此该过滤器对所有请求都会生效。实际运用中我们可以利用该函数来指定过滤器的有效范围。</li>
+<li><code>run</code>：过滤器的具体逻辑。这里我们通过<code>ctx.setSendZuulResponse(false)</code>令<code>zuul</code>过滤该请求，不对其进行路由，然后通过<code>ctx.setResponseStatusCode(401)</code>设置了其返回的错误码，当然我们也可以进一步优化我们的返回，比如，通过<code>ctx.setResponseBody(body)</code>对返回<code>body</code>内容进行编辑等。</li>
+</ul>
+<p>在实现了自定义过滤器之后，它并不会直接生效，我们还需要为其创建具体的Bean才能启动该过滤器，比如，在应用主类中增加如下内容：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@EnableZuulProxy</span></div><div class="line"><span class="meta">@SpringCloudApplication</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Application</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">new</span> SpringApplicationBuilder(Application.class).web(<span class="keyword">true</span>).run(args);</div><div class="line">	&#125;</div><div class="line">	<span class="meta">@Bean</span></div><div class="line">	<span class="function"><span class="keyword">public</span> AccessFilter <span class="title">accessFilter</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">new</span> AccessFilter();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在对<code>api-gateway</code>服务完成了上面的改造之后，我们可以重新启动它，并发起下面的请求，对上面定义的过滤器做一个验证：</p>
+<ul>
+<li><a href="http://localhost:1101/api-a/hello：返回401错误" target="_blank" rel="external">http://localhost:1101/api-a/hello：返回401错误</a></li>
+<li><a href="http://localhost:1101/api-a/hello&amp;accessToken=token：正确路由到`hello-service`的`/hello`接口，并返回`Hello" target="_blank" rel="external">http://localhost:1101/api-a/hello&amp;accessToken=token：正确路由到`hello-service`的`/hello`接口，并返回`Hello</a> World`</li>
+</ul>
 <p>到这里，对于Spring Cloud Zuul过滤器的基本功能就以介绍完毕。读者可以根据自己的需要在服务网关上定义一些与业务无关的通用逻辑实现对请求的过滤和拦截，比如：签名校验、权限校验、请求限流等功能。</p>
 <h3 id="进阶阅读"><a href="#进阶阅读" class="headerlink" title="进阶阅读"></a>进阶阅读</h3><p>为了更好的理解和扩展Spring Cloud Zuul，我们可以阅读下面这些文章，有助于深入的了解其内部运行机制，以指导我们合理的编写过滤器逻辑：</p>
 <ul>
@@ -499,32 +516,6 @@
 
 
     <div class="post-spread">
-      
-        <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style">
-<span class="jiathis_txt">分享到：</span>
-<a class="jiathis_button_fav">收藏夹</a>
-<a class="jiathis_button_copy">复制网址</a>
-<a class="jiathis_button_email">邮件</a>
-<a class="jiathis_button_weixin">微信</a>
-<a class="jiathis_button_qzone">QQ空间</a>
-<a class="jiathis_button_tqq">腾讯微博</a>
-<a class="jiathis_button_douban">豆瓣</a>
-<a class="jiathis_button_share">一键分享</a>
-
-<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
-<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" >
-var jiathis_config={
-  data_track_clickback:true,
-  summary:"",
-  shortUrl:false,
-  hideMore:false
-}
-</script>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
-<!-- JiaThis Button END -->
       
     </div>
   </div>
@@ -690,8 +681,7 @@ var jiathis_config={
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div class="copyright" >
+        <div class="copyright" >
   
   &copy; 
   <span itemprop="copyrightYear">2017</span>
@@ -705,20 +695,34 @@ var jiathis_config={
 </div>
 
 
-  <div class="powered-by">
-  <i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
-  本站访客数:<span id="busuanzi_value_site_uv"></span>
-</span><span id="busuanzi_container_site_pv">
-    本站总访问量<span id="busuanzi_value_site_pv"></span>次
-</span>
-  </div>
+  
 
 <div class="theme-info">
     <div class="powered-by"></div>
-    <span class="post-count">博客全站共31.9k字</span>
+    <span class="post-count">博客全站共32.7k字</span>
   </div>
 
         
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
 
 
 
