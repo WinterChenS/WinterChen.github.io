@@ -84,7 +84,7 @@
 <meta name="keywords" content="Spring Boot">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring Boot中使用Swagger2构建强大的RESTful API文档">
-<meta property="og:url" content="https://winterchens.github.io/2017/10/25/spring-boot-swagger2/index.html">
+<meta property="og:url" content="https://winterchen.com/2017/10/25/spring-boot-swagger2/index.html">
 <meta property="og:site_name" content="winter的博客">
 <meta property="og:description" content="由于Spring Boot能够快速开发、便捷部署等特性，相信有很大一部分Spring Boot的用户会用来构建RESTful API。而我们构建RESTful API的目的通常都是由于多终端的原因，这些终端会共用很多底层业务逻辑，因此我们会抽象出这样一层来同时服务于多个移动端或者Web前端。">
 <meta property="og:locale" content="zh-Hans">
@@ -124,7 +124,7 @@
 
 
 
-  <link rel="canonical" href="https://winterchens.github.io/2017/10/25/spring-boot-swagger2/"/>
+  <link rel="canonical" href="https://winterchen.com/2017/10/25/spring-boot-swagger2/"/>
 
 
 
@@ -301,7 +301,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://winterchens.github.io/2017/10/25/spring-boot-swagger2/">
+    <link itemprop="mainEntityOfPage" href="https://winterchen.com/2017/10/25/spring-boot-swagger2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="winter chen">
@@ -433,7 +433,7 @@
 </ul>
 <p>为了解决上面这样的问题，本文将介绍RESTful API的重磅好伙伴Swagger2，它可以轻松的整合到Spring Boot中，并与Spring MVC程序配合组织出强大RESTful API文档。它既可以减少我们创建文档的工作量，同时说明内容又整合入实现代码中，让维护文档和修改代码整合为一体，可以让我们在修改代码逻辑的同时方便的修改文档说明。另外Swagger2也提供了强大的页面测试功能来调试每个RESTful API。具体效果如下图所示：</p>
 <p><img src="http://blog.didispace.com/content/images/2016/04/swagger2_1.png" alt=""></p>
-<p>下面来具体介绍，如果在Spring Boot中使用Swagger2。首先，我们需要一个Spring Boot实现的RESTful API工程，若您没有做过这类内容，建议先阅读<br><a href="https://winterchens.github.io/2017/10/25/spring-boot-restful-api/">Spring Boot构建一个较为复杂的RESTful APIs和单元测试</a>。</p>
+<p>下面来具体介绍，如果在Spring Boot中使用Swagger2。首先，我们需要一个Spring Boot实现的RESTful API工程，若您没有做过这类内容，建议先阅读<br><a href="https://winterchens.github.io/2017/10/25/spring-boot-restful-api/" target="_blank" rel="external">Spring Boot构建一个较为复杂的RESTful APIs和单元测试</a>。</p>
 <p>下面的内容我们会以<a href="https://gitee.com/didispace/SpringBoot-Learning" target="_blank" rel="external">教程样例</a>中的Chapter3-1-1进行下面的实验（Chpater3-1-5是我们的结果工程，亦可参考）。</p>
 <h3 id="添加Swagger2依赖"><a href="#添加Swagger2依赖" class="headerlink" title="添加Swagger2依赖"></a>添加Swagger2依赖</h3><p>在<code>pom.xml</code>中加入Swagger2的依赖</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.2.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger-ui<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.2.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
@@ -1201,6 +1201,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
 

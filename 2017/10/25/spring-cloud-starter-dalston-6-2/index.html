@@ -84,7 +84,7 @@
 <meta name="keywords" content="Spring Cloud">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring Cloud构建微服务架构：服务网关（路由配置）【Dalston版】">
-<meta property="og:url" content="https://winterchens.github.io/2017/10/25/spring-cloud-starter-dalston-6-2/index.html">
+<meta property="og:url" content="https://winterchen.com/2017/10/25/spring-cloud-starter-dalston-6-2/index.html">
 <meta property="og:site_name" content="winter的博客">
 <meta property="og:description" content="在上一篇《Spring Cloud构建微服务架构：服务网关（基础）》一文中，我们通过使用Spring Cloud Zuul构建了一个基础的API网关服务，同时也演示了Spring Cloud Zuul基于服务的自动路由功能。在本文中，我们将进一步详细地介绍关于Spring Cloud Zuul的路由功能，以帮助读者可以更好的理解和使用它，以完成更复杂的路由配置。">
 <meta property="og:locale" content="zh-Hans">
@@ -121,7 +121,7 @@
 
 
 
-  <link rel="canonical" href="https://winterchens.github.io/2017/10/25/spring-cloud-starter-dalston-6-2/"/>
+  <link rel="canonical" href="https://winterchen.com/2017/10/25/spring-cloud-starter-dalston-6-2/"/>
 
 
 
@@ -298,7 +298,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://winterchens.github.io/2017/10/25/spring-cloud-starter-dalston-6-2/">
+    <link itemprop="mainEntityOfPage" href="https://winterchen.com/2017/10/25/spring-cloud-starter-dalston-6-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="winter chen">
@@ -424,7 +424,7 @@
 
       
         <blockquote>
-<p>在上一篇<a href="https://winterchens.github.io/2017/10/25/spring-cloud-starter-dalston-6-1/">《Spring Cloud构建微服务架构：服务网关（基础）》</a>一文中，我们通过使用Spring Cloud Zuul构建了一个基础的API网关服务，同时也演示了Spring Cloud Zuul基于服务的自动路由功能。在本文中，我们将进一步详细地介绍关于Spring Cloud Zuul的路由功能，以帮助读者可以更好的理解和使用它，以完成更复杂的路由配置。<br><a id="more"></a></p>
+<p>在上一篇<a href="https://winterchens.github.io/2017/10/25/spring-cloud-starter-dalston-6-1/" target="_blank" rel="external">《Spring Cloud构建微服务架构：服务网关（基础）》</a>一文中，我们通过使用Spring Cloud Zuul构建了一个基础的API网关服务，同时也演示了Spring Cloud Zuul基于服务的自动路由功能。在本文中，我们将进一步详细地介绍关于Spring Cloud Zuul的路由功能，以帮助读者可以更好的理解和使用它，以完成更复杂的路由配置。<br><a id="more"></a></p>
 <h3 id="传统路由配置"><a href="#传统路由配置" class="headerlink" title="传统路由配置"></a>传统路由配置</h3></blockquote>
 <p>所谓的传统路由配置方式就是在不依赖于服务发现机制的情况下，通过在配置文件中具体指定每个路由表达式与服务实例的映射关系来实现API网关对外部请求的路由。</p>
 <p>没有Eureka和Consul的服务治理框架帮助的时候，我们需要根据服务实例的数量采用不同方式的配置来实现路由规则：</p>
@@ -1203,6 +1203,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
 
